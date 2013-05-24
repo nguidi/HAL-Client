@@ -1,0 +1,79 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="brand" href="./index.html">
+				HAL-Browser
+			</a>
+			<div class="nav-collapse collapse">
+				<ul class="nav">
+					{{#self}}
+						<li>
+						<a href="{{href}}" class="browseable" {{data 'link'}}>
+							Fetch Root
+						</a>
+					</li>
+					{{/self}}
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span6">
+			<h3>
+				Properties
+			</h3>
+			<pre class="prettyprint">{{propertiesJSON}}</pre>
+
+			<h3>
+				Links
+			</h3>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+					<th>rel</th>
+					<th>title</th>
+					<th>name</th>
+					<th>templated</th>
+					<th>Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					{{#linksList}}
+					<tr>
+						<td>
+							{{rel}}
+						</td>
+						<td>
+							{{title}}
+						</td>
+						<td>
+							{{name}}
+						</td>
+						<td>
+							{{templated}}
+						</td>
+						<td>
+							<a href="{{href}}" class="browseable" {{data 'link'}}>
+								{{action}}
+							</a>
+						</td>
+					</tr>
+					{{/linksList}}
+				</tbody>
+            </table>
+		</div>
+		<div class="span6">
+			<h3>
+				Resource
+			</h3>
+			<pre class="prettyprint">{{resourceJSON}}</pre>
+		</div>
+	</div>
+</div>

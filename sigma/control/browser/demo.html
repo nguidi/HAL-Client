@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>HAL-Client/Browser</title>
+	</head>
+	<body>
+	</body>
+</html>
+<script type='text/javascript' src="../../../steal/steal.js"></script>
+<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+<style type="text/css">
+	body {
+		padding-top: 60px;
+		padding-bottom: 40px;
+	}
+</style>
+<script type='text/javascript'>
+	steal(
+		'sigma/control/hypermedia/container.js'
+	,	'sigma/control/browser'
+	,	'sigma/model'
+	,	'sigma/lib/style.js'
+	,	'can/view/mustache'
+	).then(
+		function()
+		{
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Browser'
+			,	{}
+			,	{
+					self: function()
+					{
+						return	this.links.attr('self')
+					}
+				,	linksList: function()
+					{
+						var	links
+						=	new can.Observe.List()
+						can.each(
+							this.links.attr()
+						,	function(link)
+							{
+								links.push(link)
+							}
+						)
+						return	links
+					}
+				,	getProperties: function()
+					{
+						return	_.omit(this.attr(),['_links','_embedded'])
+					}
+				,	propertiesJSON: function()
+					{	
+						return	can.trim(JSON.stringify(this.getProperties(),true,4))
+					}
+				,	resourceJSON: function()
+					{
+						return	can.trim(JSON.stringify(this.attr(),null,4))
+					}
+				}
+			)
+
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.Browser'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'root':
+							{
+								Handler:	Sigma.Control.Browser
+							,	options:
+								{
+									target: 'Browser'
+								,	view:	'//sigma/view/browser/init.mustache'
+								}
+							}
+						}
+					}
+				}
+			,	{
+				}
+			)
+
+			new Sigma.Hypermedia.Browser(
+				$('body')
+			,	{
+					id:		'Browser'
+				,	slot:	Sigma.Model.HAL.Browser.fetch('http://trabajando:3003/api/data/usuarios/1','root')
+				}
+			)
+		}
+	)
+</script>
