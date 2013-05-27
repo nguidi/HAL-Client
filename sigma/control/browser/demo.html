@@ -40,16 +40,13 @@
 			,	{
 					defaults:
 					{
-						media_types:
+						default_media_type:
 						{
-							'root':
+							Handler:	Sigma.Control.Browser
+						,	options:
 							{
-								Handler:	Sigma.Control.Browser
-							,	options:
-								{
-									target: 'Browser'
-								,	view:	'//sigma/view/browser/init.mustache'
-								}
+								target: 'Browser'
+							,	view:	'//sigma/view/browser/init.mustache'
 							}
 						}
 					}
@@ -62,7 +59,7 @@
 				$('body')
 			,	{
 					id:		'Browser'
-				,	slot:	Sigma.Model.HAL.Browser.fetch('http://trabajando:3003/api/data/welcomes/1','root')
+				,	slot:	Sigma.Model.HAL.Browser.fetch('http://trabajando:3003/api/data/welcomes/1')
 				}
 			)
 		}

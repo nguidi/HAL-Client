@@ -25,6 +25,18 @@
 	<div class="row-fluid">
 		<div class="span6">
 			<h3>
+				Custom Request
+			</h3>
+			<form onSubmit="return false;">
+				<div class="input-append span12">
+					<input class="span11" name="custom_url" type="text" value="/">
+					<button class="btn btn-success" type="button">
+						GET
+					</button>
+				</div>
+			</form>
+
+			<h3>
 				Properties
 			</h3>
 			<pre class="prettyprint">{{propertiesJSON}}</pre>
@@ -44,7 +56,7 @@
 				</thead>
 				<tbody>
 					{{#linksAsList}}
-					<tr>
+					<tr class="{{rel}}" {{ data 'links'}}>
 						<td>
 							{{rel}}
 						</td>
@@ -59,7 +71,9 @@
 						</td>
 						<td>
 							<a href="{{href}}" class="browseable" {{data 'link'}}>
-								{{action}}
+								<span class="label label-success">
+									{{action}}
+								</span>
 							</a>
 						</td>
 					</tr>

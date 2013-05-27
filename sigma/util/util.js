@@ -111,5 +111,10 @@ steal(
 					}
 				)
 			}
+		_.isDefined
+		=	function(what)
+			{
+				return	!_.isUndefined(what)
+			}
 	}
 )

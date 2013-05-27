@@ -44,11 +44,40 @@ steal(
 				}
 			,	get: function()
 				{
-					return	this.parent.get(this.rel,this.name)
+					return	_.isDefined(this.parent)
+							?	this.parent.get(this.rel,this.attr('this.name'))
+							:	_.isDefined(this.rel)
+								?	Sigma.Model.HAL.model_by_rel(this.rel).get(this.attr('href'),this.rel)
+								:	Sigma.Model.HAL.Resource.get(this.attr('href'))
 				}
 			,	fetch: function()
 				{
 					return	this.parent.fetch(this.rel,this.name)	
+				}
+			,	title: function()
+				{
+					return	this.attr('title')
+				}
+			,	href: function()
+				{
+					return	this.attr('href')
+				}
+			,	hreflang: function()
+				{
+					return	this.attr('hreflang')
+				}
+			,	templated: function()
+				{
+					return	this.attr('templated')
+						||	false
+				}
+			,	name: function()
+				{
+					return	this.attr('name')
+				}
+			,	action: function()
+				{
+					return	"GET"
 				}
 			}
 		)
@@ -116,13 +145,14 @@ steal(
 							=	self
 						}
 					)
-					console.log(this)
 				}
 			,	get:function(relation,name)
 				{
 					var	stored
 					=	this.resource.constructor.store[this.resource.id]
-					,	lookedup
+					if	(_.isEqual(relation,"self"))
+						return	stored
+					var	lookedup
 					=	Sigma.Model.HAL.lookup((stored && stored.embedded) || this.resource.embedded,relation,name)
 					return	_.isUndefined(lookedup)
 							?	Sigma.Model.HAL.lookup(this.resource.links,relation,name).fetch(relation,name)
@@ -281,6 +311,10 @@ steal(
 									'invalid relation: "' + relation + '"'
 								)
 				}
+			,	getSelf : function()
+				{
+					return	this.links.attr('self')
+				}
 			,	getLinks: function()
 				{
 					return	this.links
@@ -291,24 +325,28 @@ steal(
 				}
 			,	getLinksAsList: function()
 				{
+					var	self
+					=	this
 					return	new can.Observe.List(
 									_.map(
 										this.links.attr()
 									,	function(val,key)
 										{
-											return val
+											return self.links.attr(key)
 										}
 									)
 							)
 				}
 			,	getEmbeddedAsList: function()
 				{
+					var	self
+					=	this
 					return	new can.Observe.List(
 									_.map(
 										this.embedded.attr()
 									,	function(val,key)
 										{
-											return val
+											return self.embedded.attr(key)
 										}
 									)
 							)

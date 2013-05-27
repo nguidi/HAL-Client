@@ -15,15 +15,36 @@ steal(
 				'.browseable click': function(el,ev)
 				{
 					ev.preventDefault()
-					console.log(el.data('link'))
 					this.element.trigger(
 							'browse'
 						,	{
-								links:	this.options.slot.links
-							,	rel:	el.data('link').rel
-							,	name:	el.data('link').name
+								link:	el.data('link')
 							,	target:	this.options.target
 							}
+						)
+				}
+			,	'button.btn click':function(el,ev)
+				{
+					var	$input
+					=	this.element.find('input[name="custom_url"]')
+					,	href
+					=	'http://trabajando:3003/api/data'+$input.val()
+
+					this.element.trigger(
+							'browse'
+						,	_.extend(
+								{
+									target:	this.options.target
+								}
+							,	_.isEqual(href,'http://trabajando:3003/api/data/')
+								?	{
+										link:	this.options.data.attr('self')
+									}
+								:	{
+										href:	href
+									}
+							)
+							
 						)
 				}
 			}
