@@ -112,12 +112,11 @@ steal(
 									?	new Sigma.Model.HAL.Link.List(link)
 									:	new Sigma.Model.HAL.Link(link)
 								)
-							self[relation].rel
-							=	relation
 							self[relation].parent
 							=	self
 						}
 					)
+					console.log(this)
 				}
 			,	get:function(relation,name)
 				{
@@ -157,6 +156,19 @@ steal(
 		,	{
 				model: function(data)
 				{
+					var	links
+					=	data._links
+					,	embedded
+					=	data._embedded
+
+					can.each(
+						['_links','_embedded']
+					,	function(what)
+						{
+							delete data[what]
+						}
+					)
+
 					var	instance
 					=	this._super(data)
 					,	embedded_model_type
@@ -165,17 +177,17 @@ steal(
 					instance.id
 					=	(
 							data.id
-						||	parseUri(data._links.self.href).path.replace(/\//g,'_')
+						||	parseUri(links.self.href).path.replace(/\//g,'_')
 						)
 
 					instance.links
-					=	new	Sigma.Model.HAL.Links(data._links,instance)
-
+					=	new	Sigma.Model.HAL.Links(links,instance)
+					
 					instance.embedded
 					=	new can.Observe()
 
 					can.each(
-						data._embedded
+						embedded
 					,	function(embedded_data,relation)
 						{
 							embedded_model_type
@@ -192,14 +204,6 @@ steal(
 							,	embedded_model_type
 									.model(embedded_data)
 							)
-						}
-					)
-
-					can.each(
-						['_links','_embedded']
-					,	function(what)
-						{
-							delete instance[what]
 						}
 					)
 
@@ -277,6 +281,50 @@ steal(
 									'invalid relation: "' + relation + '"'
 								)
 				}
+			,	getLinks: function()
+				{
+					return	this.links
+				}
+			,	getEmbedded: function()
+				{
+					return	this.embedded
+				}
+			,	getLinksAsList: function()
+				{
+					return	new can.Observe.List(
+									_.map(
+										this.links.attr()
+									,	function(val,key)
+										{
+											return val
+										}
+									)
+							)
+				}
+			,	getEmbeddedAsList: function()
+				{
+					return	new can.Observe.List(
+									_.map(
+										this.embedded.attr()
+									,	function(val,key)
+										{
+											return val
+										}
+									)
+							)
+				}
+			,	getProperties:function()
+				{
+					return	this.attr()
+				}
+			,	getPropertiesJSON: function()
+					{	
+						return	can.trim(JSON.stringify(this.getProperties(),true,4))
+					}
+			,	getResourceJSON: function()
+					{
+						return	can.trim(JSON.stringify(_.extend(this.attr(),{_embedded: this.embedded.attr(), _links: this.links.attr()}),null,4))
+					}
 			}
 		)
 

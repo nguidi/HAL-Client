@@ -1,0 +1,21 @@
+[submodule "funcunit"]
+	path = funcunit
+	url = https://github.com/bitovi/funcunit.git
+[submodule "steal"]
+	path = steal
+	url = https://github.com/bitovi/steal.git
+[submodule "can"]
+	path = can
+	url = https://github.com/bitovi/canjs.git
+[submodule "jquery"]
+	path = jquery
+	url = https://github.com/bitovi/jquerypp.git
+[submodule "bootstrap"]
+	path = bootstrap
+	url = git://github.com/twitter/bootstrap.git
+[submodule "canui"]
+	path = canui
+	url = https://github.com/bitovi/canui.git
+[submodule "underscore"]
+	path = underscore
+	url = https://github.com/documentcloud/underscore.git

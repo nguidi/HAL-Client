@@ -32,37 +32,7 @@
 			Sigma.Model.HAL.Resource(
 				'Sigma.Model.HAL.Browser'
 			,	{}
-			,	{
-					self: function()
-					{
-						return	this.links.attr('self')
-					}
-				,	linksList: function()
-					{
-						var	links
-						=	new can.Observe.List()
-						can.each(
-							this.links.attr()
-						,	function(link)
-							{
-								links.push(link)
-							}
-						)
-						return	links
-					}
-				,	getProperties: function()
-					{
-						return	_.omit(this.attr(),['_links','_embedded'])
-					}
-				,	propertiesJSON: function()
-					{	
-						return	can.trim(JSON.stringify(this.getProperties(),true,4))
-					}
-				,	resourceJSON: function()
-					{
-						return	can.trim(JSON.stringify(this.attr(),null,4))
-					}
-				}
+			,	{}
 			)
 
 			Sigma.HypermediaContainer(
@@ -92,7 +62,7 @@
 				$('body')
 			,	{
 					id:		'Browser'
-				,	slot:	Sigma.Model.HAL.Browser.fetch('http://trabajando:3003/api/data/usuarios/1','root')
+				,	slot:	Sigma.Model.HAL.Browser.fetch('http://trabajando:3003/api/data/welcomes/1','root')
 				}
 			)
 		}
