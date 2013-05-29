@@ -87,20 +87,33 @@ steal(
 		,	{
 				setup: function(data)
 				{
-					this._super(data)
-					can.map(
-						this
-					,	function(item,index)
-						{
-							return	_.extend(
-										item
-									,	{
-											index:	index
-										,	name:	item.name	||	index
-										}
-									)
-						}
-					)
+					this.
+						_super(
+							can.map(
+								data
+							,	function(item,index)
+								{
+									return	_.extend(
+												item
+											,	{
+													index:	index
+												,	name:	item.name	||	index
+												}
+											)
+								}
+							)
+						)
+					console.log(this)
+				}
+			,	getAll: function()
+				{
+					return	can.map(
+								this
+							,	function(item)
+								{
+									return item
+								}
+							)
 				}
 			,	find: function(name)
 				{
@@ -328,12 +341,16 @@ steal(
 					var	self
 					=	this
 					return	new can.Observe.List(
-									_.map(
-										this.links.attr()
-									,	function(val,key)
-										{
-											return self.links.attr(key)
-										}
+									_.flatten(
+										_.map(
+											this.links.attr()
+										,	function(val,key)
+											{
+												return	self.links.attr(key) instanceof Sigma.Model.HAL.Link.List
+														?	self.links.attr(key).getAll()
+														:	self.links.attr(key)
+											}
+										)
 									)
 							)
 				}
