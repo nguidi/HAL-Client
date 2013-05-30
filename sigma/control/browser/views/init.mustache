@@ -56,7 +56,7 @@
 				</thead>
 				<tbody>
 					{{#linksAsList}}
-					<tr class="{{rel}}" {{ data 'links'}}>
+					<tr class="{{class}}" {{ data 'links'}}>
 						<td>
 							{{rel}}
 						</td>
@@ -70,11 +70,13 @@
 							{{templated}}
 						</td>
 						<td>
+							{{#if action}}
 							<a href="{{href}}" class="browseable" {{data 'link'}}>
-								<span class="label label-success">
+								<span class="label">
 									{{action}}
 								</span>
 							</a>
+							{{/if}}
 						</td>
 					</tr>
 					{{/linksAsList}}

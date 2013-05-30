@@ -77,7 +77,28 @@ steal(
 				}
 			,	action: function()
 				{
-					return	"GET"
+					var	relation
+					=	this.rel.split(':')
+					,	actions
+					=	{
+							api: "POST"
+						,	show: "GET"
+						,	list: "GET"
+						,	find: "POST"
+						,	filter: "POST"
+						,	create: "POST"
+						,	update: "PUT"
+						,	delete: "DELETE"
+						}
+					return	(relation.length > 1)
+							?	actions[relation[0]]
+							:	_.isEqual(this.rel,'curies')
+								?	undefined
+								:	"GET"
+				}
+			,	class: function()
+				{
+					return	this.rel.replace(':','_')
 				}
 			}
 		)
@@ -93,17 +114,15 @@ steal(
 								data
 							,	function(item,index)
 								{
-									return	_.extend(
-												item
-											,	{
-													index:	index
-												,	name:	item.name	||	index
-												}
-											)
+									return	item
+												.attr(
+													'name'
+												,	item.attr('name')
+												||	index
+												)
 								}
 							)
 						)
-					console.log(this)
 				}
 			,	getAll: function()
 				{
@@ -151,7 +170,15 @@ steal(
 							self.attr(
 									relation
 								,	can.isArray(link)
-									?	new Sigma.Model.HAL.Link.List(link)
+									?	new Sigma.Model.HAL.Link.List(
+												_.map(
+													link
+												,	function(item)
+													{
+														return	new Sigma.Model.HAL.Link(item).attr('rel',relation)
+													}
+												)
+											)
 									:	new Sigma.Model.HAL.Link(link)
 								)
 							self[relation].parent
@@ -374,11 +401,39 @@ steal(
 				}
 			,	getPropertiesJSON: function()
 					{	
-						return	can.trim(JSON.stringify(this.getProperties(),true,4))
+						return	can
+									.trim(
+										JSON
+											.stringify(
+												this.getProperties()
+											,	true
+											,	4
+											)
+									)
 					}
 			,	getResourceJSON: function()
 					{
-						return	can.trim(JSON.stringify(_.extend(this.attr(),{_embedded: this.embedded.attr(), _links: this.links.attr()}),null,4))
+						return	can
+									.trim(
+										JSON
+											.stringify(
+												_.extend(
+													this.attr()
+												,	_.extend(
+														{
+															_links: this.links.attr()
+														}
+													,	_.isEmpty(this.embedded.attr())
+														?	{}
+														:	{
+																_embedded: this.embedded.attr()
+															}	
+													)
+												)
+											,	null
+											,	4
+											)
+									)
 					}
 			}
 		)
