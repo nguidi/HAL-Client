@@ -1,0 +1,49 @@
+.navbar .dropdown-submenu:hover > a {
+	background-image: none !important;
+	background-color: transparent !important;
+}
+
+.navbar .dropdown-menu > li > a:focus {
+	background-color: transparent !important;
+}
+
+.navbar .dropdown-menu > li > a:hover {
+	background-image: none !important;
+}
+
+.navbar .dropdown-submenu > .dropdown-menu {
+	top: 100% !important;
+	left: auto !important;
+	margin-top: 0px;
+	margin-left: 0px;
+}
+
+
+.navbar .dropdown-submenu > a::after {
+	content: normal !important;
+}
+
+.navbar .caret {
+	border-top-color: white;
+	border-bottom-color: white;
+	margin-top: 8px;
+	margin-left: 4px;
+}
+
+.navbar .user {
+	display: block;
+	float: right;
+	padding: 10px;
+	font-size: 14px;
+	font-weight: 200;
+	color: #777;
+}
+
+.navbar .user:hover, .navbar .user:focus {
+	color: white;
+	text-decoration: none;
+}
+
+.navbar .user i {
+	margin-left: 15px;
+}

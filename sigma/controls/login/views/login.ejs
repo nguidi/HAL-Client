@@ -1,0 +1,52 @@
+	<div class="media-list">
+		<div class="media">
+			<h1><span class="pull-left media-object icon-user" href="#" >
+			</span></h1>
+			<div class="media-body">
+			<% if( legend ){%><legend><%= legend %></legend><%}%>
+			<form class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="inputUsername"><%= username_label %></label>
+					<div class="controls">
+						<input id="inputUsername" class="input-small" type="text" placeholder="<%= username_hint %>" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputPassword"><%= password_label %></label>
+					<div class="controls">
+						<input id="inputPassword" class="input-small" type="password" placeholder="<%= password_hint %>" />
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls pull-right" data-relation="<%= login.relation %>" >
+						<a id="login_btn" class="hyperlink btn btn-primary pull-right" href="<%=login.href%>" >
+							<h2 class="media-object"  ><i class="icon-signin"></i></h2>
+						</a>
+					</div>
+				</div>
+			</form>
+		</div>
+		<% if( open_ids ){ %>
+			<div class="media">
+				<h1><span class="pull-left media-object icon-cloud" href="#" >
+				</span></h1>
+				<div class="media-body">
+					<legend>O bien ingrese con alguna de sus cuentas:</legend>
+					<ul class="media-list">
+					<% list( open_ids
+					,	function(open_id,key){ %>
+						<li class="media" data-relation="<%= open_id.relation %>" data-name="<%= open_id.name||key %>" >
+							<a class="hyperlink btn btn-primary pull-right" href="<%= open_id.href %>" >
+								<h2 class="media-object"><i class="icon-<%= open_id.icon %>"></i></h2>
+							</a>
+							<div class="media-body">
+								<h4><abbr title="<%= open_id.message %>"><%= open_id.title %></abbr></h4>
+							</div>
+						</li>
+						<% }
+					) %>
+					</ul>
+				</div>
+			</div>
+		<%}%>
+	</div>

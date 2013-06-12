@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic">
+		<meta charset="utf-8">
+		<meta name="description" content="">
+		<meta name="author" content="Sigma-IT">
+		<title>ACL Manager</title>
+	</head>
+	<body>
+	</body>
+</html>
+<script type='text/javascript' src="../../../steal/steal.js"></script>
+<style type="text/css">
+	body {
+		padding-top: 30px;
+		padding-bottom: 40px;
+	}
+</style>
+<script type='text/javascript'>
+	steal(
+		'sigma/app/acl_manager/models/users.js'
+	,	'sigma/app/acl_manager/models/welcomes.js'	
+	,	'sigma/controls/login'
+	,	'sigma/lib/style.js'
+	,	'sigma/app/acl_manager/controls/acl_manager.js'
+	,	'sigma/app/acl_manager/styles/bootstrap.css'
+	,	'sigma/app/acl_manager/styles/bootstrap-responsive.css'
+	,	'sigma/app/acl_manager/styles/base.css'
+	).then(
+		function()
+		{
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.Content'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'init':
+							{
+								Handler:	Sigma.Control.Login
+							,	options:
+								{
+									view:	'//sigma/app/acl_manager/views/login/init.mustache'
+								,	target:	'Init'
+								,	login_form: {id_profile: 4}
+								}
+							}
+						,	'signin':
+							{
+								Handler: Sigma.Control.ACL_Manager
+							,	options:
+								{
+									target: 'details'
+								,	view: '//sigma/app/acl_manager/views/main/init.mustache'
+								}
+							}
+						}
+					}
+				}
+			,	{
+				}
+			)
+
+			new Sigma.Hypermedia.Content(
+				$('body')
+			,	{
+					id:		'Init'
+				,	slot:	Sigma.Model.HAL.Welcome.fetch('http://trabajando:3003/api/data/welcomes/2','init')
+				}
+			)
+		}
+	)
+</script>

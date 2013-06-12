@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>HAL-Client/Modal Demo</title>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<div id="topbar" class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="#">
+					<h1>Modal Demo</h1>
+				</a>
+				<div id='home' class="nav-collapse" >
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="modal"></div>
+    	<script type='text/javascript' src='../../../steal/steal.js'></script>
+    	<style type="text/css">
+		body {
+			padding-top: 90px;
+			padding-bottom: 40px;
+		}
+		#home .container-fluid {
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 500px;
+		}
+
+		div.media-box {
+			border: 1px solid #DDD;
+			margin: 15px 0;
+			padding: 15px;
+		}
+
+		div.media-object {
+			margin: 15px 0;
+		}
+
+	</style>
+</body>
+</html>
+
+<script type="text/javascript">
+	steal(
+		'sigma/controls/hypermedia/container.js'
+	,	'sigma/models/model.js'
+	,	'sigma/lib'
+	,	'sigma/lib/style.js'
+	,	'can/view/mustache'
+	)
+	.then(
+		'sigma/controls/modal'
+	,	'sigma/controls/modal/fixtures.js'
+	,	'sigma/controls/modal/modal.css'
+	).then(
+		function()
+		{
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Modal'
+			,	{}
+			,	{
+					content: function()
+					{
+						return	this.links.get('content')
+					}
+				,	options: function()
+					{
+						return	this.links.get('options')
+							&&	this.links.get('options').getCollection()
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Content'
+			,	{}
+			,	{}
+			)
+
+			Sigma.Model.HAL.Collection(
+				'Sigma.Model.HAL.Options'
+			,	{}
+			,	{}
+			)
+
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Option'
+			,	{}
+			,	{}
+			)
+
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.Modal'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'modal':
+							{
+								Handler: Sigma.Control.Modal
+							,	options: 
+								{
+									view:	'//sigma/views/modal/modal.mustache'
+								,	view_body: '//sigma/views/modal/content.mustache'
+								,	target_content: 'Content'
+								}
+							}
+						}
+					}
+				}
+			,	{}
+			)
+			
+			new Sigma.Hypermedia.Modal(
+				$('#modal')
+			,	{
+					id:'Modal'
+				,	slot: Sigma.Model.HAL.Modal.fetch('/api/modals/1','modal')
+				}
+			)
+		}
+
+	)
+</script>

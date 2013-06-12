@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>HAL-Client/Topbar Demo</title>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<div id="topbar" class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="#">
+					<h1>Topbar Demo</h1>
+				</a>
+				<div id='home' class="nav-collapse" >
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="nav"></div>
+    	<script type='text/javascript' src='../../../steal/steal.js'></script>
+    	<style type="text/css">
+		body {
+			padding-top: 90px;
+			padding-bottom: 40px;
+		}
+		#home .container-fluid {
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 500px;
+		}
+
+		div.media-box {
+			border: 1px solid #DDD;
+			margin: 15px 0;
+			padding: 15px;
+		}
+
+		div.media-object {
+			margin: 15px 0;
+		}
+
+	</style>
+</body>
+</html>
+
+<script type="text/javascript">
+	steal(
+		'sigma/controls/hypermedia/container.js'
+	,	'sigma/models/model.js'
+	,	'sigma/lib'
+	,	'sigma/lib/style.js'
+	,	'can/view/mustache'
+	)
+	.then(
+		'sigma/controls/topbar'
+	,	'sigma/controls/topbar/fixtures.js'
+	,	'sigma/controls/topbar/topbar.css'
+	).then(
+		function()
+		{
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Menu'
+			,	{}
+			,	{
+					options: function()
+					{
+						return	this.links.get('options')
+							&&	this.links.get('options').getCollection()
+					}
+				,	user: function()
+					{
+						return	this.links.get('user')
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.User'
+			,	{}
+			,	{
+					submenu: function()
+					{
+						return	_.isDefined(this.links.attr('show:profile'))
+							&&	_.isDefined(this.links.attr('api:signout'))
+					}
+				,	config: function()
+					{
+						return	this.links.attr('show:profile')
+					}
+				,	signout: function()
+					{
+						return	this.links.attr('api:signout')
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Collection(
+				'Sigma.Model.HAL.Options'
+			,	{}
+			,	{}
+			)
+
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Option'
+			,	{}
+			,	{
+					submenus: function()
+					{
+						return	this.links.get('submenus')
+							&&	this.links.get('submenus').getCollection()
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Collection(
+				'Sigma.Model.HAL.Submenus'
+			,	{}
+			,	{}
+			)
+
+			Sigma.Model.HAL.Menu(
+				'Sigma.Model.HAL.Submenu'
+			,	{}
+			,	{}
+			)
+
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.Menu'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'nav':
+							{
+								Handler: Sigma.Control.Topbar
+							,	options: 
+								{
+									view:	'//sigma/views/topbar/init.mustache'
+								,	target_content: 'Content'
+								}
+							}
+						}
+					}
+				}
+			,	{}
+			)
+			
+			new Sigma.Hypermedia.Menu(
+				$('#nav')
+			,	{
+					id:'Nav'
+				,	slot: Sigma.Model.HAL.Menu.fetch('/api/menus/1','nav')
+				}
+			)
+
+		}
+
+	)
+</script>

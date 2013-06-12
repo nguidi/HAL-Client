@@ -19,3 +19,6 @@
 [submodule "underscore"]
 	path = underscore
 	url = https://github.com/documentcloud/underscore.git
+[submodule "underscore.string"]
+	path = underscore.string
+	url = https://github.com/epeli/underscore.string.git

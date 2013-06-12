@@ -1,0 +1,76 @@
+<div class="navbar navbar-inverse navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			</button>
+			<a class="brand pull-left" href="./index.html">{{app_name}}</a>	
+		</div>
+	</div>
+</div>
+<div id="wellcome" class="hero-unit container-fluid">
+	<div class="row-fluid">
+		<div class="span6 container-fluid">
+			<div class="row-fluid">
+				<div class="span4">
+					<span class="icon-stack  icon-4x">
+						<i class="icon-check-empty icon-stack-base"></i>
+						<i class="icon-rocket" alt="Wellcome"></i>
+					</span>
+				</div>
+				<div class="span8">
+					<h2>
+						{{title}}
+					</h2>
+					<p>
+						{{welcome}}
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="span5">
+			<form class="form-horizontal pull-right">
+				<div class="control-group">
+					<div class="controls">
+						<h4>
+							INGRESE AL SISTEMA
+						</h4>
+					</div>
+				</div>
+				<div class="control-group">
+					<label for="username" class="control-label">Usuario</label>
+					<div class="controls">
+						<input name="username" type="text">
+					</div>
+				</div>
+				<div class="control-group">
+					<label for="password" class="control-label">Contraseña</label>
+					<div class="controls">
+						<input name="password" type="password">
+					</div>
+				</div>
+				{{#signin}}
+				<div class="control-group"> 
+					<div class="controls">
+						<a class="btn btn-inverse pull-right browseable {{name}}" {{data 'link'}}>
+							Ingresar
+						</a>
+					</div>
+				</div>
+				{{/signin}}
+			</form>
+		</div>
+	</div>
+</div>
+<footer>
+	<div class="container">
+		<div class="row">
+			<div class="span12">
+				<p class="pull-right">ACL Manager</p>
+				<p>© Copyright 2013 Sigma-IT Solutions</p>
+			</div>
+		</div>
+	</div>
+</footer>

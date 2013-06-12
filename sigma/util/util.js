@@ -100,6 +100,20 @@ steal(
 				)
 				return toReturn
 			}
+		can.parseFormData
+		=	function(data)
+			{
+				return	_.map(
+							data
+						,	function(value,key)
+							{
+								return	_.object(
+											['key','value']
+										,	[key,value]
+										)
+							}
+						)
+			}
 		can.cleanForm
 		=	function(form)
 			{
@@ -115,6 +129,12 @@ steal(
 		=	function(what)
 			{
 				return	!_.isUndefined(what)
+			}
+		can.isStatusCode
+		=	function(hal)
+			{
+				return	_.has(hal.attr(),'code','status')
+					&&	_.str.include(hal.links.attr('self.href'),'status_codes')
 			}
 	}
 )

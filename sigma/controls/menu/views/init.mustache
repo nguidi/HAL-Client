@@ -1,0 +1,26 @@
+<ul class="nav nav-list local-menu" id="drilldown-{{id}}">
+	{{#options}}
+		{{#if submenus}}
+		<li class="dropdown-submenu">
+			<a {{data 'link'}}>
+				{{title}}
+			</a>
+			<ul class="dropdown-menu">
+				{{#submenus}}
+				<li>
+					<a class="browseable" {{data 'link'}}>
+						{{title}}
+					</a>
+				</li>
+				{{/submenus}}
+			</ul>
+		</li>
+		{{else}}
+		<li>
+			<a {{data 'link'}} class="browseable">
+				{{title}}
+			</a>
+		</li>
+		{{/if}}
+	{{/options}}
+</ul>

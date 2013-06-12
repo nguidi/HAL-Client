@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>HAL-Client/Browser</title>
+	</head>
+	<body>
+	</body>
+</html>
+<script type='text/javascript' src="../../../steal/steal.js"></script>
+<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+<style type="text/css">
+	body {
+		padding-top: 30px;
+		padding-bottom: 40px;
+	}
+</style>
+<script type='text/javascript'>
+	steal(
+		'sigma/controls/hypermedia/container.js'
+	,	'sigma/controls/browser'
+	,	'sigma/models/model.js'
+	,	'sigma/lib/style.js'
+	).then(
+		function()
+		{
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Browser'
+			,	{}
+			,	{}
+			)
+
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.Browser'
+			,	{
+					defaults:
+					{
+						default_media_type:
+						{
+							Handler:	Sigma.Control.Browser
+						,	options:
+							{
+								target: 'Browser'
+							,	view:	'//sigma/views/browser/init.mustache'
+							}
+						}
+					}
+				}
+			,	{
+				}
+			)
+
+			new Sigma.Hypermedia.Browser(
+				$('body')
+			,	{
+					id:		'Browser'
+				,	slot:	Sigma.Model.HAL.Browser.fetch('http://trabajando:3003/api/data/welcomes/1')
+				}
+			)
+		}
+	)
+</script>
