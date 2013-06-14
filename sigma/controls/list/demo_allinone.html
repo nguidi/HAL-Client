@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>Sigma/List demo</title>
+	<script type='text/javascript' src="../../../../../steal/steal.js"></script>
+	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<style type="text/css">
+		body {
+			padding-top: 90px;
+			padding-bottom: 40px;
+		}
+
+		.table-wrapper h4{
+			text-indent: 15px;
+		}
+		.table-wrapper .actions{
+			margin-top:-32px;
+		}
+		.table th{
+			font-size: 12px;
+		}
+		.table td.objetivo {
+			font-size: 13px;
+		}
+		.table th span.header-pais, .table td.objetivo{
+			color: #999;
+		}
+		.table-wrapper{
+			margin:1% 2%;
+		}
+		.table td{
+			text-indent: 10px;
+			vertical-align: middle;
+			font-size: 12px;
+		}
+		.table td a{
+			color:#5990DE;
+		}
+		.table td.center, .table th.center{
+			text-align: center;
+			vertical-align: middle;
+		}
+		.table td.plan{
+			vertical-align: middle;
+		}
+		.table td div.programa{
+			padding: 5px 0px;
+		}
+	</style>
+</head>
+<body>
+	<div id="topbar" class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="#">
+					<h1>Planes List Demo</h1>
+				</a>
+				<div id='home' class="nav-collapse" >
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="vistaLIST"></div>
+<script type='text/javascript'>
+steal(
+	'sigma/stock/controls/lib'
+,	'can/view/mustache'
+).then(
+	'sigma/stock/controls/list'
+,	'sigma/stock/controls/charts'
+,	'sigma/stock/controls/lib/media.css'
+,	'sigma/lib/style.js'
+).then(
+	function()
+	{
+		Sigma.HypermediaContainer(
+			'HAL.Container'
+		,	{
+				defaults:
+				{
+					media_types:
+					{
+						'procesos':
+						{
+							Handler: Sigma.Controls.List
+						,	options:
+							{
+								target: 'Root'
+							,	view_list: '//stock/views/list/procesos.mustache'
+							,	view_template_list: '//api/views/planes/planes_globales_list.mustache'
+							}
+						}
+					,	'programas':
+						{
+							Handler: Sigma.Controls.List
+						,	options:
+							{
+								target: 'Root'
+							,	view_list: '//stock/views/list/programas.mustache'
+							}
+						}
+					,	'actividads':
+						{
+							Handler: Sigma.Controls.List
+						,	options:
+							{
+								target: 'Root'
+							,	view_list: '//stock/views/list/actividads.mustache'
+							}
+						}
+					,	'plans':
+						{
+							Handler: Sigma.Controls.List
+						,	options:
+							{
+								target: 'Root'
+							,	view_list: '//stock/views/list/planes.mustache'
+							,	view_template_list: '//api/views/planes/planes_globales_list.mustache'
+							}
+						}
+					,	'pais':
+						{
+							Handler: Sigma.Controls.List
+						,	options:
+							{
+								target: 'Root'
+							,	view_list: '//stock/views/list/planes.mustache'
+							,	view_template_list: '//api/views/planes/planes_globales_list.mustache'
+							}
+						}
+					,	'plan':
+						{
+							Handler: Sigma.Controls.Charts
+						,	options:
+							{
+								target: 'Root'
+							,	view_list: '//stock/views/list/plan.mustache'
+							}
+						}
+					}
+				}
+			}
+		,	{}
+		)
+
+		Sigma.Model.HAL.Collection(
+			'Sigma.Model.HAL.Plans'
+		,	{}
+		,	{
+				planes: function()
+				{
+					return this.getCollection()
+				}
+			}
+		)
+
+		Sigma.Model.HAL.Collection(
+			'Sigma.Model.HAL.Programas'
+		,	{}
+		,	{}
+		)
+
+		Sigma.Model.HAL.Resource(
+			'Sigma.Model.HAL.Programa'
+		,	{}
+		,	{
+				programa: function()
+				{
+					return 	this.links.attr('nombre_programa').get()
+				}
+			,	pais: function()
+				{
+					return 	this.embedded.attr('pais')
+				}
+			}
+		)
+
+		Sigma.Model.HAL.Resource(
+			'Sigma.Model.HAL.NombrePrograma'
+		,	{}
+		,	{}
+		)
+
+		Sigma.Model.HAL.Resource(
+			'Sigma.Model.HAL.Pais'
+		,	{}
+		,	{}
+		)
+
+		Sigma.Model.HAL.Resource(
+			'Sigma.Model.HAL.Plan'
+		,	{}
+		,	{
+				programas: function()
+				{
+					return 	this.embedded.attr('programas')
+					?	this.embedded.attr('programas').getCollection()
+					: 	new can.Observe.List() 
+				}
+			}
+		)
+
+		Sigma.Model.HAL.Plans.fetch(
+			'http://trabajando:3003/api/data/plans'
+		,	'procesos'
+		).then(
+			function(list)
+			{
+				list.attr('title',"Planes globales")
+				can.each(
+					list.getCollection()
+				,	function(data)
+					{
+						data.attr('rowspan',data.embedded.attr('programas')?data.embedded.attr('programas').getCollection().length+1:0)
+					}
+				)
+				
+				new	HAL.Container(
+					$('#vistaLIST')
+				,	{
+						id:	'Root'
+					,	slot:	list
+					}
+				)
+			}
+		)
+	}
+)
+</script>
+</body>
+</html>

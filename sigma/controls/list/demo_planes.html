@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>Sigma/List demo</title>
+	<script type='text/javascript' src="../../../../steal/steal.js"></script>
+	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<style type="text/css">
+		body {
+			padding-top: 90px;
+			padding-bottom: 40px;
+		}
+
+		.table-wrapper h4{
+			text-indent: 15px;
+		}
+		.table-wrapper .actions{
+			margin-top:-32px;
+		}
+		.table th{
+			font-size: 12px;
+		}
+		.table td.objetivo {
+			font-size: 13px;
+		}
+		.table th span.header-pais, .table td.objetivo{
+			color: #999;
+		}
+		.table-wrapper{
+			margin:1% 2%;
+		}
+		.table td{
+			text-indent: 10px;
+			vertical-align: middle;
+			font-size: 12px;
+		}
+		.table td a{
+			color:#5990DE;
+		}
+		.table td.center{
+			text-align: center;
+			vertical-align: middle;
+		}
+		.table td.plan{
+			vertical-align: middle;
+		}
+		.table td div.programa{
+			padding: 5px 0px;
+		}
+	</style>
+</head>
+<body>
+	<div id="topbar" class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="#">
+					<h1>List Demo</h1>
+				</a>
+				<div id='home' class="nav-collapse" >
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="planesGlobales"></div>
+<script type='text/javascript'>
+steal(
+	'sigma/stock/controls/lib'
+,	'can/view/mustache'
+).then(
+	'sigma/stock/controls/list'
+,	'sigma/stock/controls/lib/media.css'
+,	'sigma/lib/style.js'
+).then(
+	function()
+	{
+		Sigma.HypermediaContainer(
+			'HAL.Container'
+		,	{
+				defaults:
+				{
+					media_types:
+					{
+						'list':
+						{
+							Handler: Sigma.Controls.List
+						,	options:
+							{
+								target: 'Root'
+							,	view_list: '//stock/views/list/planes.mustache'
+							}
+						}
+					}
+				}
+			}
+		,	{}
+		)
+		
+		Sigma.Model.HAL.Collection(
+			'Sigma.Model.HAL.Plans'
+		,	{}
+		,	{}
+		)
+
+		Sigma.Model.HAL.Resource(
+			'Sigma.Model.HAL.Plan'
+		,	{}
+		,	{}
+		)
+
+		new	HAL.Container(
+			$('#planesGlobales')
+		,	{
+				id:		'Root'
+			,	slot:	Sigma.Model.HAL.Plans.fetch(
+							'http://trabajando:3003/api/data/plans'
+						,	'list'
+						)
+			}
+		)
+	}
+)
+</script>
+</body>
+</html>

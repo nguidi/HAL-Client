@@ -1,0 +1,30 @@
+<div class="table-wrapper">
+	<div class="well well-small">
+		<h4 class="">{{title}}</h4>
+	</div>
+	<table class="table table-hover table-bordered">
+		<thead>
+			<tr>
+				<th width="200">Centro</th> 
+				<th width="200">Nivel de título</span></th>
+				<th width="200">Importancia informe</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#list}}
+				<tr class="{{id_centro}}">
+					<td data-field="n_centro" class="n_centro buscable"><a href="{{links.self.href}}" title="Editar este Plan">{{n_centro}}</a></td>
+					<td data-field="n_grupo_nivel_titulo" class="n_grupo_nivel_titulo buscable">{{n_grupo_nivel_titulo}}</td>
+					<td data-field="tipo_importancia_informe" class="tipo_importancia_informe">{{tipo_importancia_informe}}</td>
+				</tr>
+			{{/list}}
+			{{^list}}
+				<tr colspan="3">
+					<td colspan="3">
+						No hay registros para mostrar
+					</td>
+				</tr>
+		        {{/list}}
+		</tbody>
+	</table>	
+</div>

@@ -1,0 +1,75 @@
+
+<div class="table-wrapper">
+	<div class="well well-small">
+		<h4 class="">{{title}}</h4>
+		<div class="actions input-append pull-right">
+			{{#if actions}}
+			<span class="actions offset1">
+			{{#actions}}
+				<button class="btn btn-small" name="{{name}}"type="button" title="{{tooltip}}">
+					<i class="icon-{{icon}}"></i>&nbsp;&nbsp;{{caption}}
+				</button>
+			{{/actions}}
+			</span>
+			{{/if}}
+		</div>
+	</div>
+	<table class="table table-hover table-bordered">
+		<thead>
+			<tr>
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+				<th colspan="4" class="center">Argentina</th>
+				<th colspan="4" class="center">Resto del mundo</th>
+			</tr>
+			<tr>
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+				<th>&nbsp;</th>
+				<th colspan="2" width="80" class="center">Claves</th>
+				<th colspan="2" width="80" class="center">No Claves</th>
+				<th colspan="2" width="80" class="center">Claves</th>
+				<th colspan="2" width="80" class="center">No Claves</th>
+			</tr>
+			<tr>
+				<th width="200">Tipo de Programas</th> 
+				<th width="200">Comentarios</th>
+				<th >Nombre de Programas / Iniciativas</th>
+				<th width="20" class="center">$</th>
+				<th width="20" class="center">Cant</th>
+				<th width="20" class="center">$</th>
+				<th width="20" class="center">Cant</th>
+				<th width="20" class="center">$</th>
+				<th width="20" class="center">Cant</th>
+				<th width="20" class="center">$</th>
+				<th width="20" class="center">Cant</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#list}}
+				<tr>
+					<td data-field="plan" class="plan"><a href="{{_links.self.href}}" title="Editar este Plan">{{tipo_iniciativa}}</a></td>
+					<td data-field="objetivo" class="objetivo">{{objetivos}}</td>
+					<td data-field="programa-wrapper">
+					{{#programas}}
+						<div class="programa">
+							<span id="{{id}} "class="nombre-programa">
+								<a href="{{_links.self.href}}" title="Editar este Programa">{{nombre_programa}}</a>
+							</span>
+						</div>
+					{{/programas}}
+					</td>
+					<td>{{id_pais}}</td>
+					<td>{{id_pais}}</td>
+					<td>{{id_pais}}</td>
+					<td>{{id_pais}}</td>
+					<td>{{id_pais}}</td>
+					<td>{{id_pais}}</td>
+					<td>{{id_pais}}</td>
+					<td>{{id_pais}}</td>
+				</tr>
+			{{/list}}
+		</tbody>
+	</table>	
+</div>

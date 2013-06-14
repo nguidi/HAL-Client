@@ -2,6 +2,9 @@ steal(
 	'sigma/lib'
 ,	'sigma/lib/hypermedia.js'
 ,	'sigma/util'
+,	'sigma/controls/topbar'
+,	'sigma/app/acl_manager/models/menus.js'
+,	'sigma/app/acl_manager/models/contents.js'
 ).then(
 	function() {
 		Sigma.HypermediaControl(
@@ -23,11 +26,13 @@ steal(
 					,	{
 							defaults:
 							{
-								media_types:
+								containers:
 								{
 									'topbar':
 									{
-										Handler:	Sigma.Control.Menu
+										Handler:	Sigma.Control.Topbar
+									,	url: 		'http://trabajando:3003/api/data/menus/1'
+									,	resource: 	Sigma.Model.HAL.Menu
 									,	options:
 										{
 											view:	'//sigma/app/acl_manager/views/main/topbar.mustache'
@@ -36,16 +41,37 @@ steal(
 									}
 								,	'content':
 									{
-										Handler:	Sigma.Control.Menu
-									,	navegable_control:	Sigma.Hypermedia.ACL_Manager.Content
-									,	options:
+										media_types:
 										{
-											view:	'//sigma/app/acl_manager/views/main/topbar.mustache'
-										}
+											'option_1':
+											{
+												Handler: Sigma.HypermediaControl
+											,	resource: Sigma.Model.HAL.Content
+											,	url: 'http://trabajando:3003/api/data/contents/1'
+											,	inicializable: true
+											,	options:
+												{
+													target: 'Content'
+												,	view_home: '//sigma/app/acl_manager/views/main/init.mustache'
+												}
+											}
+										,	'option_2':
+											{
+												Handler: Sigma.HypermediaControl
+											,	resource: Sigma.Model.HAL.Content
+											,	options:
+												{
+													target: 'Content'
+												,	view_home: '//sigma/app/acl_manager/views/main/init.mustache'
+												}
+											}
+										} 
 									}
 								,	'footer':
 									{
 										Handler:	Sigma.HypermediaControl
+									,	url: 		'http://trabajando:3003/api/data/footers/1'
+									,	resource: 	Sigma.Model.HAL.Footer
 									,	options:
 										{
 											view:	'//sigma/app/acl_manager/views/main/topbar.mustache'
@@ -57,6 +83,8 @@ steal(
 					,	{
 						}
 					)
+
+					new Sigma.Hypermedia.ACL_Manager(can.$('body'))
 				}
 			}
 		)
