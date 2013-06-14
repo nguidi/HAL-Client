@@ -359,33 +359,44 @@ steal(
 					
 					return	Sigma.Model.HAL.lookup((stored && stored.embedded) || this.resource.embedded,relation,name)
 				}
+			,	resource_by_rel: function(rel)
+				{
+					return	(
+								_.isEqual(rel,"self")
+								?	this.resource.constructor
+								:	(
+										Sigma.Model.HAL.model_by_rel(rel)
+									||	Sigma.Model.HAL.Resource
+									)
+							)
+				}
 			,	fetch: function(url,rel)
 				{
-					return this.resource.constructor.fetch(url,rel)
+					return 	this.resource_by_rel(rel).fetch(url,rel)
 				}
 			,	find: function(url,data,rel)
 				{
-					return	this.resource.constructor.find(url,data,rel)
+					return	this.resource_by_rel(rel).find(url,data,rel)
 				}
 			,	filter: function(url,data,rel)
 				{
-					return	this.resource.constructor.filter(url,data,rel)
+					return	this.resource_by_rel(rel).filter(url,data,rel)
 				}
 			,	update: function(data)
 				{
-					return	this.resource.constructor.update(url,data,rel)
+					return	this.resource_by_rel(rel).update(url,data,rel)
 				}
-			,	delete: function()
+			,	delete: function(url,rel)
 				{
-					return	this.resource.constructor.delete(url,rel)
+					return	this.resource_by_rel(rel).delete(url,rel)
 				}
-			,	join: function(data)
+			,	join: function(url,data,rel)
 				{
-					return	this.resource.constructor.join(url,data,rel)
+					return	this.resource_by_rel(rel).join(url,data,rel)
 				}
-			,	create: function(data)
+			,	create: function(url,data,rel)
 				{
-					return	this.resource.constructor.create(url,data,rel)
+					return	this.resource_by_rel(rel).create(url,data,rel)
 				}
 			}
 		)
@@ -452,9 +463,12 @@ steal(
 				{
 					var	self
 					=	this
+
 					return	can.ajax(
 								{
-									url: 	url
+									url: 	can.fixture.on
+											?	'/'+url
+											:	url
 								,	type: 	type
 								,	data:	data
 								}

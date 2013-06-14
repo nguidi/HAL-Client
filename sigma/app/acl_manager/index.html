@@ -21,14 +21,12 @@
 </style>
 <script type='text/javascript'>
 	steal(
-		'sigma/app/acl_manager/models/users.js'
-	,	'sigma/app/acl_manager/models/welcomes.js'	
+		'sigma/app/acl_manager/models'
 	,	'sigma/controls/login'
 	,	'sigma/lib/style.js'
 	,	'sigma/app/acl_manager/controls/acl_manager.js'
-	,	'sigma/app/acl_manager/styles/bootstrap.css'
-	,	'sigma/app/acl_manager/styles/bootstrap-responsive.css'
-	,	'sigma/app/acl_manager/styles/base.css'
+	).then(
+		'sigma/app/acl_manager/fixtures/login.js'
 	).then(
 		function()
 		{
@@ -69,7 +67,7 @@
 				$('body')
 			,	{
 					id:		'Init'
-				,	slot:	Sigma.Model.HAL.Welcome.fetch('http://trabajando:3003/api/data/welcomes/2','init')
+				,	slot:	Sigma.Model.HAL.Welcome.fetch('/api/data/welcomes/1','init')
 				}
 			)
 		}

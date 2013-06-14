@@ -284,6 +284,12 @@ HAL_Resource.prototype.curies = function(t_curies)
 			,	href: "api/{api_action}"
 			,	templated: true
 			}
+		,	'link':
+			{
+				name: "link"
+			,	href: "api/data/{target}/{target_id}/{target_relation}"
+			,	templated: true
+			}
 		}
 	if	(typeof t_curies === 'string')
 		this.link('curies',_.filter(curies,function(curie,key){return key == t_curies}))
