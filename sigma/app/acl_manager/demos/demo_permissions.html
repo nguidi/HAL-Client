@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>ACL Manager/Permissions</title>
+	</head>
+	<body>
+	</body>
+</html>
+<script type='text/javascript' src="../../../../steal/steal.js"></script>
+<style type="text/css">
+	body {
+		padding-top: 30px;
+		padding-bottom: 40px;
+	}
+</style>
+<script type='text/javascript'>
+	steal(
+		'sigma/app/acl_manager/models'
+	,	'sigma/lib/style.js'
+	,	'sigma/lib'
+	,	'sigma/lib/hypermedia.js'
+	,	'sigma/util'
+	).then(
+		'sigma/app/acl_manager/fixtures/permissions.js'
+	,	'sigma/app/acl_manager/models/models.js'
+	).then(
+		function()
+		{
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.Content'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'init':
+							{
+								Handler:	Sigma.HypermediaControl
+							,	options:
+								{
+									view:	'//sigma/app/acl_manager/views/permissions/init.mustache'
+								,	target:	'Init'
+								}
+							}
+						}
+					}
+				}
+			,	{
+				}
+			)
+
+			new Sigma.Hypermedia.Content(
+				$('body')
+			,	{
+					id:		'Init'
+				,	slot:	Sigma.Model.HAL.Permissions.fetch('/api/acl/permissions','init')
+				}
+			)
+		}
+	)
+</script>

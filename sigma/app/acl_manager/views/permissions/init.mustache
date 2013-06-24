@@ -1,0 +1,21 @@
+	<table class="table table-bordered">
+		<caption>Permisos Disponibles</caption>
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Permiso</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#permissions}}
+			<tr>
+				<td>{{id}}</td>
+				<td>
+					<a class="expand" {{data 'permission'}}>
+						{{permission}}
+					</a>
+				</td>
+			</tr>
+			{{/permissions}}
+		</tbody>
+	</table>
