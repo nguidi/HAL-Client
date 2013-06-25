@@ -75,6 +75,15 @@ steal(
 					}
 				,	'/api/data/menus/1'
 				)
+		,	footer_resource
+		=	new	HAL_Resource(
+					{
+						id: 1
+					,	title: "ACL Manager"
+					,	copyright: "© Copyright 2013 Sigma-IT Solutions"
+					}
+				,	'/api/data/footers/1'
+				)
 
 		can.fixture(
 			'POST /api/signin'
@@ -102,9 +111,11 @@ steal(
 									)
 									.curies('show')
 									.link('show:topbar','/users/1/topbar')
-									.link('show:home','/users/1/home')
+									.link('show:content:home','/users/1/home')
+									.link('show:footer','/users/1/footer')
 									.embed('topbar',topbar_resource)
 									.embed('home',home_resource)
+									.embed('footer',footer_resource)
 									.toJSON()
 							:	new	HAL_Resource(
 										{
