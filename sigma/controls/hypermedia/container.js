@@ -51,6 +51,7 @@ steal(
 		,	{
 				init:	function(el,options)
 				{
+					console.log("arguments", arguments)
 					if(!options.id)
 						throw 'Container must have an "id" property'
 					this.constructor.registerContainer(this)
@@ -67,7 +68,6 @@ steal(
 				}
 			,	_update:function(resource)
 				{
-					console.log(resource)
 					if(can.isDeferred(resource))
 					{
 						this.proxy(this.options.render.loading,'')
@@ -108,6 +108,7 @@ steal(
 						if	(resource)
 							throw	'Wrong resource type!!!'
 					}
+					console.log(resource)
 				}
 			,	getRelationHandler: function(resource)
 				{

@@ -1,12 +1,63 @@
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="navbar navbar-inverse">
 	<div class="navbar-inner">
 		<div class="container">
-			<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			<span class="icon-bar"></span>
-			</button>
-			<a class="brand pull-left" href="./index.html">ACL Manager</a>	
+			<a class="brand">
+				{{title}}
+			</a>
+			<div class="nav-collapse collapse">
+				<ul class="nav">
+				{{#options}}
+					{{#if submenus}}
+					<li class="dropdown-submenu">
+						<a {{data 'link'}}>
+							{{title}}
+							<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu pull-right">
+							{{#submenus}}
+							<li>
+								<a class="browseable " {{data 'link'}}>
+									{{title}}
+								</a>
+							</li>
+							{{/submenus}}
+						</ul>
+					</li>
+					{{else}}
+					<li>
+						<a {{data 'link'}} class="browseable">
+							{{title}}
+						</a>
+					</li>
+					{{/if}}
+				{{/options}}
+				</ul>
+			</div>
+			{{#user}}
+			<a class="user dropdown-submenu">
+				{{username}}
+				<i class="icon-user icon-muted icon-large"></i>
+				{{#if submenu}}
+				<span class="caret"></span>
+				<ul class="dropdown-menu pull-right">
+					{{#config}}
+					<li>
+						<a class="browseable" {{data 'link'}}>
+							{{title}}
+						</a>
+					</li>
+					{{/config}}
+					{{#signout}}
+					<li>
+						<a class="browseable signout" {{data 'link'}}>
+							{{title}}
+						</a>
+					</li>
+					{{/signout}}
+				</ul>
+				{{/if}}
+			</a>
+			{{/user}}
 		</div>
 	</div>
 </div>

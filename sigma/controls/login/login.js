@@ -56,6 +56,7 @@ steal(
 							.then(
 								function(data)
 								{
+									console.log("LOGIN ",data)
 									if	(can.isStatusCode(data))
 										self.loginFail()
 									else

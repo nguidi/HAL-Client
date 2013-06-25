@@ -3,18 +3,13 @@ steal(
 ).then(
 	function()
 	{
-		Sigma.Model.HAL.Collection(
-			'Sigma.Model.HAL.Menus'
-		,	{}
-		,	{}
-		)
-
 		Sigma.Model.HAL.Resource(
 			'Sigma.Model.HAL.Menu'
 		,	{}
 		,	{
 				options: function()
 				{
+					console.log("options ",this.links.get('options').getCollection())
 					return	this.links.get('options')
 						&&	this.links.get('options').getCollection()
 				}

@@ -4,4 +4,6 @@ steal(
 ,	'./users.js'
 ,	'./permissions.js'
 ,	'./access.js'
+,	'./menus.js'
+,	'./contents.js'
 )

@@ -15,12 +15,12 @@ steal(	'sigma/lib'
 				}
 			}
 		,	{
-				init:	function(el,options)
+				init:	function(el,data)
 				{
 					//new array hypemerdia containers
 					this.hypermedia_containers = {}
 
-					this._set_hypermedia_containers()
+					this._set_hypermedia_containers(data)
 				}
 			,	' navegable': function(el,ev,data)
 				{	
@@ -34,7 +34,7 @@ steal(	'sigma/lib'
 					,	rel
 					=	data.element_action?data.element_action.data('link').rel:''
 
-					console.log(hc,rel,data.element_action.data('link'),this.hypermedia_containers)
+					//console.log(hc,rel,data.element_action.data('link'),this.hypermedia_containers)
 
 					if(!this._search_hypermedia_container(rel) && this.options.inicializable)
 					{
@@ -71,7 +71,7 @@ steal(	'sigma/lib'
 
 					if(data.links && data.element_action)
 					{
-						console.log("DATA BROWSE",data,rel)
+						//console.log("DATA BROWSE",data,rel)
 						can.trigger(
 							this.element
 						,	'browse'
@@ -84,32 +84,60 @@ steal(	'sigma/lib'
 						)
 					}
 				}
-			,	_set_hypermedia_containers: function()
+			,	_set_hypermedia_containers: function(data)
 				{
 					var	self
 					=	this
+					,	resource
+					=	undefined
+
+					//console.log("DATA _set_hypermedia_containers: ",data)
+
 					can.each(
 						this.options.containers
 					,	function(item, index)
 						{
-							if(self.options.inicializable || self.options.rel == index)
+							var 	item_aux
+							=	undefined
+							,	index_aux
+							=	0
+
+							resource = data.links.get(index)
+							if(!resource)
 							{
-								self._hypermedia_container_setup(item,index,self.options.sub_options)
+								item_aux
+								= 	_.find(
+										item.media_types
+									,	function(mit,mi)
+										{
+											index_aux = mi
+											return data.links.get(mi)
+										}
+									)
+								resource 
+								=	data.links.get(index_aux)	
+							}
+							resource.rel = index
+
+							if(self.options.inicializable && resource)
+							{
+								self._hypermedia_container_setup(
+									item_aux?item_aux:item
+								,	index
+								,	resource
+								)
 							}
 						}
 					)
 				}
-			,	_hypermedia_container_setup: function(item, index, sub_options)
+			,	_hypermedia_container_setup: function(item, index, resource)
 				{
+					//console.log("Arguments _hypermedia_container_setup: ", item, index, resource)
 					if(item)
 					{
-						var 	media 
-						= 	{}
-						,	hypermedia_container_new
+						var 	hypermedia_container_new
 						=	{}
 						,	slot
-						= 	undefined
-						,	media_type
 						= 	undefined
 
 						if(can.$('div#'+index+'').length==0)
@@ -123,42 +151,18 @@ steal(	'sigma/lib'
 						else
 							$element = can.$('div#'+index+'')
 
-						Sigma.HypermediaContainer(
-							'Sigma.' + can.capitalize(index)
-						)
-
-						if(item.media_types)
-						{
-							media = item.media_types
-							can.each(
-								item.media_types
-							,	function(item, inde)
-								{
-									if(item.inicializable)
-										media_type = inde
-								}	
-							)
-						}
-						else
-						{
-							media_type = index
-							media[index] = item
-						}
-
-						console.log(media, index, media_type)
-
 						if(this.options.inicializable)
 						{
-							slot = media[media_type].resource.fetch(
-								(sub_options[media_type])
-								?	sub_options[media_type].url
-								: 	media[media_type].url
-							,	media_type
-							)
+							slot = 	(resource instanceof Sigma.Model.HAL.Resource)
+								?	resource
+								: 	item.resource.fetch(
+										item.url
+									,	index
+									)
 						}
 							
 						hypermedia_container_new 
-							= 	this._install_element_hc(index,$element,media,slot)
+							= 	this._install_element_hc(index,$element,item,slot)
 
 						hypermedia_container_new.children = item.navegable_control != undefined
 								?	item.navegable_control
@@ -190,13 +194,22 @@ steal(	'sigma/lib'
 					?	this.hypermedia_containers[nelly]
 					: 	neri_gato
 				}
-			,	_install_element_hc: function(index,$element,media,slot)
+			,	_install_element_hc: function(index, $element, media, slot)
 				{
-					var 	options
+					//console.log("Arguments ",arguments)
+					var 	media_aux
+					=	{}
+					media_aux[index] = media
+					var	options
 					=	{
-							media_types: media
+							media_types: media[index]?media:media_aux
 						,	id: can.capitalize(index)
 						}
+
+					Sigma.HypermediaContainer(
+						'Sigma.' + can.capitalize(index)
+					)
+					
 					return new Sigma[can.capitalize(index)](
 						$element
 					,	slot

@@ -3,8 +3,6 @@ steal(
 ,	'sigma/lib/hypermedia.js'
 ,	'sigma/util'
 ,	'sigma/controls/topbar'
-,	'sigma/app/acl_manager/models/menus.js'
-,	'sigma/app/acl_manager/models/contents.js'
 ).then(
 	function() {
 		Sigma.HypermediaControl(
@@ -41,8 +39,7 @@ steal(
 										{
 											'home':
 											{
-												Handler: Sigma.Control.ACL_Manager.Home
-											,	inicializable: true
+												Handler: Sigma.HypermediaControl //Sigma.Control.ACL_Manager.Home
 											,	options:
 												{
 													target: 'Content'
@@ -66,7 +63,7 @@ steal(
 										Handler:	Sigma.HypermediaControl
 									,	options:
 										{
-											view:	'//sigma/app/acl_manager/views/main/topbar.mustache'
+											view:	'//sigma/app/acl_manager/views/main/footer.mustache'
 										}
 									}
 								}
