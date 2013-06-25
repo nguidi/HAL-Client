@@ -58,7 +58,6 @@ steal(
 				}
 			,	update:	function(options)
 				{
-					this._super(options)
 					var	data
 					=	this.options.slot
 					if	(data && data.isComputed)
@@ -135,7 +134,6 @@ steal(
 				}
 			,	_render_content: function(data_to_render)
 				{
-					console.log(this.element)
 					can.append(
 							this.element
 						,	can.view(

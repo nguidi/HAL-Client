@@ -60,7 +60,6 @@ steal(
 				}
 			,	update:	function(options)
 				{
-					this._super(options)
 					var	resource=this.options.slot
 					if(resource && resource.isComputed)
 						resource=resource()
@@ -188,11 +187,10 @@ steal(
 				{
 					console.log(value)
 					if(!value)
-					return	this.options.resource
+						return	this.options.resource
+					this.options.slot=value
 					this.update(
-						{
-							slot: value
-						}
+						this.options
 					)
 				}
 			,	_set_deferred_slot:function(def, data)

@@ -448,7 +448,7 @@ steal(
 									&&	_.has(embedded_data._embedded,'collection')
 									)	?	Sigma.Model.HAL.Collection
 										:	Sigma.Model.HAL.Resource
-							console.log(embedded_model_type)
+
 							instance.embedded.attr(
 								relation
 							,	embedded_model_type
