@@ -54,11 +54,11 @@ steal(
 						throw 'Control must have an "container" property'
 					if(!this.options.target)
 						this.options.target=this.options.container
-					this.update()
+					this.update(options)
 				}
 			,	update:	function(options)
 				{
-					this._super(this.options)
+					this._super(options)
 					var	data
 					=	this.options.slot
 					if	(data && data.isComputed)
@@ -91,7 +91,7 @@ steal(
 						else
 						{
 							this.set_data(data)
-							this.on()
+							// this.on()
 							this.clean_rendered()
 							this._render_content(this.options.data)
 						}
@@ -135,6 +135,7 @@ steal(
 				}
 			,	_render_content: function(data_to_render)
 				{
+					console.log(this.element)
 					can.append(
 							this.element
 						,	can.view(

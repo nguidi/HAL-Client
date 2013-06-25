@@ -1,0 +1,33 @@
+<table class="table table-bordered">
+	<caption>Objetos bajo Control</caption>
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Objeto</th>
+			<th>Relaciones</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#acos}}
+		<tr>
+			<td>{{id}}</td>
+			<td>
+				<a {{data 'aco'}}>
+					{{aco}}
+				</a>
+			</td>
+			<td>
+				<ul>
+					{{#assocs}}
+					<li>
+						<a {{data 'assoc'}}>
+							{{aco}}
+						</a>
+					</li>
+					{{/assocs}}
+				<ul>
+			</td>
+		</tr>
+		{{/acos}}
+	</tbody>
+</table>

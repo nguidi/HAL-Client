@@ -14,5 +14,11 @@ steal(
 		,	{}
 		,	{}
 		)
+
+		Sigma.Model.HAL.Resource(
+			'Sigma.Model.HAL.Home'
+		,	{}
+		,	{}
+		)
 	}
 )

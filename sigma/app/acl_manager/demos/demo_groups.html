@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta name="description" content="">
 	<meta name="author" content="Sigma-IT">
-	<title>ACL Manager/Permissions</title>
+	<title>ACL Manager/Groups</title>
 	</head>
 	<body>
 	</body>
@@ -28,6 +28,7 @@
 	).then(
 		'sigma/app/acl_manager/fixtures/fixtures.js'
 	,	'sigma/app/acl_manager/models/models.js'
+	,	'sigma/app/acl_manager/controls/groups.js'
 	).then(
 		function()
 		{
@@ -40,10 +41,10 @@
 						{
 							'init':
 							{
-								Handler:	Sigma.HypermediaControl
+								Handler:	Sigma.Control.ACL_Manager.Groups
 							,	options:
 								{
-									view:	'//sigma/app/acl_manager/views/permissions/init.mustache'
+									view:	'//sigma/app/acl_manager/views/groups/init.mustache'
 								,	target:	'Init'
 								}
 							}
@@ -58,7 +59,7 @@
 				$('body')
 			,	{
 					id:		'Init'
-				,	slot:	Sigma.Model.HAL.Permissions.fetch('/api/data/permissions','init')
+				,	slot:	Sigma.Model.HAL.Groups.fetch('/api/data/groups','init')
 				}
 			)
 		}

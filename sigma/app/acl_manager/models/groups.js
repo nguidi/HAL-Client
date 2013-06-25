@@ -4,10 +4,10 @@ steal(
 	function()
 	{
 		Sigma.Model.HAL.Collection(
-			'Sigma.Model.HAL.ACOS'
+			'Sigma.Model.HAL.Groups'
 		,	{}
 		,	{
-				acos: function()
+				groups: function()
 				{
 					return	this.getCollection()
 				}
@@ -15,13 +15,13 @@ steal(
 		)
 
 		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.ACO'
+			'Sigma.Model.HAL.Group'
 		,	{}
 		,	{
-				assocs: function()
+				permissions: function()
 				{
-					return	this.links.get('assocs')
-						&&	this.links.get('assocs').getCollection()
+					return	this.links.get('permissions')
+						&&	this.links.get('permissions').getCollection()
 				}
 			}
 		)

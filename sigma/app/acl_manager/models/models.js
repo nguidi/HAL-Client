@@ -6,4 +6,8 @@ steal(
 ,	'./access.js'
 ,	'./menus.js'
 ,	'./contents.js'
+,	'./groups.js'
+,	'./acos.js'
+,	'./footers.js'
+,	'./contents.js'
 )

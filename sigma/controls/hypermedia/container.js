@@ -55,7 +55,7 @@ steal(
 					if(!options.id)
 						throw 'Container must have an "id" property'
 					this.constructor.registerContainer(this)
-					this.update()
+					this.update(options)
 
 				}
 			,	update:	function(options)
@@ -78,7 +78,7 @@ steal(
 						{
 							this.current_control=false
 							this.set_resource(resource)
-							this.on()
+							// this.on()
 							//this.proxy(this.options.render.content,'')
 							this.render_resource(this.options.resource)
 						}
@@ -86,7 +86,7 @@ steal(
 						{
 							this.current_control=false
 							this.set_resource(resource)
-							this.on()
+							// this.on()
 							//this.proxy(this.options.render.content,'')
 							this.proxy(this.options.render.empty,'')
 						}
@@ -108,7 +108,6 @@ steal(
 						if	(resource)
 							throw	'Wrong resource type!!!'
 					}
-					console.log(resource)
 				}
 			,	getRelationHandler: function(resource)
 				{
@@ -136,6 +135,7 @@ steal(
 				}
 			,	render_resource: function(resource_to_render)
 				{
+					console.log(resource_to_render)
 					var	self = this
 					,	self_rel = this.getRelationHandler(resource_to_render)
 					self_rel = this.getSubRelationHandler(self_rel,resource_to_render.rel)
@@ -186,6 +186,7 @@ steal(
 				}
 			,	slot: function(value)
 				{
+					console.log(value)
 					if(!value)
 					return	this.options.resource
 					this.update(

@@ -57,5 +57,11 @@ steal(
 				}
 			}
 		)
+
+		Sigma.Model.HAL.Menu(
+			'Sigma.Model.HAL.Topbar'
+		,	{}
+		,	{}
+		)
 	}
 )

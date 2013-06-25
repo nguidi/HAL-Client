@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta name="description" content="">
 	<meta name="author" content="Sigma-IT">
-	<title>ACL Manager/Permissions</title>
+	<title>ACL Manager/ACOS</title>
 	</head>
 	<body>
 	</body>
@@ -43,7 +43,7 @@
 								Handler:	Sigma.HypermediaControl
 							,	options:
 								{
-									view:	'//sigma/app/acl_manager/views/permissions/init.mustache'
+									view:	'//sigma/app/acl_manager/views/acos/init.mustache'
 								,	target:	'Init'
 								}
 							}
@@ -58,7 +58,7 @@
 				$('body')
 			,	{
 					id:		'Init'
-				,	slot:	Sigma.Model.HAL.Permissions.fetch('/api/data/permissions','init')
+				,	slot:	Sigma.Model.HAL.ACOS.fetch('/api/data/acos','init')
 				}
 			)
 		}

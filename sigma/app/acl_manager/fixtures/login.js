@@ -1,6 +1,7 @@
 steal(
 	'can/util/fixture'
 ,	'sigma/util/hal_builder.js'
+,	'./fixtures_data.js'
 ,	function()
 	{
 		can.fixture(
@@ -89,25 +90,28 @@ steal(
 			'POST /api/signin'
 		,	function(original)
 			{
-				return	_.isEqual(
-							_.filter(
-								original.data.query
-							,	function(query)
-								{
-									return	(query.key == 'username')
-											?	query.value != 'nguidi'
-											:	query.value != '12345'
-								}
-							).length
-						,	1
-						)	?	new	HAL_Resource(
-										{
-											id: 1
-										,	profile: 1
-										,	username: 'nguidi'
-										,	password: '12345'
-										}
-									,	'/api/data/users/1'
+				var user
+				=	_.find(
+						users
+					,	function(u)
+						{
+							return	_.isEqual(
+										_.filter(
+											original.data.query
+										,	function(q)
+											{
+												return	_.isEqual(u[q.key],q.value) 
+											}
+										).length
+									,	original.data.query.length
+									)
+						}
+					)
+
+				return	_.isDefined(user)
+						?	new	HAL_Resource(
+										user
+									,	'/api/data/users/'+user.id
 									)
 									.curies('show')
 									.link('show:topbar','/users/1/topbar')

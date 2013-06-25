@@ -1,0 +1,38 @@
+<table class="table table-bordered">
+	<caption>Grupos</caption>
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Grupo</th>
+			<th>Permisos Generales</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#groups}}
+		<tr>
+			<td>{{id}}</td>
+			<td>
+				<a id="{{id}}" class="editable" {{data 'group'}}>
+					{{group}}
+				</a>
+			</td>
+			<td>
+				<ul>
+					{{#permissions}}
+					<li>
+						<a id="{{id}}" {{data 'permission'}}>
+							{{permission}}
+						</a>
+					</li>
+					{{/permissions}}
+				<ul>
+			</td>
+			<td>
+				<a>
+					<i class="icon-remove"></i>
+					</a>
+			</td>
+		</tr>
+		{{/groups}}
+	</tbody>
+</table>
