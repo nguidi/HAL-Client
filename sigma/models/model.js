@@ -335,7 +335,7 @@ steal(
 																		Sigma.Model.HAL.link_by_type(_.first(relation.split(':')))
 																	||	Sigma.Model.HAL
 																	).Link(item)
-																		.attr('rel',relation)
+																		.attr('rel',_.last(relation.split(':')))
 													}
 												)
 											)
@@ -343,11 +343,21 @@ steal(
 												Sigma.Model.HAL.link_by_type(_.first(relation.split(':')))
 											||	Sigma.Model.HAL
 											).Link(link)
+												.attr('rel',_.last(relation.split(':')))
 								)
 							self[relation].parent
 							=	self
 						}
 					)
+				}
+			,	get_link_by_rel: function(rel)
+				{
+					return _.find(
+							this
+						,	function(i){
+								return i.rel == rel
+							}
+						)
 				}
 			,	get:function(relation,name)
 				{
