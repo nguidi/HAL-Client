@@ -105,23 +105,9 @@ steal(
 		Sigma.Model.HAL.Link(
 			'Sigma.Model.HAL.Relation.Link'
 		,	{
-				url: function(relation)
+				url: function()
 				{
-					return	uritemplate(
-								_.find(
-									this.parent.curies.attr()
-								,	function(curie)
-									{
-										return	curie.name	==	_.first(relation.split(':'))
-									}
-								).href
-							).expand(
-								{
-									model:	this.attr('href').split('/')[1]
-								,	id:		this.attr('href').split('/')[2]
-								,	assoc:	this.attr('href').split('/')[3]
-								}
-							)
+					return 	this.attr('href')
 				}
 			}
 		)
@@ -136,6 +122,8 @@ steal(
 			,	resolve: function()
 				{
 					return	this.parent.fetch(this.url(),this.rel)
+					/*console.log(this._super())
+					return	this.parent.fetch(this.url(),this.rel)*/
 				}
 			}
 		)
@@ -233,12 +221,12 @@ steal(
 				}
 			,	resolve: function(data)
 				{
-					return	this.parent.find(this.url(),data,this.rel.split(':')[1])
+					return	this.parent.find(this.url(),data,this.rel)
 				}
 			,	url: function()
 				{
 					var	relation
-					=	this.rel
+					=	this.curie
 					return	uritemplate(
 								_.find(
 									this.parent.curies.attr()
@@ -336,6 +324,7 @@ steal(
 																	||	Sigma.Model.HAL
 																	).Link(item)
 																		.attr('rel',_.last(relation.split(':')))
+																		.attr('curie',_.first(relation.split(':')))
 													}
 												)
 											)
@@ -344,26 +333,32 @@ steal(
 											||	Sigma.Model.HAL
 											).Link(link)
 												.attr('rel',_.last(relation.split(':')))
+												.attr('curie',_.first(relation.split(':')))
 								)
 							self[relation].parent
 							=	self
 						}
 					)
 				}
-			,	get_link_by_rel: function(rel)
+			,	get_link_by_rel: function(relation)
 				{
-					return _.find(
-							this
-						,	function(i){
-								return i.rel == rel
-							}
-						)
+					var	res
+					=	undefined
+
+					can.each(
+						this
+					,	function(it, ind){
+							if(it && it.rel == relation)
+								res = it
+						}
+					)
+					return	res
 				}
 			,	get:function(relation,name)
 				{
 					var	stored
 					=	this.resource.constructor.store[this.resource.id]
-
+					
 					if	(_.isEqual(relation,"self"))
 						return	stored
 					
@@ -372,13 +367,13 @@ steal(
 			,	resource_by_rel: function(rel)
 				{
 					return	(
-								_.isEqual(rel,"self")
-								?	this.resource.constructor
-								:	(
-										Sigma.Model.HAL.model_by_rel(rel)
-									||	Sigma.Model.HAL.Resource
-									)
-							)
+							_.isEqual(rel,"self")
+							?	this.resource.constructor
+							:	(
+									Sigma.Model.HAL.model_by_rel(rel)
+								||	Sigma.Model.HAL.Resource
+								)
+						)
 				}
 			,	fetch: function(url,rel)
 				{
