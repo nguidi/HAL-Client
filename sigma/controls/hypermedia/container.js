@@ -58,20 +58,30 @@ steal(
 					this.update(options)
 
 				}
-			,	update:	function(options)
+			,	update:	function(options,handler_options)
 				{
 					var	resource=this.options.slot
 					if(resource && resource.isComputed)
 						resource=resource()
-					this._update(resource)
+					this._update(resource,handler_options)
 				}
-			,	_update:function(resource)
+			,	_update:function(resource,handler_options)
 				{
+					var self
+					=	this
 					if(can.isDeferred(resource))
 					{
 						this.proxy(this.options.render.loading,'')
-						resource.done(this.proxy(this._update))
-						resource.fail(this.proxy(this.options.render.fail,''))
+						resource
+							.then(
+								function(resolved)
+								{
+									self._update(resolved,handler_options)
+								}
+							,	this.proxy(this.options.render.fail,'')
+							)
+						// resource.done(this.proxy(this._update))
+						// resource.fail(this.proxy(this.options.render.fail,''))
 					}
 					else	if(resource)
 						{
@@ -79,7 +89,7 @@ steal(
 							this.set_resource(resource)
 							// this.on()
 							//this.proxy(this.options.render.content,'')
-							this.render_resource(this.options.resource)
+							this.render_resource(this.options.resource,handler_options)
 						}
 						else
 						{
@@ -132,7 +142,7 @@ steal(
 					return	relation_found[this.options.id.toLowerCase().split('_'+resource_rel,1)[0]]
 						||	undefined
 				}
-			,	render_resource: function(resource_to_render)
+			,	render_resource: function(resource_to_render,handler_options)
 				{
 					console.log(resource_to_render)
 					var	self = this
@@ -141,13 +151,13 @@ steal(
 						?can.extend(self_rel,this.getSubRelationHandler(self_rel,resource_to_render.rel))
 						:self_rel
 					if(this.container_element)
-						this.container_element.remove()
+						this.container_element.unbind().remove()
 					this.container_element = $('<div>').appendTo(this.element)
 					if(self_rel.options)
 						new	self_rel.Handler(
 								this.container_element
 							,	can.extend(
-									self_rel.options||{}
+									_.extend(self_rel.options||{},handler_options||{})
 								,	{
 										container: self
 									,	target: self_rel.options.target
@@ -156,7 +166,7 @@ steal(
 								)
 							)
 				}
-			,	browse: function(link)
+			,	browse: function(link,options)
 				{
 					var	resolved
 					=	link.get()
@@ -170,6 +180,7 @@ steal(
 								return	raw
 								}
 							)
+						,	options
 						)
 					else
 						this.slot(
@@ -180,42 +191,18 @@ steal(
 											||	'root'
 									}
 								)
+							,	options
 							)
 
 				}
-			,	slot: function(value)
+			,	slot: function(value,options)
 				{
-					console.log(value)
 					if(!value)
 						return	this.options.resource
-					this.options.slot=value
+					this.options.slot = value
 					this.update(
 						this.options
-					)
-				}
-			,	_set_deferred_slot:function(def, data)
-				{
-					def
-					.pipe(
-						function(raw)
-						{	
-							raw.rel = data.rel
-							return	raw
-						}
-					)
-					.then(
-						function(result)
-						{
-							if(container.slot().links[data.storage])
-							{
-								container.slot().embedded
-								.attr(data.storage,result)
-							}
-							else
-							{
-								container.slot(result)
-							}
-						}
+					,	options
 					)
 				}
 			,	'{slot} change': function(target, ev, newVal)
@@ -240,16 +227,13 @@ steal(
 						container
 							.browse(
 								args.link
+							,	args.options
 							)
-					else if	(args.data instanceof Sigma.Model.HAL.Resource || args.data instanceof Sigma.Model.HAL.Collection)
+					else if	(args.data instanceof Sigma.Model.HAL.Resource || args.data instanceof Sigma.Model.HAL.Collection || can.isDeferred(args.data))
 						container
 							.slot(
 								args.data
-							)
-					else if	(can.isDeferred(args.data))
-						container
-							._set_deferred_slot(
-								args.data
+							,	args.options
 							)
 					else
 						container
@@ -259,6 +243,7 @@ steal(
 								,	data.rel
 								,	data.name
 								)
+							,	args.options
 							)
 				}
 			}
