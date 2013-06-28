@@ -5,6 +5,40 @@ steal(
 ,	function()
 	{
 		can.fixture(
+			'POST /api/data/groups'
+		,	function(original)
+			{
+				var g
+				=	new Object()
+				switch(original.data.action)
+				{
+					case "create":
+						g
+						=	_.object(
+								['id','group']
+							,	[groups.length+1,_.find(original.data.query,function(q){return q.key=='group'}).value]
+							)
+						groups.push(g)
+						break;
+					case "filter":
+						console.log("NOT")
+						break;
+					default:
+						console.log("NOT")
+						break;
+				}
+				return	new	HAL_Resource(
+								g
+							,	'/api/data/groups/'+g.id
+							)
+							.curies('show')
+							.link('show:permissions','groups/'+g.id+'/permissions')
+							.toJSON()
+
+			}
+		)
+
+		can.fixture(
 			'GET /api/data/groups'
 		,	function()
 			{				
@@ -60,6 +94,9 @@ steal(
 								)
 							,	'/api/data/groups'
 							)
+							.curies(['show','create'])
+							.link('show:permissions','/api/data/permissions')
+							.link('create:groups','api/adata/groups')
 							.toJSON()
 			}
 		)

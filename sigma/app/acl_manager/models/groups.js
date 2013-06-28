@@ -11,6 +11,14 @@ steal(
 				{
 					return	this.getCollection()
 				}
+			,	add: function()
+				{
+					return	this.links.attr('show:permissions')
+				}
+			,	create_groups: function()
+				{
+					return	this.links.attr('create:groups')
+				}
 			}
 		)
 

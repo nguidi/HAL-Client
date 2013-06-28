@@ -439,7 +439,7 @@ steal(
 					=	new	Sigma.Model.HAL.Links(links,instance)
 					
 					instance.embedded
-					=	new can.Observe()
+					=	new 	can.Observe()
 
 					can.each(
 						embedded
@@ -453,6 +453,8 @@ steal(
 									&&	_.has(embedded_data._embedded,'collection')
 									)	?	Sigma.Model.HAL.Collection
 										:	Sigma.Model.HAL.Resource
+
+							console.log(embedded_data, embedded)
 
 							instance.embedded.attr(
 								relation
@@ -642,7 +644,6 @@ steal(
 		,	{
 				model: function(data)
 				{
-					console.log(data)
 					data.id
 					=	(
 							data.id
