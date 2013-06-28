@@ -80,25 +80,18 @@ steal(
 		can.getFormData
 		=	function(form)
 			{
-				var	raw_data
-				=	can.deparam(form.serialize())
-				,	toReturn
-				=	new Array()
-				can.each(
-					raw_data
-				,	function(raw_value,raw_key)
-					{
-						if	(raw_value != "Seleccione una opción" && !_.isEmpty(raw_value))
-							toReturn
-								.push(
-									{
-										key:	raw_key
-									,	value:	raw_value
-									}
-								)
-					}
-				)
-				return toReturn
+				return	{
+							query:	can.map(
+										can.deparam(form.serialize())
+									,	function(raw_value,raw_key)
+										{
+											return	_.object(
+														['key','value']
+													,	[raw_key,raw_value]
+													)
+										}
+									)
+						}
 			}
 		can.parseFormData
 		=	function(data)
@@ -135,6 +128,17 @@ steal(
 			{
 				return	_.has(hal.attr(),'code','status')
 					&&	_.str.include(hal.links.attr('self.href'),'status_codes')
+			}
+		can.isCollection
+		=	function(resource)
+			{
+				return	_.has(resource,'_embedded')
+					&&	_.has(resource._embedded,'collection')
+			}
+		can.isResource
+		=	function(resource)
+			{
+				return	!can.isCollection(resource)
 			}
 	}
 )

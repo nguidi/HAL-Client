@@ -9,7 +9,9 @@
 	<title>ACL Manager/Groups</title>
 	</head>
 	<body>
+		<div id="groups" class="container"></div>
 	</body>
+	<div id="modal"></div>
 </html>
 <script type='text/javascript' src="../../../../steal/steal.js"></script>
 <style type="text/css">
@@ -25,10 +27,12 @@
 	,	'sigma/lib'
 	,	'sigma/lib/hypermedia.js'
 	,	'sigma/util'
+	,	'sigma/controls/modal'
 	).then(
-		'sigma/app/acl_manager/fixtures/fixtures.js'
-	,	'sigma/app/acl_manager/models/models.js'
+		'sigma/app/acl_manager/fixtures'
+	,	'sigma/app/acl_manager/models'
 	,	'sigma/app/acl_manager/controls/groups.js'
+	,	'sigma/app/acl_manager/styles'
 	).then(
 		function()
 		{
@@ -45,6 +49,8 @@
 							,	options:
 								{
 									view:	'//sigma/app/acl_manager/views/groups/init.mustache'
+								,	view_modal: '//sigma/app/acl_manager/views/groups/modal.mustache'
+								,	modal: 	'Modal'
 								,	target:	'Init'
 								}
 							}
@@ -55,11 +61,37 @@
 				}
 			)
 
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.Modal'
+			,	{
+					defaults:
+					{
+						default_media_type:
+						{
+							Handler:	Sigma.Control.Modal
+						,	options:
+							{
+								target:	'Modal'
+							}
+						}
+					}
+				}
+			,	{
+				}
+			)
+
 			new Sigma.Hypermedia.Content(
-				$('body')
+				$('#groups')
 			,	{
 					id:		'Init'
 				,	slot:	Sigma.Model.HAL.Groups.fetch('/api/data/groups','init')
+				}
+			)
+
+			new Sigma.Hypermedia.Modal(
+				$('#modal')
+			,	{
+					id:		'Modal'
 				}
 			)
 		}
