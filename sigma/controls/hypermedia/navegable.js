@@ -27,58 +27,33 @@ steal(	'sigma/lib'
 					ev.stopPropagation()
 					var 	hc 
 					= 	this.hypermedia_containers[can.underscore(data.target)]
-					,	link
-					=	{}
-					,	sub_options
-					= 	{}
-					,	rel
-					=	data.element_action?data.element_action.data('link').rel:''
 
-					//console.log(hc,rel,data.element_action.data('link'),this.hypermedia_containers)
+					//console.log(hc,this.hypermedia_containers,data)
 
-					if(!this._search_hypermedia_container(rel) && this.options.inicializable)
+					if(	!this._search_hypermedia_container(data.target) 
+					&& 	hc 
+					&& 	!hc.children.fullName
+					)
 					{
-						if(data.element_action)
-						{	
-							link[rel] 
-							= 	{
-									url: data.element_action.data('link').links.self.href
-								}
-							sub_options = {sub_options: link, rel: rel}
-						}
-						if(hc && hc.children.fullName != undefined)
-						{
-							hc.children = new hc.children(hc.element,can.extend(data,sub_options))
-							can.each(
-								data.sub_options
-							,	function(item,index){
-									t = hc.children.options.containers[index]
-									hc.children.children = (t && t.navegable_control)
-										? t.navegable_control
-										: {}
-								}
-							)
-						}
-						/*else
-						{
-							hc.children._hypermedia_container_setup(
-								this._search_media_type(hc,rel)
-							,	rel
-							,	sub_options.sub_options
-							)
-						}*/
+						hc.children = new hc.children(hc.element,data)
+						can.each(
+							data.sub_options
+						,	function(item,index){
+								t = hc.children.options.containers[index]
+								hc.children.children = (t && t.navegable_control)
+									? t.navegable_control
+									: {}
+							}
+						)
 					}
 
-					if(data.links && data.element_action)
+					if(data.links && data.target)
 					{
-						//console.log("DATA BROWSE",data,rel)
 						can.trigger(
 							this.element
 						,	'browse'
 						,	{
-								links: data.links
-							,	rel: rel
-							,	name: data.element_action.data('link').name
+								link: data.links
 							,	target: data.target
 							}
 						)
@@ -90,8 +65,6 @@ steal(	'sigma/lib'
 					=	this
 					,	resource
 					=	undefined
-
-					//console.log("DATA _set_hypermedia_containers: ",data)
 
 					can.each(
 						this.options.containers
@@ -115,7 +88,11 @@ steal(	'sigma/lib'
 										}
 									)
 								resource 
-								=	data.links.get(index_aux)	
+								=	data.links.get(index_aux)
+								can.extend(
+									item_aux
+								, 	{media_types:item.media_types}
+								)	
 							}
 							resource.rel = index
 
@@ -125,6 +102,7 @@ steal(	'sigma/lib'
 									item_aux?item_aux:item
 								,	index
 								,	resource
+								//,	item.media_types
 								)
 							}
 						}
@@ -175,34 +153,40 @@ steal(	'sigma/lib'
 					else
 						throw "HYPERMEDIA CONTAINER NOT DEFINED"
 				}
-			,	_search_hypermedia_container: function(nelly)
+			,	_search_hypermedia_container: function(data_target)
 				{
 					var 	neri_gato
 					=	undefined
+					,	container
+					=	can.underscore(data_target)
 
 					can.each(
 						this.hypermedia_containers
 					,	function(item,index)
 						{
 							hc = item.children.hypermedia_containers
-							if(hc && hc[nelly])
-								neri_gato = hc[nelly]
+							if(hc && hc[container])
+								neri_gato = hc[container]
 						}
 					)
 
-					return 	this.hypermedia_containers[nelly]
-					?	this.hypermedia_containers[nelly]
+					return 	this.hypermedia_containers[container]
+					?	this.hypermedia_containers[container]
 					: 	neri_gato
 				}
 			,	_install_element_hc: function(index, $element, media, slot)
 				{
-					//console.log("Arguments ",arguments)
 					var 	media_aux
 					=	{}
 					media_aux[index] = media
 					var	options
 					=	{
-							media_types: media[index]?media:media_aux
+							media_types: can.extend(
+									media[index]
+									?	media
+									: 	media_aux
+								,	media.media_types
+								)
 						,	id: can.capitalize(index)
 						}
 

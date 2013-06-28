@@ -50,6 +50,8 @@ steal(
 										}
 									,	'/api/data/options/1'
 									)
+									.curies('show')
+									.link('show:content:aros','/api/data/aros')
 							,	new	HAL_Resource(
 										{
 											id: 2
@@ -57,13 +59,26 @@ steal(
 										}
 									,	'/api/data/options/2'
 									)
+									.curies('show')
+									.link('show:content:acos','/api/data/acos')
 							,	new	HAL_Resource(
 										{
 											id: 3
-										,	title: "Control"
+										,	title: "Grupos"
 										}
 									,	'/api/data/options/3'
 									)
+									.curies('show')
+									.link('show:content:grupos','/api/data/groups')
+							,	new	HAL_Resource(
+										{
+											id: 4
+										,	title: "Asignaciones"
+										}
+									,	'/api/data/options/4'
+									)
+									.curies('show')
+									.link('show:content:asignacion','/api/data/asignacions')
 							]
 						,	'/api/data/menus/1/options'
 						)

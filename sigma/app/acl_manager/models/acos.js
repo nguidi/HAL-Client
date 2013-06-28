@@ -4,7 +4,7 @@ steal(
 	function()
 	{
 		Sigma.Model.HAL.Collection(
-			'Sigma.Model.HAL.ACOS'
+			'Sigma.Model.HAL.Acos'
 		,	{}
 		,	{
 				acos: function()
@@ -15,7 +15,7 @@ steal(
 		)
 
 		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.ACO'
+			'Sigma.Model.HAL.Aco'
 		,	{}
 		,	{
 				assocs: function()

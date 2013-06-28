@@ -55,6 +55,11 @@ steal(
 					return	this.links.get('submenus')
 						&&	this.links.get('submenus').getCollection()
 				}
+			,	link: function()
+				{
+					return	this.links.get_link_by_rel(can.underscore(this.title))
+					||	this.links.get_link_by_rel('self')
+				}
 			}
 		)
 

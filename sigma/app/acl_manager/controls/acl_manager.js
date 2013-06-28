@@ -3,6 +3,7 @@ steal(
 ,	'sigma/lib/hypermedia.js'
 ,	'sigma/util'
 ,	'sigma/controls/topbar'
+,	'sigma/app/acl_manager/controls/groups.js'
 ).then(
 	function() {
 		Sigma.HypermediaControl(
@@ -46,14 +47,40 @@ steal(
 												,	view: '//sigma/app/acl_manager/views/main/init.mustache'
 												}
 											}
-										,	'option_2':
+										,	'aros':
 											{
 												Handler: Sigma.HypermediaControl
-											,	resource: Sigma.Model.HAL.Content
 											,	options:
 												{
 													target: 'Content'
-												,	view_home: '//sigma/app/acl_manager/views/main/init.mustache'
+												,	view: '//sigma/app/acl_manager/views/main/init.mustache'
+												}
+											}
+										,	'acos':
+											{
+												Handler: Sigma.HypermediaControl
+											,	options:
+												{
+													target: 'Content'
+												,	view:	'//sigma/app/acl_manager/views/acos/init.mustache'
+												}
+											}
+										,	'grupos':
+											{
+												Handler: Sigma.Control.ACL_Manager.Groups
+											,	options:
+												{
+													target: 'Content'
+												,	view: '//sigma/app/acl_manager/views/groups/init.mustache'
+												}
+											}
+										,	'asignacion':
+											{
+												Handler: Sigma.HypermediaControl
+											,	options:
+												{
+													target: 'Content'
+												,	view: '//sigma/app/acl_manager/views/main/init.mustache'
 												}
 											}
 										} 

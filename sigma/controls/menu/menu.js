@@ -34,15 +34,15 @@ steal(
 
 			,	'.browseable click': function(el, ev)
 				{
-					//console.log("TRIGGER ",this.options.target)
+					console.log(el.data('link'))
+
 					if (this.toggleActive(el.is('li') ? el : el.parent('li')))
 						can.trigger(
 							this.element
 						,	'navegable'
 						,	{
 								target: this.options.target
-							,	element_action: el
-							,	links: this.options.slot.links
+							,	links: el.data('link')
 							}
 						)
 				}

@@ -51,7 +51,7 @@ steal(
 		,	{
 				init:	function(el,options)
 				{
-					console.log("arguments", arguments)
+					//console.log("arguments", arguments)
 					if(!options.id)
 						throw 'Container must have an "id" property'
 					this.constructor.registerContainer(this)
@@ -120,6 +120,7 @@ steal(
 				}
 			,	getRelationHandler: function(resource)
 				{
+					console.log(this.options.media_types)
 					return	_.find(
 								this.options.media_types
 							,	function(data,rel)
@@ -144,7 +145,7 @@ steal(
 				}
 			,	render_resource: function(resource_to_render,handler_options)
 				{
-					console.log(resource_to_render)
+					//console.log(resource_to_render)
 					var	self = this
 					,	self_rel = this.getRelationHandler(resource_to_render)
 					self_rel = this.getSubRelationHandler(self_rel,resource_to_render.rel)
@@ -169,7 +170,8 @@ steal(
 			,	browse: function(link,options)
 				{
 					var	resolved
-					=	link.get()
+					=	link.get() || link.resolve()
+
 					if	(can.isDeferred(resolved))		
 						this.slot(
 							resolved
@@ -187,8 +189,7 @@ steal(
 								_.extend(
 									resolved
 								,	{
-										rel:	link.rel
-											||	'root'
+										rel:	link.rel || 'root'
 									}
 								)
 							,	options
@@ -212,8 +213,8 @@ steal(
 				}
 			,	' browse': function(el,ev,args)
 				{
-					/*console.log("this constructor: ",this)
-					A = this*/
+					//console.log("this constructor: ",args)
+					//A = this
 					ev.stopPropagation()
 					var	container
 					=	this.constructor

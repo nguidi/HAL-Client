@@ -642,6 +642,13 @@ steal(
 		,	{
 				model: function(data)
 				{
+					console.log(data)
+					data.id
+					=	(
+							data.id
+						||	parseUri(data._links.self.href).path.replace(/\//g,'_')
+						)
+
 					var	instance
 					=	this._super(data)
 					,	embedded_model_type
@@ -651,11 +658,6 @@ steal(
 						?	'Resource'
 						:	String(_.initial(instance.constructor.shortName,1)).replace(/,/g,'')
 					
-					instance.id
-					=	(
-							data.id
-						||	parseUri(data._links.self.href).path.replace(/\//g,'_')
-						)
 
 					instance.links
 					=	new	Sigma.Model.HAL.Links(data._links,instance)
