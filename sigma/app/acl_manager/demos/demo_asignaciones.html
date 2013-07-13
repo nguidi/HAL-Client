@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta name="description" content="">
 	<meta name="author" content="Sigma-IT">
-	<title>ACL Manager/ACOS</title>
+	<title>ACL Manager/Asignaciones</title>
 	</head>
 	<body>
 	</body>
@@ -28,23 +28,29 @@
 	).then(
 		'sigma/app/acl_manager/fixtures/fixtures.js'
 	,	'sigma/app/acl_manager/models/models.js'
+	,	'sigma/app/acl_manager/controls/assignations.js'
+	,	'sigma/app/acl_manager/controls/navegables/assignations.js'
 	).then(
 		function()
 		{
-			Sigma.HypermediaContainer(
+			Sigma.HypermediaNavegableControl(
 				'Sigma.Hypermedia.Content'
 			,	{
 					defaults:
 					{
-						media_types:
+						containers:
 						{
-							'init':
+							'Content':
 							{
-								Handler:	Sigma.HypermediaControl
+								Handler: 	Sigma.Control.Assignations
+							,	url: 		'/api/data/groups'
+							,	resource: 	 Sigma.Model.HAL.Groups
 							,	options:
 								{
-									view:	'//sigma/app/acl_manager/views/acos/init.mustache'
-								,	target:	'Init'
+									view:	'//sigma/app/acl_manager/views/assignations/init.mustache'
+								,	target:	'Content'
+								,	acos: '//sigma/app/acl_manager/views/assignations/acos.mustache'
+								,	assocs: '//sigma/app/acl_manager/views/assignations/asociaciones.mustache'
 								}
 							}
 						}
@@ -54,13 +60,15 @@
 				}
 			)
 
-			new Sigma.Hypermedia.Content(
+			new Sigma.Hypermedia.Content($('body'))
+
+			/*new Sigma.Hypermedia.Content(
 				$('body')
 			,	{
-					id:		'Init'
-				,	slot:	Sigma.Model.HAL.Groups.fetch('/api/data/groups','init')
+					id:	'Content'
+				,	slot:	Sigma.Model.HAL.Groups.fetch('/api/data/groups','content')
 				}
-			)
+			)*/
 		}
 	)
 </script>

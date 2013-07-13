@@ -1,0 +1,38 @@
+<table class="table table-bordered">
+	<thead>
+		<th>
+			Nombre de la asociación
+		</th>
+		<th>
+			Permisos
+		</th>
+	</thead>
+	<tbody>
+	{{#assocs}}
+		<tr>
+			<td>
+				{{aco}}
+			</td>
+			<td>
+				<ul>
+					{{#permissions}}
+					<li>
+						{{permission}}
+						<a id="{{id}}" {{data 'permission'}}>
+							<i class="icon-remove"></i>
+						</a>
+					</li>
+					{{/permissions}}
+					<br>
+					<p>
+						<a id="{{id}}">
+							<i class="icon-plus"></i>
+							Asignar permisos a la asociación
+						</a>
+					</p>
+				<ul>
+			</td>
+		</tr>
+	{{/assocs}}
+	</tbody>
+</table>

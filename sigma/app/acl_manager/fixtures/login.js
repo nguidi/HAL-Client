@@ -78,7 +78,7 @@ steal(
 									,	'/api/data/options/4'
 									)
 									.curies('show')
-									.link('show:content:asignacion','/api/data/asignacions')
+									.link('show:content:asignaciones','/api/data/groups')
 							]
 						,	'/api/data/menus/1/options'
 						)

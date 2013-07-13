@@ -6,7 +6,7 @@ steal(
 ).then(
 	function() {
 		Sigma.HypermediaControl(
-			'Sigma.Control.ACL_Manager.Groups'
+			'Sigma.Control.Groups'
 		,	{
 				defaults:
 				{
@@ -20,9 +20,7 @@ steal(
 				_render_content:function(data)
 				{
 					this._super(data)
-
 				}
-
 			,	'.add-group click': function(el,ev)
 				{
 					can.trigger(

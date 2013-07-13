@@ -122,8 +122,6 @@ steal(
 			,	resolve: function()
 				{
 					return	this.parent.fetch(this.url(),this.rel)
-					/*console.log(this._super())
-					return	this.parent.fetch(this.url(),this.rel)*/
 				}
 			}
 		)
@@ -453,8 +451,6 @@ steal(
 									&&	_.has(embedded_data._embedded,'collection')
 									)	?	Sigma.Model.HAL.Collection
 										:	Sigma.Model.HAL.Resource
-
-							console.log(embedded_data, embedded)
 
 							instance.embedded.attr(
 								relation

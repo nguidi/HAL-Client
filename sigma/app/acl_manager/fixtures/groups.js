@@ -23,6 +23,9 @@ steal(
 					case "filter":
 						console.log("NOT")
 						break;
+					case "find":
+						console.log("NOTFIND")
+						break;
 					default:
 						console.log("NOT")
 						break;
@@ -53,6 +56,8 @@ steal(
 												)
 												.curies('show')
 												.link('show:permissions','groups/'+g.id+'/permissions')
+												.link('show:acos','groups/'+g.id+'/acos')
+												.link('show:perfiles','groups/'+g.id+'/perfiles')
 												.embed(
 													'permissions'
 												,	new HAL_Collection(
@@ -88,6 +93,80 @@ steal(
 																}
 															)
 														,	'groups/'+g.id+'/permissions'
+														)
+												)
+												.embed(
+													'acos'
+												,	new HAL_Collection(
+															can.map(
+																_.filter(
+																	acos
+																,	function(a,key)
+																	{
+																		return	_.contains(
+																					can.map(
+																						_.filter(
+																							acos_groups
+																						,	function(ag)
+																							{
+																								return	ag.id_group == g.id
+																							}
+																						)
+																					,	function(fag)
+																						{
+																							return	fag.id_aco
+																						}
+																					)
+																				,	a.id
+																				)
+																	}
+																)
+															,	function(a)
+																{
+																	return	new HAL_Resource(
+																					a
+																				,	'/api/data/acos/'+a.id
+																				)
+																}
+															)
+														,	'groups/'+g.id+'/acos'
+														)
+												)
+												.embed(
+													'perfiles'
+												,	new HAL_Collection(
+															can.map(
+																_.filter(
+																	profiles
+																,	function(p,key)
+																	{
+																		return	_.contains(
+																					can.map(
+																						_.filter(
+																							aros_groups
+																						,	function(ag)
+																							{
+																								return	ag.id_group == g.id
+																							}
+																						)
+																					,	function(fp)
+																						{
+																							return	fp.profile
+																						}
+																					)
+																				,	p.id
+																				)
+																	}
+																)
+															,	function(p)
+																{
+																	return	new HAL_Resource(
+																					p
+																				,	'/api/data/permissions/'+p.id
+																				)
+																}
+															)
+														,	'groups/'+g.id+'/perfiles'
 														)
 												)
 									}

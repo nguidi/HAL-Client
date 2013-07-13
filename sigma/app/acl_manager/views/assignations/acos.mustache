@@ -1,0 +1,59 @@
+<p>
+	Seleccionar una aco para pasar a la asignación de permisos especiales para las asociaciones
+</p>
+<table class="table table-bordered">
+	<thead>
+		<th>
+			Selección
+		</th>
+		<th>
+			Nombre del aco
+		</th>
+		<th>
+			Permisos
+		</th>
+		<th>
+			Asociaciones
+		</th>
+	</thead>
+	<tbody>
+	{{#acos}}
+		<tr>
+			<td>
+				<input type="radio" value="{{id}}" name="acos" class="select" {{#next}} {{data 'next'}} {{/next}} >
+			</td>
+			<td>
+				{{aco}}
+			</td>
+			<td>
+				<ul>
+					{{#permissions}}
+					<li>
+						{{permission}}
+						<a id="{{id}}" {{data 'permission'}}>
+							<i class="icon-remove"></i>
+						</a>
+					</li>
+					{{/permissions}}
+					<br>
+					<p>
+						<a id="{{id}}">
+							<i class="icon-plus"></i>
+							Asignar permisos a la aco
+						</a>
+					</p>
+				<ul>
+			</td>
+			<td>
+				<ul>
+					{{#assocs}}
+					<li>
+						{{aco}}
+					</li>
+					{{/assocs}}
+				<ul>
+			</td>
+		</tr>
+	{{/grupos}}
+	</tbody>
+</table>

@@ -80,8 +80,6 @@ steal(
 								}
 							,	this.proxy(this.options.render.fail,'')
 							)
-						// resource.done(this.proxy(this._update))
-						// resource.fail(this.proxy(this.options.render.fail,''))
 					}
 					else	if(resource)
 						{
@@ -120,7 +118,6 @@ steal(
 				}
 			,	getRelationHandler: function(resource)
 				{
-					console.log(this.options.media_types)
 					return	_.find(
 								this.options.media_types
 							,	function(data,rel)
@@ -145,14 +142,16 @@ steal(
 				}
 			,	render_resource: function(resource_to_render,handler_options)
 				{
-					//console.log(resource_to_render)
 					var	self = this
 					,	self_rel = this.getRelationHandler(resource_to_render)
 					self_rel = this.getSubRelationHandler(self_rel,resource_to_render.rel)
 						?can.extend(self_rel,this.getSubRelationHandler(self_rel,resource_to_render.rel))
 						:self_rel
 					if(this.container_element)
+					{
 						this.container_element.unbind().remove()
+						this.element.html('')
+					}					
 					this.container_element = $('<div>').appendTo(this.element)
 					if(self_rel.options)
 						new	self_rel.Handler(

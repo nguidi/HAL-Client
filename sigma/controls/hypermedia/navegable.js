@@ -10,8 +10,8 @@ steal(	'sigma/lib'
 				defaults:
 				{
 					containers:{}
-				,	sub_options:false
 				,	inicializable: true
+				,	view: undefined
 				}
 			}
 		,	{
@@ -27,8 +27,6 @@ steal(	'sigma/lib'
 					ev.stopPropagation()
 					var 	hc 
 					= 	this.hypermedia_containers[can.underscore(data.target)]
-
-					//console.log(hc,this.hypermedia_containers,data)
 
 					if(	!this._search_hypermedia_container(data.target) 
 					&& 	hc 
@@ -75,26 +73,40 @@ steal(	'sigma/lib'
 							,	index_aux
 							=	0
 
-							resource = data.links.get(index)
-							if(!resource)
+							console.log(data)
+
+							if(data.links)
 							{
-								item_aux
-								= 	_.find(
-										item.media_types
-									,	function(mit,mi)
-										{
-											index_aux = mi
-											return data.links.get(mi)
-										}
-									)
-								resource 
-								=	data.links.get(index_aux)
-								can.extend(
+								resource = data.links.get(index)
+							
+								if(!resource)
+								{
 									item_aux
-								, 	{media_types:item.media_types}
-								)	
+									= 	_.find(
+											item.media_types
+										,	function(mit,mi)
+											{
+												index_aux = mi
+												return data.links.get(mi)
+											}
+										)
+									resource 
+									=	data.links.get(index_aux)
+									can.extend(
+										item_aux
+									, 	{
+											media_types:item.media_types
+										,	class: item.class
+										}
+									)	
+								}
+								resource.rel = index
 							}
-							resource.rel = index
+							else
+							{
+								console.log(item)
+								resource = item.resource
+							}
 
 							if(self.options.inicializable && resource)
 							{
@@ -102,7 +114,6 @@ steal(	'sigma/lib'
 									item_aux?item_aux:item
 								,	index
 								,	resource
-								//,	item.media_types
 								)
 							}
 						}
@@ -118,9 +129,18 @@ steal(	'sigma/lib'
 						,	slot
 						= 	undefined
 
+						if(this.options.view)
+						{
+							can.append(
+								this.element
+							,	can.view(this.options.view)
+							)
+						}
 						if(can.$('div#'+index+'').length==0)
 						{
 							$element = can.$('<div id="'+index+'">')
+							if(item.class)
+								$element.addClass(item.class)
 							can.append(
 								this.element
 							,	$element

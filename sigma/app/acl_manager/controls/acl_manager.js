@@ -3,7 +3,8 @@ steal(
 ,	'sigma/lib/hypermedia.js'
 ,	'sigma/util'
 ,	'sigma/controls/topbar'
-,	'sigma/app/acl_manager/controls/groups.js'
+,	'sigma/controls/modal'
+,	'./groups.js'
 ).then(
 	function() {
 		Sigma.HypermediaControl(
@@ -67,23 +68,27 @@ steal(
 											}
 										,	'grupos':
 											{
-												Handler: Sigma.Control.ACL_Manager.Groups
+												Handler: Sigma.Control.Groups
 											,	options:
 												{
 													target: 'Content'
-												,	view: '//sigma/app/acl_manager/views/groups/init.mustache'
+												,	view:	'//sigma/app/acl_manager/views/groups/init.mustache'
+												,	view_modal: '//sigma/app/acl_manager/views/groups/modal.mustache'
+												,	modal: 	'Modal'
 												}
 											}
-										,	'asignacion':
+										,	'asignaciones':
 											{
-												Handler: Sigma.HypermediaControl
+												Handler: Sigma.Control.Assignations
+											//,	Children: 
 											,	options:
 												{
-													target: 'Content'
-												,	view: '//sigma/app/acl_manager/views/main/init.mustache'
+													view:	'//sigma/app/acl_manager/views/assignations/init.mustache'
+												,	target:	'Content'
 												}
 											}
-										} 
+										}
+									,	class: 'content container'
 									}
 								,	'footer':
 									{

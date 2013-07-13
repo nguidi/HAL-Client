@@ -1,0 +1,154 @@
+<h1>Asignaciones</h1>
+<div class="acc-wizard row-fluid">
+	<div class="span3">
+		<ol class="acc-wizard-sidebar">
+			<li class="acc-wizard-todo acc-wizard-active"><a href="#grupos">Grupos</a></li>
+			<li class="acc-wizard-todo"><a href="#acos">Acos</a></li>
+			<li class="acc-wizard-todo"><a href="#assocs">Asociaciones</a></li>
+	        </ol>
+	</div>
+	<div class="span9">
+		<div class="accordion" id="accordion-wizard">
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-wizard" href="#grupos">
+						Grupos
+					</a>
+				</div>
+				<div id="grupos" class="accordion-body collapse in">
+					<div class="accordion-inner">
+						<form id="form-grupos">
+							<p>
+								Seleccionar un grupo para pasar a la asignación de permisos especiales para los acos asociados
+							</p>
+							<table class="table table-bordered">
+								<thead>
+									<th>
+										Selección
+									</th>
+									<th>
+										Nombre del grupo
+									</th>
+									<th>
+										Permisos
+									</th>
+									<th>
+										Acos
+									</th>
+									<th>
+										Perfiles
+									</th>
+								</thead>
+								<tbody>
+								{{#groups}}
+									<tr>
+										<td>
+											<input type="radio" value="{{id}}" name="group" class="select" {{#next}} {{data 'next'}} {{/next}}>
+										</td>
+										<td>
+											{{group}}
+										</td>
+										<td>
+											<ul>
+												{{#permissions}}
+												<li>
+													{{permission}}
+													<a id="{{id}}" {{data 'permission'}}>
+														<i class="icon-remove"></i>
+													</a>
+												</li>
+												{{/permissions}}
+												<br>
+												<p>
+													<a id="{{id}}">
+														<i class="icon-plus"></i>
+														Asignar permisos al grupo
+													</a>
+												</p>
+											<ul>
+										</td>
+										<td>
+											<ul>
+												{{#acos}}
+												<li>
+													{{aco}}
+													<a id="{{id}}" {{data 'permission'}}>
+														<i class="icon-remove"></i>
+													</a>
+												</li>
+												{{/acos}}
+												<br>
+												<p>
+													<a id="{{id}}">
+														<i class="icon-plus"></i>
+														Asignar acos al grupo
+													</a>
+												</p>
+											<ul>
+										</td>
+										<td>
+											<ul>
+												{{#perfiles}}
+												<li>
+													{{profile}}
+													<a id="{{id}}" {{data 'profile'}}>
+														<i class="icon-remove"></i>
+													</a>
+												</li>
+												{{/perfiles}}
+												<br>
+												<p>
+													<a id="{{id}}">
+														<i class="icon-plus"></i>
+														Asignar grupo a perfiles
+													</a>
+												</p>
+											<ul>
+										</td>
+									</tr>
+								{{/grupos}}
+								</tbody>
+							</table>
+						</form>
+					</div> <!--/.accordion-inner -->
+				</div> <!-- /#grupos -->
+			</div> <!-- /.accordion-group -->
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-wizard" href="#acos">
+						Acos
+					</a>
+				</div>
+				<div id="acos" class="accordion-body collapse in">
+					<div class="accordion-inner">
+						<form id="form-acos">
+							<h4>
+								Seleccionar un grupo para mostrar sus acos
+							</h4>
+							<div id="table-acos">
+							</div>
+						</form>
+					</div> <!--/.accordion-inner -->
+				</div> <!-- /#acos -->
+			</div> <!-- /.accordion-group -->
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion-wizard" href="#assocs">
+						Asociaciones
+					</a>
+				</div>
+				<div id="assocs" class="accordion-body collapse in">
+					<div class="accordion-inner">
+						<form id="form-assocs">
+							<h4>
+								Seleccionar una aco para mostrar sus asociaciones
+							</h4>
+							<div id="table-assocs">
+							</div>
+						</form>
+					</div> <!--/.accordion-inner -->
+				</div> <!-- /#asociaciones -->
+			</div> <!-- /.accordion-group -->
+		</div>
+	</div>
+</div>
