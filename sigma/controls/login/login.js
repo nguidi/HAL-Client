@@ -49,7 +49,6 @@ steal(
 						,	can.$('<i class="icon-spinner icon-spin icon-large pull-left">')
 						)
 
-
 					if (this.checkLogin(form))
 						el.data('link')
 							.resolve(form)

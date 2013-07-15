@@ -1,26 +1,26 @@
 steal(
-	'sigma/models/model.js'
+	'sigma/models'
 ).then(
 	function()
 	{
-		Sigma.Model.HAL.Collection(
-			'Sigma.Model.HAL.Permissions'
-		,	{}
-		,	{
-				permissions: function()
-				{
-					return	this.getCollection()
-				}
-			}
-		)
-
 		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.Permission'
-		,	{}
+			'Sigma.Model.HAL.Permissions'
+		,	{ }
 		,	{
 				access: function()
 				{
 					return	this.links.get('access')
+				}
+			}
+		)
+
+		Sigma.Model.HAL.Collection(
+			'Sigma.Model.HAL.Permissions.Collection'
+		,	{ }
+		,	{
+				permissions: function()
+				{
+					return	this.embedded.attr('collection')
 				}
 			}
 		)

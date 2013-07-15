@@ -1,10 +1,10 @@
 steal(
-	'sigma/models/model.js'
+	'sigma/models'
 ).then(
 	function()
 	{
 		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.Welcome'
+			'Sigma.Model.HAL.Welcomes'
 		,	{}
 		,	{
 				signin: function()

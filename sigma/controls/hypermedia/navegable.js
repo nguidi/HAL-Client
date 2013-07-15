@@ -68,7 +68,7 @@ steal(	'sigma/lib'
 						this.options.containers
 					,	function(item, index)
 						{
-							var 	item_aux
+							var	item_aux
 							=	undefined
 							,	index_aux
 							=	0
@@ -77,8 +77,9 @@ steal(	'sigma/lib'
 
 							if(data.links)
 							{
-								resource = data.links.get(index)
-							
+								// resource = data.links.get(index)
+								resource	=	data['get'+can.capitalize(index)]()
+								
 								if(!resource)
 								{
 									item_aux
@@ -100,7 +101,6 @@ steal(	'sigma/lib'
 										}
 									)	
 								}
-								resource.rel = index
 							}
 							else
 							{

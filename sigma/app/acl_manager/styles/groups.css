@@ -2,3 +2,11 @@
 	margin-top: 20px;
 	margin-bottom: 20px;
 }
+
+.container-caption form {
+	margin: 0px;
+}
+
+.brand {
+	color: white !important;
+}

@@ -1,0 +1,33 @@
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Nombre</th>
+			<th>Apellido</th>
+		</tr>
+	</thead>
+	<tbody>
+	{{#collection}}
+		<tr>
+			<td>
+				{{id}}
+			</td>
+			<td>
+				{{nombre}}
+			</td>
+			<td>
+				{{apellido}}
+			</td>
+		</tr>
+	{{/collection}}
+	{{^collection}}
+		<tr>
+			<td colspan="100">
+				<p class="muted">
+				No hay registros para mostrar
+				</p>
+			<td>
+		</tr>
+	{{/collection}}
+	</tbody>
+</table>	

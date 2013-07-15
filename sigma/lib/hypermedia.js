@@ -9,5 +9,5 @@ steal(
 ,	'sigma/controls/hypermedia/navegable.js'
 ,	'sigma/util'
 ).then(
-	'sigma/models/model.js'
+	'sigma/models'
 )

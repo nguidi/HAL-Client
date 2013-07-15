@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>SGM/Scrollable Demo</title>
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+	<div id="topbar" class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="#">
+					<h1>Scrollable Demo</h1>
+				</a>
+				<div id='home' class="nav-collapse" >
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="scrollableContainer" class="container span7"></div>
+    	<script type='text/javascript' src='../../../../steal/steal.js'></script>
+    	<style type="text/css">
+		body {
+			padding-top: 90px;
+			padding-bottom: 40px;
+			margin-bottom: 15px;
+		}
+	</style>
+</body>
+</html>
+
+<script type="text/javascript">
+
+	steal(
+		'sigma/stock/controls/lib'
+	,	'can/view/mustache'
+	,	'sigma/fixtures'
+	).then(
+		'sigma/stock/controls/scrollable'
+	,	'sigma/stock/controls/scrollable/adapters.js'
+	).then(
+		'sigma/lib/style.js'
+	,	function()
+		{
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.Scrollable.Container'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'scrollable':
+							{
+								Handler: Sigma.Controls.Scrollable
+							,	options:
+								{
+									target: 'scrollable'
+								,	view_content: '//sigma/stock/controls/scrollable/views/content.mustache'
+								,	view_more: '//stock/views/scrollable/more.mustache'
+								}
+							}
+						}
+					}
+				}
+			,	{
+				}
+			)
+
+			new Sigma.Hypermedia.Scrollable.Container(
+					$('#scrollableContainer')
+				,	{
+						id:'Scrollable'
+					,	target: 'Scrollable'
+					,	slot: Sigma.Model.HAL.Collection.getRoot('http://trabajando:3003/api/data/programas?type=scrollable&ipp=10','scrollable')
+					}
+				)
+		}
+
+	)
+
+</script>

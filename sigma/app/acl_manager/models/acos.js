@@ -1,9 +1,20 @@
 steal(
-	'sigma/models/model.js'
+	'sigma/models'
 ).then(
 	function()
 	{
 		Sigma.Model.HAL.Collection(
+			'Sigma.Model.HAL.Assocs.Collection'
+		,	{}
+		,	{
+				assocs: function()
+				{
+					return	this.getCollection()
+				}
+			}
+		)
+
+		Sigma.Model.HAL.Resource(
 			'Sigma.Model.HAL.Assocs'
 		,	{}
 		,	{
@@ -15,7 +26,7 @@ steal(
 		)
 
 		Sigma.Model.HAL.Collection(
-			'Sigma.Model.HAL.Acos'
+			'Sigma.Model.HAL.Acos.Collection'
 		,	{}
 		,	{
 				acos: function()
@@ -26,7 +37,7 @@ steal(
 		)
 
 		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.Aco'
+			'Sigma.Model.HAL.Acos'
 		,	{}
 		,	{
 				assocs: function()

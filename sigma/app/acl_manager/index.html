@@ -32,7 +32,6 @@
 	,	'sigma/lib/style.js'
 	).then(
 		'sigma/app/acl_manager/controls/acl_manager.js'
-	,	'sigma/app/acl_manager/fixtures'
 	,	'sigma/app/acl_manager/styles'
 	).then(
 		function()
@@ -51,7 +50,7 @@
 								{
 									view:	'//sigma/app/acl_manager/views/login/init.mustache'
 								,	target:	'Init'
-								,	login_form: {profile: 1}
+								,	login_form: {id_profile: 1}
 								}
 							}
 						,	'signin':
@@ -74,7 +73,7 @@
 				$('body')
 			,	{
 					id:		'Init'
-				,	slot:	Sigma.Model.HAL.Welcome.fetch('/api/data/welcomes/1','init')
+				,	slot:	Sigma.Model.HAL.Welcomes.fetch('http://trabajando:3003/api/data/welcomes/1','init')
 				}
 			)
 		}

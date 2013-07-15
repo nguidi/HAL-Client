@@ -1,15 +1,14 @@
 steal(
-	'sigma/models/model.js'
+	'sigma/models'
 ).then(
 	function()
 	{
 		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.Menu'
+			'Sigma.Model.HAL.Menus'
 		,	{}
 		,	{
 				options: function()
 				{
-					console.log("options ",this.links.get('options').getCollection())
 					return	this.links.get('options')
 						&&	this.links.get('options').getCollection()
 				}
@@ -21,33 +20,7 @@ steal(
 		)
 
 		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.User'
-		,	{}
-		,	{
-				submenu: function()
-				{
-					return	_.isDefined(this.links.attr('show:profile'))
-						&&	_.isDefined(this.links.attr('api:signout'))
-				}
-			,	config: function()
-				{
-					return	this.links.attr('show:profile')
-				}
-			,	signout: function()
-				{
-					return	this.links.attr('api:signout')
-				}
-			}
-		)
-
-		Sigma.Model.HAL.Collection(
 			'Sigma.Model.HAL.Options'
-		,	{}
-		,	{}
-		)
-
-		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.Option'
 		,	{}
 		,	{
 				submenus: function()
@@ -63,10 +36,30 @@ steal(
 			}
 		)
 
-		Sigma.Model.HAL.Menu(
-			'Sigma.Model.HAL.Topbar'
+		Sigma.Model.HAL.Resource(
+			'Sigma.Model.HAL.Topbars'
 		,	{}
+		,	{
+				menu: function()
+				{
+					return	this.links.get('menu')
+				}
+			,	brand: function()
+				{
+					return	this.links.get('brand')
+				}
+			}
+		)
+
+		Sigma.Model.HAL.Resource(
+			'Sigma.Model.HAL.Footbar'
 		,	{}
+		,	{
+				menu: function()
+				{
+					return	this.links.get('menu')
+				}
+			}
 		)
 	}
 )

@@ -6,10 +6,10 @@
 	<meta charset="utf-8">
 	<meta name="description" content="">
 	<meta name="author" content="Sigma-IT">
-	<title>ACL Manager/Groups</title>
+	<title>ACL Manager/A</title>
 	</head>
 	<body>
-		<div id="groups" class="container"></div>
+		<div id="a" class="container"></div>
 	</body>
 	<div id="modal"></div>
 </html>
@@ -29,9 +29,8 @@
 	,	'sigma/controls/modal'
 	).then(
 		'sigma/app/acl_manager/fixtures'
-	,	'sigma/app/acl_manager/models/groups.js'
-	,	'sigma/app/acl_manager/models/permissions.js'
-	,	'sigma/app/acl_manager/controls/groups.js'
+	,	'sigma/app/acl_manager/models'
+	,	'sigma/app/acl_manager/controls/a.js'
 	,	'sigma/app/acl_manager/styles'
 	).then(
 		function()
@@ -45,7 +44,7 @@
 						{
 							'init':
 							{
-								Handler:	Sigma.Control.Groups
+								Handler:	Sigma.Control.ACL_Manager.A
 							,	options:
 								{
 									view:	'//sigma/app/acl_manager/views/groups/init.mustache'

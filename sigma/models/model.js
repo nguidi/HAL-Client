@@ -452,6 +452,9 @@ steal(
 									)	?	Sigma.Model.HAL.Collection
 										:	Sigma.Model.HAL.Resource
 
+							embedded_data.rel
+							=	relation
+
 							instance.embedded.attr(
 								relation
 							,	embedded_model_type

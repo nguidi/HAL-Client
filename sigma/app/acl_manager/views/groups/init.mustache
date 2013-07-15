@@ -1,13 +1,21 @@
 <div class="container-caption">
 	<h4>
 		Grupos
-		{{#add}}
-		<button type="button" class="add-group btn btn-primary pull-right" {{data 'link'}}>
-			<i class="icon-info-plus-sign"></i>
-			Nuevo Grupo
-		</button>
-		{{/add}}
 	</h4>
+	<div class="breadcrumb">
+		<form class="form-inline" onSubmit="return false;">
+			<label for="group">
+				Buscar:
+			</label>
+			<input type="text" class="input-large search" name="group">
+		{{#add}}
+			<button type="button" class="add-group btn btn-primary pull-right" {{data 'link'}}>
+				<i class="icon-info-plus-sign"></i>
+				Nuevo Grupo
+			</button>
+		{{/add}}
+		</form>
+	</div>
 </div>
 <div class="container-table">
 	<table class="table table-bordered">
@@ -47,4 +55,18 @@
 			{{/groups}}
 		</tbody>
 	</table>
+	<div class="paginator">
+		<ul class="pager">
+			<li>
+				<a class="browseable">
+					&larr; Anterior
+				</a>
+			</li>
+			<li>
+				<a class="browseable">
+					Siguiente &rarr;
+				</a>
+			</li>
+		</ul>
+	</div>
 </div>

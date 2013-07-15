@@ -1,10 +1,10 @@
 steal(
-	'sigma/models/model.js'
+	'sigma/models'
 ).then(
 	function()
 	{
 		Sigma.Model.HAL.Collection(
-			'Sigma.Model.HAL.Access'
+			'Sigma.Model.HAL.Access.Collection'
 		,	{}
 		,	{
 				access: function()
@@ -15,7 +15,7 @@ steal(
 		)
 
 		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.Acces'
+			'Sigma.Model.HAL.Access'
 		,	{}
 		,	{}
 		)

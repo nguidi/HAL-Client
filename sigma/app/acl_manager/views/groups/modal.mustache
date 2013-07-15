@@ -17,11 +17,11 @@
 				</div>
 			</div>
 			<div class="control-group">
-				<label class="control-label" for="permisos">Permisos Generales</label>
+				<label class="control-label" for="permissions">Permisos Generales</label>
 				<div class="controls">
 					{{#permissions}}
 					<label class="checkbox">
-						<input type="checkbox" name="permisos" value="{{id}}">
+						<input type="checkbox" name="permissions[]" value="{{id}}">
 						{{permission}}
 					</label>
 					{{/permissions}}

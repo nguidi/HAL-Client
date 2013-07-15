@@ -1,7 +1,7 @@
 steal(
 	'sigma/lib'
 ,	'sigma/util'
-,	'sigma/models/model.js'
+,	'sigma/models'
 ).then(
 	function()
 	{
@@ -101,20 +101,18 @@ steal(
 				}
 			,	set_resource:function(resource)
 				{
-					var	self=this
-					if(
-						(resource instanceof Sigma.Model.HAL.Resource.List)
-					)	throw	'Resource.List not suported in containers'
-					if(
-						(resource instanceof Sigma.Model.HAL.Collection)
-					||	(resource instanceof Sigma.Model.HAL.Resource)
-					)
-						this.options.resource=resource
+					var	self
+					=	this
+					if	(resource instanceof Sigma.Model.HAL.Resource.List)
+						throw	'Resource.List not suported in containers'
+					if	(
+							resource instanceof Sigma.Model.HAL.Collection
+						||	resource instanceof Sigma.Model.HAL.Resource
+						)
+							this.options.resource=resource
 					else
-					{
 						if	(resource)
 							throw	'Wrong resource type!!!'
-					}
 				}
 			,	getRelationHandler: function(resource)
 				{
@@ -170,7 +168,6 @@ steal(
 				{
 					var	resolved
 					=	link.get() || link.resolve()
-
 					if	(can.isDeferred(resolved))		
 						this.slot(
 							resolved
@@ -229,7 +226,7 @@ steal(
 								args.link
 							,	args.options
 							)
-					else if	(args.data instanceof Sigma.Model.HAL.Resource || args.data instanceof Sigma.Model.HAL.Collection || can.isDeferred(args.data))
+					else if	(args.data instanceof Sigma.Model.HAL.Resource || can.isDeferred(args.data))
 						container
 							.slot(
 								args.data

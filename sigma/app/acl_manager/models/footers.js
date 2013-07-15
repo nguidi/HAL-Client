@@ -1,16 +1,10 @@
 steal(
-	'sigma/models/model.js'
+	'sigma/models'
 ).then(
 	function()
 	{
-		Sigma.Model.HAL.Collection(
-			'Sigma.Model.HAL.Footers'
-		,	{}
-		,	{}
-		)
-
 		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.Footer'
+			'Sigma.Model.HAL.Footers'
 		,	{}
 		,	{}
 		)

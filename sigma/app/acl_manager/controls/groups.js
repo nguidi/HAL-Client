@@ -17,11 +17,7 @@ steal(
 				}
 			}
 		,	{
-				_render_content:function(data)
-				{
-					this._super(data)
-				}
-			,	'.add-group click': function(el,ev)
+				'.add-group click': function(el,ev)
 				{
 					can.trigger(
 						this.element
@@ -51,24 +47,35 @@ steal(
 				{
 					var	data
 					=	this.options.data
-					Sigma.Model.HAL.Group
-							.create(
-								data.getHref()
-							,	_.filter(
-									form_data.query
-								,	function(q,i)
-									{
-										return	q.key != 'permisos'
-									}
-								)
-							,	'group'
-							).then(
-								function(group)
-								{
-									console.log("SAVE",group)
-								}
-							)
+					data
+						.create(
+							data.getHref()
+						,	form_data.query
+						,	'group'
+						)
+				}
 
+			,	'.search keyup': function(el,ev)
+				{
+					if	(ev.keyCode == 13)
+					{
+						var	data
+						=	this.options.data
+						can.trigger(
+							this.element
+						,	'browse'
+						,	{
+								target:	this.options.target
+							,	data:	data
+											.constructor
+												.filter(
+													data.getHref()
+												,	can.getFormData(el.parents('form')).query
+												,	data.rel
+												)
+							}
+						)
+					}
 				}
 			}
 		)

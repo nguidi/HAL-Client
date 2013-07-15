@@ -248,18 +248,21 @@ var	profiles
 =	[
 		{
 			id: 1
+		,	id_group: 1
 		,	id_aco: 7
 		,	id_permission: 2
 		,	allow: false
 		}
 	,	{
 			id: 2
+		,	id_group: 1
 		,	id_aco: 7
 		,	id_permission: 3
 		,	allow: false
 		}
 	,	{
 			id: 3
+		,	id_group: 1
 		,	id_aco: 7
 		,	id_permission: 4
 		,	allow: false
