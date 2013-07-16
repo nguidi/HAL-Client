@@ -107,6 +107,10 @@ steal(
 		,	{
 				url: function()
 				{
+					var	relation
+					=	this.curie
+					//////////////////////////////NERI ACA FIJATE QUE ONDA CON LA URL QUE DEVUELVE; SE ZARPA EN GATO
+
 					return 	uritemplate(
 								_.find(
 									this.parent.curies.attr()
@@ -134,8 +138,6 @@ steal(
 			,	resolve: function()
 				{
 					return	this.parent.fetch(this.url(),this.rel)
-					/*console.log(this._super())
-					return	this.parent.fetch(this.url(),this.rel)*/
 				}
 			}
 		)
@@ -371,11 +373,12 @@ steal(
 				{
 					var	stored
 					=	this.resource.constructor.store[this.resource.id]
-					
+
 					if	(_.isEqual(relation,"self"))
 						return	stored
 					
-					return	Sigma.Model.HAL.lookup((stored && stored.embedded) || this.resource.embedded,relation,name)
+					//return	Sigma.Model.HAL.lookup((stored && stored.embedded) || this.resource.embedded,relation,name)
+					return	Sigma.Model.HAL.lookup(this.resource.embedded,relation,name)
 				}
 			,	resource_by_rel: function(rel)
 				{

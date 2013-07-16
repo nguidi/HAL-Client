@@ -64,6 +64,8 @@ steal(	'sigma/lib'
 					,	resource
 					=	undefined
 
+					console.log(data)
+
 					can.each(
 						this.options.containers
 					,	function(item, index)
@@ -73,12 +75,13 @@ steal(	'sigma/lib'
 							,	index_aux
 							=	0
 
-							console.log(data)
+							console.log(item)
 
 							if(data.links)
 							{
 								// resource = data.links.get(index)
 								resource	=	data['get'+can.capitalize(index)]()
+								//console.log(resource, data['get'+can.capitalize(index)])
 								
 								if(!resource)
 								{
@@ -104,11 +107,10 @@ steal(	'sigma/lib'
 							}
 							else
 							{
-								console.log(item)
 								resource = item.resource
 							}
 
-							if(self.options.inicializable && resource)
+							if(self.options.inicializable)
 							{
 								self._hypermedia_container_setup(
 									item_aux?item_aux:item
@@ -121,7 +123,7 @@ steal(	'sigma/lib'
 				}
 			,	_hypermedia_container_setup: function(item, index, resource)
 				{
-					//console.log("Arguments _hypermedia_container_setup: ", item, index, resource)
+					console.log("Arguments _hypermedia_container_setup: ", item, index, resource)
 					if(item)
 					{
 						var 	hypermedia_container_new
@@ -149,7 +151,7 @@ steal(	'sigma/lib'
 						else
 							$element = can.$('div#'+index+'')
 
-						if(this.options.inicializable)
+						if(this.options.inicializable && resource)
 						{
 							slot = 	(resource instanceof Sigma.Model.HAL.Resource)
 								?	resource

@@ -14,11 +14,14 @@ steal(
 				}
 			,	getFooter: function()
 				{
+					console.log(this.links.get('profile'), this.links, this.links.get('profile').links)
+
 					return	this.links.get('profile')
 						&&	this.links.get('profile').links.get('footbar')
 				}
 			,	getContent: function()
 				{
+					console.log(this.links,this.links.get('profile').links.get('home'))
 					return	this.links.get('profile')
 						&&	this.links.get('profile').links.get('home')
 				}
