@@ -28,11 +28,10 @@
 	,	'sigma/util'
 	,	'sigma/controls/modal'
 	).then(
-		'sigma/app/acl_manager/fixtures'
-	,	'sigma/app/acl_manager/models/groups.js'
-	,	'sigma/app/acl_manager/models/permissions.js'
+		'sigma/app/acl_manager/models/models.js'
 	,	'sigma/app/acl_manager/controls/groups.js'
 	,	'sigma/app/acl_manager/styles'
+	,	'sigma/plugins'
 	).then(
 		function()
 		{
@@ -84,7 +83,7 @@
 				$('#groups')
 			,	{
 					id:		'Init'
-				,	slot:	Sigma.Model.HAL.Groups.fetch('/api/data/groups','init')
+				,	slot:	Sigma.Model.HAL.Groups.Fetch('http://trabajando:3003/api/data/groups','init')
 				}
 			)
 

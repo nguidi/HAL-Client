@@ -38,7 +38,18 @@ steal(
 
 		Sigma.Model.HAL.Resource(
 			'Sigma.Model.HAL.Acos'
-		,	{}
+		,	{
+				findAll: function()
+				{
+					return	this.Fetch('http://trabajando:3003/api/data/acos')
+								.pipe(
+									function(raw)
+									{
+										return	raw.embedded.attr('collection')
+									}
+								)
+				}
+			}
 		,	{
 				assocs: function()
 				{

@@ -113,31 +113,27 @@ steal(
 								}
 							)
 				}
-			,	fetch: function(url,rel)
+			,	Fetch: function(url,rel)
 				{
 					return	this.request( url, 'GET', {}, rel)
 				}
-			,	update: function(url,data,rel)
+			,	Update: function(url,data,rel)
 				{
 					return	this.request( url, 'PUT', {}, rel)
 				}
-			,	join: function(url,data,rel)
-				{
-					return	this.request( url, 'POST', { action: 'join', associations: data }, rel)
-				}
-			,	find: function(url,data,rel)
+			,	Find: function(url,data,rel)
 				{
 					return	this.request( url, 'POST', { action: 'find', query: data }, rel)
 				}
-			,	filter: function(url,data,rel)
+			,	Filter: function(url,data,rel)
 				{
 					return	this.request( url, 'POST', { action: 'filter', query: data }, rel)
 				}
-			,	create: function(url,data,rel)
+			,	Create: function(url,data,rel)
 				{
 					return	this.request( url, 'POST', { action: 'create', query: data }, rel)
 				}
-			,	delete: function(url,rel)
+			,	Delete: function(url,rel)
 				{
 					return	this.request( url, 'DELETE', {}, rel)
 				}
@@ -145,7 +141,7 @@ steal(
 		,	{
 				getHref:function()
 				{
-					return	uritemplate(this.links.attr('self.href')).expand(this.attr())
+					return	this.links.attr('self.href')
 				}
 			,	linked: function(relation,name)
 				{
@@ -276,31 +272,27 @@ steal(
 					return	cached
 						||	this.fetch(url,rel)
 				}
-			,	fetch: function(url,rel)
+			,	Fetch: function(url,rel)
 				{
 					return	this.request( url, 'GET', {}, rel)
 				}
-			,	update: function(url,data,rel)
+			,	Update: function(url,data,rel)
 				{
-					return	this.request( url, 'PUT', {}, rel)
+					return	this.request( url, 'PUT', data, rel)
 				}
-			,	join: function(url,data,rel)
-				{
-					return	this.request( url, 'POST', { action: 'join', associations: data }, rel)
-				}
-			,	find: function(url,data,rel)
+			,	Find: function(url,data,rel)
 				{
 					return	this.request( url, 'POST', { action: 'find', query: data }, rel)
 				}
-			,	filter: function(url,data,rel)
+			,	Filter: function(url,data,rel)
 				{
 					return	this.request( url, 'POST', { action: 'filter', query: data }, rel)
 				}
-			,	create: function(url,data,rel)
+			,	Create: function(url,data,rel)
 				{
 					return	this.request( url, 'POST', { action: 'create', query: data }, rel)
 				}
-			,	delete: function(url,rel)
+			,	Delete: function(url,rel)
 				{
 					return	this.request( url, 'DELETE', {}, rel)
 				}
@@ -308,7 +300,7 @@ steal(
 		,	{
 				getHref:function()
 				{
-					return	uritemplate(this.links.attr('self.href')).expand(this.attr())
+					return	this.links.attr('self.href')
 				}
 			,	linked: function(relation,name)
 				{

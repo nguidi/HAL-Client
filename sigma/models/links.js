@@ -109,20 +109,23 @@ steal(
 				{
 					var	relation
 					=	this.curie
-					//////////////////////////////NERI ACA FIJATE QUE ONDA CON LA URL QUE DEVUELVE; SE ZARPA EN GATO
 
-					return 	uritemplate(
-								_.find(
-									this.parent.curies.attr()
-								,	function(curie)
+					return 	Sigma.Model.HAL.simplify_url(
+								uritemplate(
+									_.find(
+										this.parent.curies.attr()
+									,	function(curie)
+										{
+											return	curie.name	==	_.first(relation.split(':'))
+										}
+									).href
+								).expand(
 									{
-										return	curie.name	==	_.first(relation.split(':'))
+										model:	this.attr('href').split('/')[1]
+									,	id:		this.attr('href').split('/')[2]
+									,	assoc:	this.attr('href').split('/')[3]
 									}
-								).href
-							).expand(
-								{
-									api_action: this.attr('href').split('/')[1] 
-								}
+								)
 							)
 				}
 			}
@@ -393,31 +396,27 @@ steal(
 				}
 			,	fetch: function(url,rel)
 				{
-					return 	this.resource_by_rel(rel).fetch(url,rel)
+					return 	this.resource_by_rel(rel).Fetch(url,rel)
 				}
 			,	find: function(url,data,rel)
 				{
-					return	this.resource_by_rel(rel).find(url,data,rel)
+					return	this.resource_by_rel(rel).Find(url,data,rel)
 				}
 			,	filter: function(url,data,rel)
 				{
-					return	this.resource_by_rel(rel).filter(url,data,rel)
+					return	this.resource_by_rel(rel).Filter(url,data,rel)
 				}
 			,	update: function(data)
 				{
-					return	this.resource_by_rel(rel).update(url,data,rel)
+					return	this.resource_by_rel(rel).Update(url,data,rel)
 				}
 			,	delete: function(url,rel)
 				{
-					return	this.resource_by_rel(rel).delete(url,rel)
-				}
-			,	join: function(url,data,rel)
-				{
-					return	this.resource_by_rel(rel).join(url,data,rel)
+					return	this.resource_by_rel(rel).Delete(url,rel)
 				}
 			,	create: function(url,data,rel)
 				{
-					return	this.resource_by_rel(rel).create(url,data,rel)
+					return	this.resource_by_rel(rel).Create(url,data,rel)
 				}
 			}
 		)

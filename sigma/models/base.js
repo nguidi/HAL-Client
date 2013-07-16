@@ -35,6 +35,22 @@ steal(
 													}
 												)
 						}
+					,	simplify_url: function(url)
+						{
+							var	res
+							=	new Array()
+							_.each(
+								url.split('/')
+							,	function(val)
+								{
+									if	(_.isEqual(val,'http:'))
+										val+='/'
+									if	(!_.isEmpty(val))
+										res.push(val)
+								}
+							)
+							return	res.join('/')
+						}
 					}
 				)
 	}

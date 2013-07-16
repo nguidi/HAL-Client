@@ -4,10 +4,10 @@
 	</h4>
 	<div class="breadcrumb">
 		<form class="form-inline" onSubmit="return false;">
-			<label for="group">
+			<label for="name">
 				Buscar:
 			</label>
-			<input type="text" class="input-large search" name="group">
+			<input type="text" class="input-large search" name="name">
 		{{#add}}
 			<button type="button" class="add-group btn btn-primary pull-right" {{data 'link'}}>
 				<i class="icon-info-plus-sign"></i>
@@ -24,6 +24,7 @@
 				<th>#</th>
 				<th>Nombre del Grupo</th>
 				<th>Permisos Generales</th>
+				<th>Acos Contenidas</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -31,25 +32,42 @@
 			<tr>
 				<td>{{id}}</td>
 				<td>
-					<a id="{{id}}" class="editable" {{data 'group'}}>
-						{{group}}
+					<a id="{{id}}" class="editable name-editable" {{data 'resource'}}>
+						{{name}}
 					</a>
 				</td>
 				<td>
-					<ul>
+					{{#if permissions}}
+					<ul class="icons-ul editable permissions-editable" {{data 'resource'}}>
 						{{#permissions}}
 						<li>
-							<a id="{{id}}" {{data 'permission'}}>
-								{{permission}}
-							</a>
+							<i class="icon-li {{#if allow}} icon-plus {{else}} icon-minus {{/if}}"></i>
+							{{name}}
 						</li>
 						{{/permissions}}
-					<ul>
+					</ul>
+					{{/if}}
 				</td>
 				<td>
-					<a>
+					{{#if acos}}
+					<ul class="editable acos-editable" {{data 'resource'}}>
+						{{#acos}}
+						<li>
+							{{name}}
+							{{#permissions}}
+								<span class="label {{#if allow}} label-success {{else}} label-error {{/if}}">
+									{{name}}
+								</span>
+							{{/permissions}}
+						</li>
+						{{/acos}}
+					<ul>
+					{{/if}}
+				</td>
+				<td class="text-center">
+					<a class="text-error">
 						<i class="icon-remove"></i>
-						</a>
+					</a>
 				</td>
 			</tr>
 			{{/groups}}
