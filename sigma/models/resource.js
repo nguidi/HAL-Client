@@ -143,6 +143,10 @@ steal(
 				{
 					return	this.links.attr('self.href')
 				}
+			,	getResourceURL: function()
+				{
+					return	Sigma.Model.HAL.simplify_url(this.getHref())
+				}
 			,	linked: function(relation,name)
 				{
 					var	cached
@@ -301,6 +305,10 @@ steal(
 				getHref:function()
 				{
 					return	this.links.attr('self.href')
+				}
+			,	getResourceURL: function()
+				{
+					return	Sigma.Model.HAL.simplify_url(_.initial(this.getHref().split('/'),1).join('/'))
 				}
 			,	linked: function(relation,name)
 				{

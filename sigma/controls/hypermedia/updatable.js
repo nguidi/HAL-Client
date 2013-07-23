@@ -9,9 +9,9 @@ steal(
 		,	{
 				defaults:
 				{
-					loading:	'//sigma/views/hypermedia/loading.mustache'
-				,	empty:		'//sigma/views/hypermedia/empty.mustache'
-				,	failed:		'//sigma/views/hypermedia/failed.mustache'
+					loading:	'sigma/views/hypermedia/loading.mustache'
+				,	empty:		'sigma/views/hypermedia/empty.mustache'
+				,	failed:		'sigma/views/hypermedia/failed.mustache'
 				,	slot:		false
 				,	container:	false
 				,	target:		false

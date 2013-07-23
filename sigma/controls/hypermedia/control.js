@@ -11,8 +11,8 @@ steal(
 				pluginName:	'hc_generic'
 			,	defaults:
 				{
-					view:		'//sigma/views/hypermedia/generic.mustache'
-				,	view_list:	'//sigma/views/hypermedia/generic_list.mustache'
+					view:		'sigma/views/hypermedia/generic.mustache'
+				,	view_list:	'sigma/views/hypermedia/generic_list.mustache'
 				}
 			}
 		,	{
