@@ -1,0 +1,33 @@
+<div class="tabs-wrapper">
+	<h3 class="">{{nombre}}</h3>
+	<div class="actions-wrapper input-append pull-right">
+		{{#tabs}}
+			{{#if embedded.actions_form}}
+				{{>actionsTemplate}}
+			{{/if}}
+		{{/tabs}}
+	</div>
+	<ul class="nav nav-tabs" id="tab-{{id}}">
+		{{# tabs}}
+			<li><a href="#{{name}}" class="browseable" {{data 'link'}}>{{title}}</a></li>
+		{{/tabs}}
+	</ul>
+	<div class="tab-content">
+		{{#tabs}}
+			<div class="tab-pane" id="{{name}}">
+				{{#if embedded.forms}}
+					{{>formTemplate}}
+				{{/if}}
+				{{#if embedded.bars}}
+					{{>barsTemplate}}
+				{{/if}}
+				{{#if embedded.lists}}
+					{{>listInstituciones}}
+				{{/if}}
+			</div>
+		{{/tabs}}
+	</div>
+</div>
+
+
+

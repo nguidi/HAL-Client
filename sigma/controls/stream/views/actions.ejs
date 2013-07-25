@@ -1,0 +1,12 @@
+<% if( attr('actions') && (attr('actions').attr('length') >0) ) { %>
+	<ul>
+		<% 	can.each(
+				attr('actions')
+			,	function (action) { %>
+				<li class="media-action pull-<%= attr('align') %>">	
+					<%== can.view.render("//sigma/stock/controls/stream/views/action.ejs",action) %>
+				</li>
+		<%  		}
+			) %>
+	</ul>
+<%}%>

@@ -1,0 +1,11 @@
+	<% if(attr('title')){ %>
+		<a href="<%=attr('href') %>">
+			<i><%=attr('title')%></i>
+		</a>
+	<%}%>
+
+	<% if(attr('icon')){ %>
+		<a href="<%=attr('href') %>" class"icon">
+			<i class="icon icon-<%=attr('icon')%>"></i>
+		</a>
+	<%}%>

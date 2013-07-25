@@ -1,0 +1,28 @@
+.form-wrapper div.well-small {
+	margin-left: -25px;
+	margin-right: 7px;
+}
+
+.form-wrapper div.form-actions {
+	margin-left: 0px;
+	margin-bottom: 0px;
+}
+
+.form-wrapper form{
+	padding: 0;
+	margin: 0;
+}
+
+.form-wrapper form input{
+	padding: 2px 4px;
+	font-size: 12px;
+	margin-bottom: -10px;
+}
+
+.form-wrapper form legend {
+	font-size:14px;
+	color: #999;
+	text-indent: 10px;
+	line-height: 40px;
+	margin-bottom: 3px;
+}
