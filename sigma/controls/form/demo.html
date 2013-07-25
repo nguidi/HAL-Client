@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>Sigma/Form demo</title>
+	<script type='text/javascript' src="../../../../steal/steal.js"></script>
+	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<div id="topbar" class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="#">
+					<h1>Form Demo</h1>
+				</a>
+				<div id='home' class="nav-collapse" >
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="form"></div>
+<script type='text/javascript'>
+steal(
+	'sigma/lib'
+,	'can/view/mustache'
+).then(
+	'sigma/controls/form'
+,	'sigma/lib/style.js'
+).then(
+	function()
+	{
+		Sigma.Model.HAL.Resource(
+			'Sigma.Model.HAL.Form'
+		,	{}
+		,	{
+				getActions:function()
+				{
+					console.log(this.embedded.attr('actions_forms'))
+					return (this.embedded.attr('actions_forms'))
+							?this.embedded.attr('actions_forms').embedded.attr('collection')
+							:false
+				}
+			,	getFields:function()
+				{
+					return (this.embedded.attr('fields_forms'))
+							?this.embedded.attr('fields_forms').embedded.attr('collection')
+							:false
+				}
+			}
+		)
+
+		Sigma.Model.HAL.Resource(
+			'Sigma.Model.HAL.Fields_forms'
+		,	{}
+		,	{
+				getFieldType: function()
+				{
+					return	this.embedded.attr('form_field_type')
+						&&	this.embedded.attr('form_field_type').attr('type')
+				}
+			,	options: function()
+				{
+					return	(
+								this.embedded.attr('options')
+							&&	this.embedded.attr('options').embedded.attr('collection')
+							)
+						||	(
+								this.embedded.attr('suboptions')
+							&&	this.embedded.attr('suboptions').embedded.attr('collection')
+							)
+				}
+			}
+		)
+
+		Sigma.HypermediaContainer(
+			'Sigma.Hypermedia.Form.Container'
+		,	{
+				defaults:
+				{
+					media_types:
+					{
+						'form':
+						{
+							Handler:Sigma.Controls.Form
+						,	options:
+							{
+								target: 'FormTemplate'
+							,	view_form: 'sigma/views/form/forms.mustache'
+							}
+						}
+					}
+				}
+			}
+		,	{}
+		)
+
+		new	Sigma.Hypermedia.Form.Container(
+			$('#form')
+		,	{
+				id: 'Form'
+			,	slot:	Sigma.Model.HAL.Form.Fetch(
+							'http://trabajando:3003/api/data/forms/1'
+						,	'form'
+						)
+			}
+		)		
+	}
+)
+</script>
+</body>
+</html>

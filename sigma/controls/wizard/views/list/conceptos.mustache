@@ -1,0 +1,47 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>
+				Codigo
+			</th>
+			<th>
+				Cuenta
+			</th>
+			<th>
+				Nombre de la Cuenta
+			</th>
+			<th>
+				Accion
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#conceptos}}
+		<tr>
+			<td>
+				{{codigo}}
+			</td>
+			<td>
+				{{#cuenta}}
+					{{id}}
+				{{/cuenta}}
+			</td>
+			<td>
+				{{#cuenta}}
+					{{cuenta}}
+				{{/cuenta}}
+			</td>
+			<td>
+				<i class="text-error icon-remove"></i>
+			</td>
+		</tr>
+		{{/conceptos}}
+		{{^conceptos}}
+		<tr>
+			<td colspan="100">
+				No se cargo ningun Concepto
+			</td>
+		</tr>
+	    {{/conceptos}}
+	</tbody>
+</table>

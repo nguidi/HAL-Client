@@ -1,5 +1,7 @@
 steal(
-	'sigma/controls/hypermedia/control.js'
+	'sigma/lib'
+,	'sigma/lib/hypermedia.js'
+,	'sigma/util'
 ).then(
 	function()
 	{

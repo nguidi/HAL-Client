@@ -1,0 +1,57 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>
+				Nombre
+			</th>
+			<th>
+				Tipo
+			</th>
+			<th>
+				Entidad
+			</th>
+			<th>
+				Default
+			</th>
+			<th>
+				Grupo
+			</th>
+			<th>
+				Accion
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#campos}}
+		<tr>
+			<td>
+				{{nombre}}
+			</td>
+			<td>
+				{{tipo_campo}}
+			</td>
+			<td>
+				{{entidad}}
+			</td>
+			<td>
+				{{default}}
+			</td>
+			<td>
+				{{#grupo}}
+					{{grupo}}
+				{{/grupo}}
+			</td>
+			<td>
+				<i class="text-error icon-remove"></i>
+			</td>
+		</tr>
+		{{/campos}}
+		{{^campos}}
+		<tr>
+			<td colspan="100">
+				No se cargo ningun campo extra
+			</td>
+		</tr>
+	    {{/campos}}
+	</tbody>
+</table>

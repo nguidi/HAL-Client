@@ -23,7 +23,7 @@
 	steal(
 		'sigma/controls/hypermedia/container.js'
 	,	'sigma/controls/browser'
-	,	'sigma/models/model.js'
+	,	'sigma/models'
 	,	'sigma/lib/style.js'
 	).then(
 		function()
@@ -58,7 +58,7 @@
 				$('body')
 			,	{
 					id:		'Browser'
-				,	slot:	Sigma.Model.HAL.Browser.fetch('http://trabajando:3003/api/data/welcomes/1')
+				,	slot:	Sigma.Model.HAL.Browser.Fetch('http://trabajando:3003/api/data/welcomes/1')
 				}
 			)
 		}

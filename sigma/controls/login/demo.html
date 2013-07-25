@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	<meta name="description" content="">
 	<meta name="author" content="Sigma-IT">
-	<title>SGM/Login demo</title>
+	<title>HAL-Client/Login demo</title>
 	<script type='text/javascript' src="../../../steal/steal.js"></script>
 	<style type="text/css">
 		body {
@@ -55,19 +55,44 @@
 	,	'sigma/lib/hypermedia.js'
 	,	'sigma/controls/login'
 	,	'sigma/lib/style.js'
+	,	'sigma/controls/login/fixtures.js'
 	).then(
 		function()
 		{
-			the_root=Sigma.Model.HAL.Resource.fetch('http://trabajando:3003/api/data/welcomes/1')
-			the_root.then(
-				function(data)
-				{
-					new	Sigma.Controls.Login(
-							$('#login')
-						,	{
-								links:data.links
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Welcomes'
+			,	{}
+			,	{
+				}
+			)
+
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.Login'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'login':
+							{
+								Handler: Sigma.Control.Login
+							,	options: 
+								{
+									view:	'sigma/views/login/init.mustache'
+								,	target_content: 'Content'
+								}
 							}
-						)
+						}
+					}
+				}
+			,	{}
+			)
+			
+			new Sigma.Hypermedia.Login(
+				$('#login')
+			,	{
+					id:		'Login'
+				,	slot:	Sigma.Model.HAL.Welcomes.Fetch('api/data/welcomes/1','login')
 				}
 			)
 		}

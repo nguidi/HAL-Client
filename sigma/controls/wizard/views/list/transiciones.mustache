@@ -1,0 +1,68 @@
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>
+				Estado Origen
+			</th>
+			<th>
+				Estado Destino
+			</th>
+			<th>
+				Evento
+			</th>
+			<th>
+				Tiempo Estimado
+			</th>
+			<th>
+				Transicion por Defecto
+			</th>
+			<th>
+				Campos Requeridos
+			</th>
+			<th>
+				Accion
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		{{#transiciones}}
+		<tr>
+			<td>
+				{{estado_origen}}
+			</td>
+			<td>
+				{{estado_destino}}
+			</td>
+			<td>
+				{{evento_transicion}}
+			</td>
+			<td>
+				{{tiempo_estimado}}
+			</td>
+			<td>
+				{{ocurre_defecto}}
+			</td>
+			<td>
+				<ul class="unstyled">
+				{{#campos_requeridos}}
+					<li>
+						{{nombre}}
+					</li>
+				{{/campos_requeridos}}
+				</ul>
+			</td>
+			<td>
+				<i class="text-error icon-edit"></i>
+				<i class="text-error icon-remove"></i>
+			</td>
+		</tr>
+		{{/transiciones}}
+		{{^transiciones}}
+		<tr>
+			<td colspan="100">
+				No se cargo ninguna Transicion
+			</td>
+		</tr>
+	    {{/transiciones}}
+	</tbody>
+</table>

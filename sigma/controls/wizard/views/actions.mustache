@@ -1,0 +1,28 @@
+<div class="wizard-actions">
+	<ul class="pager">
+	{{#actions}}
+		{{#anterior}}
+		<li class="previous">
+			<a {{data 'action'}}>
+				&larr; {{title}}
+			</a>
+		</li>
+		{{/anterior}}
+		{{#siguiente}}
+		<li class="next">
+			<a {{data 'action'}}>
+				{{title}} &rarr;
+			</a>
+		</li>
+		{{/siguiente}}
+		{{#finalizar}}
+		<li class="next">
+			<a class="ready" {{data 'action'}}>
+				{{title}}
+				<i class="icon-ok"></i>
+			</a>
+		</li>
+		{{/finalizar}}
+	{{/actions}}
+	</ul>
+</div>

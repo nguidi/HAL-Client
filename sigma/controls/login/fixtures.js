@@ -1,86 +1,29 @@
 steal(
-	'sigma/model/hal.js'
+	'can/util/fixture'
+,	'sigma/util/hal_builder.js'
 ).then(
-    function(){
-		can.fixture("GET /api"
+    function()
+    {
+		can.fixture(
+			'GET api/data/welcomes/1'
 		,	function()
 			{
-			var	genOpenIds
-			=	function(url)
-				{
-				return can
-					.map(
-						[
-							{	name:'facebook'
-							,	title:'Facebook'
-							}
-						,	{	name:'google_plus'
-							,	title:'Google+'
-							}
-						,	{	name:'linkedin'
-							,	title:'LinkedIn'
-							}
-						,	{	name:'twitter'
-							,	title:'Twitter'
-							}
-						]
-					,	function(open_id)
-						{
-						return	{
-								title: open_id.title
-							,	icon: Sigma.fixtures.getIcon(open_id.name)
-							,	href: '/api/login/'+open_id.name
-							}
-						}
-					)
-				}
-			return	new HAL_Resource(
-					{
-					}
-				,	'/api'
-				).link(
-					{
-						login:
-							{
-								href:'/api/token'
-							,	title:'Entrar'
-							}
-					,	open_ids:
-							genOpenIds()
-					}
-				)
+				return	new	HAL_Resource(
+								{
+									id: 1
+								,	title: "algo sobre la app para que quede mas lindo"
+								,	welcome: "Bienvenidos"
+								,	logo: "http://placehold.it/260x180"
+								}
+							,	'api/option/6'
+							)
+							.curies('api')
+							.link('api:signin','/api/signin')
+							.link('api:signout','/api/signout')
+							.link('api:signup','/api/signup')
+							.toJSON()
 			}
 		)
-		can.fixture("GET /api/token"
-		,	function(orig,settings,headers)
-			{
-			return	{
-					_links:{
-						self:	{ href:orig.url }
-					,	profile:	{ href:can.sub('/api/{username}',orig.data) }
-					,	_profile:	{ href:'/profile/session' }
-					}
-				,	greeting:'Juan Perez'
-				,	username:orig.data.username
-				,	token:'XXXXXXTOKEN'
-				,	name:'session'
-				}
-			}
-		)
-		can.fixture("GET /api/login/{service}"
-		,	function(orig,settings,headers)
-			{
-			return	{
-					_links:{
-						self:	{ href:orig.url }
-					,	profile:	{ href:'/api/{username}' }
-					,	_profile:	{ href:'/profile/session' }
-					}
-				,	greeting:'Juan Perez'
-				,	username:'jperez'
-				,	name:'session'
-				}
-			}
-		)
+
 	}
 )
