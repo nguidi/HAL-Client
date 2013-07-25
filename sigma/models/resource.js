@@ -123,11 +123,11 @@ steal(
 				}
 			,	Find: function(url,data,rel)
 				{
-					return	this.request( url, 'POST', { action: 'find', query: data }, rel)
+					return	this.request( url, 'POST', { action: 'findOneBy', query: data }, rel)
 				}
 			,	Filter: function(url,data,rel)
 				{
-					return	this.request( url, 'POST', { action: 'filter', query: data }, rel)
+					return	this.request( url, 'POST', { action: 'findAllBy', query: data }, rel)
 				}
 			,	Create: function(url,data,rel)
 				{
@@ -286,11 +286,11 @@ steal(
 				}
 			,	Find: function(url,data,rel)
 				{
-					return	this.request( url, 'POST', { action: 'find', query: data }, rel)
+					return	this.request( url, 'POST', { action: 'findOneBy', query: data }, rel)
 				}
 			,	Filter: function(url,data,rel)
 				{
-					return	this.request( url, 'POST', { action: 'filter', query: data }, rel)
+					return	this.request( url, 'POST', { action: 'findAllBy', query: data }, rel)
 				}
 			,	Create: function(url,data,rel)
 				{

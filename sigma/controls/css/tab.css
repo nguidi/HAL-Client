@@ -1,0 +1,33 @@
+.nav-tabs li{
+	font-size: 12px;
+}
+
+.tabs-wrapper {
+}
+
+.tabs-wrapper h3{
+	width:30%;
+}
+
+.tabs-wrapper .actions-wrapper{
+	color:black;
+	width:60%;
+	margin-right:0;
+	margin-top:-50px;
+}
+
+.nav-tabs{
+	clear:both;
+	margin-top:5px;
+}
+
+.tab-content{
+	height: 300px important!;  
+	overflow: auto;
+
+}
+
+.tab-pane:{
+	border:1px solid #333;	
+	min-height: 500px;
+}

@@ -1,0 +1,19 @@
+<div class="media-body">
+	<div class="input-append">
+		<input type="text" class="span4" type="text" placeholder="{{place_holder}}">
+		<button type="button" class="btn">{{button_text}}</button>
+	</div>
+	<ul class="nav nav-pill">
+	{{#actions}}
+		<li class="pull-right">
+			<a href="{{href}}" class"icon">
+				{{title}}
+
+				{{#icon}}
+					<i class="icon icon-{{icon}}"></i>
+				{{/icon}}
+			</a>
+		</li>
+	{{/actions}}
+	</ul>
+</div>

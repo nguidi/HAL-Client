@@ -1,0 +1,15 @@
+div.media-object {
+	text-align:center;
+	padding:10px;
+	border-radius:10px;
+	line-height:1;
+	background-color:#9D261D;
+	font-size:40px;
+	text-shadow: 2px 2px 3px #222;
+	color:white;
+}
+
+li.media-action {
+	float:right;
+	list-style-type: none;
+}

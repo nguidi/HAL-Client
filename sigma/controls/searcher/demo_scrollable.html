@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>Sigma/searcher demo</title>
+	<script type='text/javascript' src="../../../../steal/steal.js"></script>
+	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<style type="text/css">
+		body {
+			padding-top: 90px;
+			padding-bottom: 40px;
+		}
+		#topContainer ul.dropdown-menu {
+			margin-top: 0;
+			padding: 0;
+		}
+
+		ul.advance div.well-small {
+			margin-left: -25px;
+			margin-right: 7px;
+		}
+
+		ul.advance div.form-actions {
+			margin-left: 0px;
+			margin-bottom: 0px;
+		}
+
+		ul.advance form{
+			padding: 0;
+			margin: 0;
+		}
+
+		ul.advance form input{
+			padding: 2px 4px;
+			font-size: 12px;
+			margin-bottom: -10px;
+		}
+
+		ul.advance form legend {
+			font-size:12px;
+			color: #999;
+			text-indent: 10px;
+			line-height: 40px;
+			margin-bottom: 3px;
+		}
+		
+	</style>
+</head>
+<body>
+	<div id="topbar" class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="#">
+					<h1>Searcher Demo</h1>
+				</a>
+				<div id='home' class="nav-collapse" >
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="topContainer" class="well-large"></div>
+	<div id="contentContainer"  class="well-large"></div>
+<script type='text/javascript'>
+steal(
+	'sigma/stock/controls/lib'
+,	'can/view/mustache'
+).then(
+	'sigma/stock/controls/searcher'
+,	'sigma/stock/controls/searcher/adapters.js'
+,	'sigma/stock/controls/scrollable/adapters.js'
+,	'sigma/stock/controls/scrollable'
+,	'sigma/stock/controls/lib/media.css'
+,	'sigma/lib/style.js'
+).then(
+	function()
+	{
+		Sigma.HypermediaContainer(
+			'HAL.Searcher.Container'
+		,	{
+				defaults:
+				{
+					media_types:
+					{
+						'filter':
+						{
+							Handler: Sigma.Controls.Searcher
+						,	options:
+							{
+								target: 'Top'
+							,	target_content: 'Scrollable'
+							,	view_filter: '//stock/views/searcher/init.mustache'
+							,	data_render: ['actions_search','fields_search']
+							}
+						}
+					,	'scrollable':
+						{
+							Handler: Sigma.Controls.Scrollable
+						,	options:
+							{
+								target: 'Scrollable'
+							,	view_content: '//stock/views/scrollable/universidades.mustache'
+							,	how_to_render: 'universidades'
+							}
+						}
+					}
+				}
+			}
+		,	{}
+		)
+				
+		
+		new	HAL.Searcher.Container(
+			$('#topContainer')
+		,	{
+				id: 'Top'
+			,	slot: Sigma.Model.HAL.Searcher.getRoot(
+					'http://trabajando:3003/api/data/searchers/2'
+				,	'filter'
+				)
+			}
+		)
+
+		new	HAL.Searcher.Container(
+			$('#contentContainer')
+		,	{
+				id: 'Scrollable'
+			,	target: 'Scrollable'
+			,	slot: Sigma.Model.HAL.Collection.getRoot(
+					'http://trabajando:3003/api/data/universidades?type=scrollable&ipp=10'
+				,	'scrollable'
+				)
+			}
+		)
+
+	}
+)
+</script>
+</body>
+</html>

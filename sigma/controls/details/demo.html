@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>SGM/Details Demo</title>
+	<script type='text/javascript' src="../../../../steal/steal.js"></script>
+	<style type="text/css">
+		body {
+			padding-top: 90px;
+			padding-bottom: 40px;
+		}
+		#home .container-fluid {
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 500px;
+		}
+		#root {
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 800px;
+		}
+
+	</style>
+	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+</head>
+<body>
+<div id="topbar" class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+			<a class="brand" href="#">
+				<h1>DetailsView Demo</h1>
+			</a>
+			<div id='home' class="nav-collapse" >
+			</div>
+		</div>
+	</div>
+</div>
+	<div id="detailsContainer" class="span9"></div>
+	<div id="replyContainer" class="span9"></div>
+	<div id="drillDownContainer" class="span9"></div>
+<script type='text/javascript'>
+
+	steal(
+		'sigma/stock/controls/lib'
+	,	'can/view/mustache'
+	,	'sigma/fixtures'
+	).then(
+		'sigma/stock/controls/details/adapters.js'
+	,	'sigma/stock/controls/details/fixtures.js'
+	,	'sigma/stock/controls/details/details.js'
+	,	'sigma/stock/controls/details/drilldown.js'
+	,	'sigma/stock/controls/details/comments.js'
+	,	'sigma/lib/style.js'
+	,	'sigma/stock/controls/details/all.css'
+	).then(
+
+		function()
+		{
+		
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.DetailsView.Container'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'details':
+							{
+								Handler: Sigma.Hypermedia.Details
+							,	options:
+								{
+									target: 'details'
+								,	view: '//stock/views/details/details.mustache'
+								}
+							}
+						,	'drilldown':
+							{
+								Handler: Sigma.Controls.DrillDown
+							,	options:
+								{
+									target: 'drilldown'
+								,	view_drilldown: '//stock/views/details/drilldown.mustache'
+								,	view_breadcrumb: '//stock/views/details/breadcrumb.mustache'
+								}
+							}
+						,	'reply':
+							{
+								Handler: Sigma.Hypermedia.Comments
+							,	options:
+								{
+									target: 'comments'
+								,	view: '//stock/views/details/reply.mustache'
+								}
+							}
+						}
+					}
+				}
+			,	{
+				}
+			)
+
+			new Sigma.Hypermedia.DetailsView.Container(
+				$('#detailsContainer')
+			,	{
+					id:'Details'
+				,	target: 'Details'
+				,	slot: Sigma.Model.HAL.Resource.Details.getRoot(1)
+				}
+			)
+
+			new Sigma.Hypermedia.DetailsView.Container(
+				$('#replyContainer')
+			,	{
+					id:'Reply'
+				,	target: 'Reply'
+				,	slot: Sigma.Model.HAL.Resource.Comments.getRoot(1)
+				}
+			)
+
+			new Sigma.Hypermedia.DetailsView.Container(
+				$('#drillDownContainer')
+			,	{
+					id:'DrillDown'
+				,	target: 'DrillDown'
+				,	slot: Sigma.Model.HAL.Resource.DrillDown.getRoot('fixture/bebidas')
+				}
+			)
+		}
+
+	)
+
+</script>

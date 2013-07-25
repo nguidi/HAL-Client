@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>SRU</title>
+	<script type='text/javascript' src="../../../../steal/steal.js"></script>
+	<style type="text/css">
+		.container {
+			padding-left: 30px;
+			padding-right: 30px;
+		}
+		.content20 {
+			padding-top: 20px;
+			margin-bottom: 100px;
+		}
+		.content40 {
+			padding-top: 40px;
+			margin-bottom: 100px;
+		}
+		.content60 {
+			padding-top: 60px;
+			margin-bottom: 100px;
+		}
+		.content80 {
+			padding-top: 80px;
+			margin-bottom: 100px;
+		}
+		.footer {
+			text-align: center;
+			padding: 30px 0;
+			border-top: 1px solid #E5E5E5;
+			background-color: whiteSmoke;	
+		}
+		.error {
+			font-size: 12px;
+			color: #953B39;
+		}
+	</style>
+</head>
+<body>
+	<div id="api">
+	</div>
+<script type='text/javascript'>
+steal(
+	'sigma/stock/controls/lib'
+,	'can/view/mustache'
+,	'sigma/fixtures'
+).then(
+	'sigma/stock/controls/grid'
+,	'sigma/stock/controls/lib/media.css'
+,	'sigma/stock/controls/topbar'
+,	'/SRU-Frontend/api/navegable_controls/gerente_principal_control.js'
+,	'sigma/lib/style.js'
+).then(
+	function()
+	{
+		can.view.cache = false;
+
+		Sigma.HypermediaNavegableControl(
+			'HAL.Grid.Control'
+		,	{
+				defaults:
+				{
+
+					media_types:
+					{
+						'topbar':
+						{
+							Handler:Sigma.Controls.Topbar
+						,	url : 'http://trabajando:3003/api/data/menus/4'
+						,	options:
+							{
+								target: 'Content'
+							,	view: 'sigma/stock/views/topbar/topbar.mustache'
+							,	nav: true
+							,	drilldown: false
+							}
+						}
+					,	'content':
+						{
+							Handler:Sigma.Controls.Grid
+						,	url : 'http://trabajando:3003/api/data/principals/1'
+						,	navegable_control: HAL.Gerente.Control
+						,	options:
+							{
+								target: 'Content'
+							,	target_success: 'Perfil'
+							,	view: 'sigma/stock/views/grid/grid.mustache'
+							,	how_to_render: ['right_sidebars','left_sidebars','subcontents']
+							}
+						}
+					,	'footer':
+						{
+							Handler: Sigma.HypermediaControl
+						,	url : 'http://trabajando:3003/api/data/footer/1'
+						,	options:
+							{
+								target: 'Footer'
+							,	view: '../api/views/footer.mustache'
+							}
+						}
+					}
+				}
+			}
+			,
+			{}
+		)
+
+		new HAL.Grid.Control($('#api'))
+
+	}
+)
+</script>
+</body>
+</html>

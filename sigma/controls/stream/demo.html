@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>SGM/Stream Demo</title>
+	<script type='text/javascript' src="../../../../steal/steal.js"></script>
+	<style type="text/css">
+		body {
+			padding-top: 90px;
+			padding-bottom: 40px;
+		}
+		#home .container-fluid {
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 500px;
+		}
+		#root {
+			margin-left: auto;
+			margin-right: auto;
+			max-width: 800px;
+		}
+		div.media-box {
+			border: 1px solid #DDD;
+			margin: 15px 0;
+			padding: 15px;
+		}
+
+		div.media-object {
+			margin: 15px 0;
+		}
+
+	</style>
+	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+	<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+</head>
+<body>
+<div id="topbar" class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+			<a class="brand" href="#">
+				<h1>Stream Demo</h1>
+			</a>
+			<div id='home' class="nav-collapse" >
+			</div>
+		</div>
+	</div>
+</div>
+	<div id="stream" class="span9"></div>
+<script type='text/javascript'>
+	steal(
+		'can/view/mustache'
+	,	'sigma/fixtures'
+	).then(
+		'sigma/stock/controls/stream'
+	,	'sigma/stock/controls/stream/fixtures.js'
+	,	'sigma/stock/controls/stream/stream_adapter.js'
+	,	'sigma/stock/controls/lib/media.css'
+	,	'sigma/stock/controls/stream/stream.css'
+	,	'sigma/lib/style.js'
+	).then(	function()
+		{
+			var streamOptions = {
+				target: 'comments'
+			,	view_object : '//stock/views/stream/object.mustache'
+			,	view_body : '//stock/views/stream/body.mustache'
+			,	view_action : '//stock/views/stream/actions.mustache'	
+			}
+
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.Stream.Container'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'comments':
+							{
+								Handler: Sigma.Hypermedia.Stream
+							,	options: streamOptions
+							}
+						,	'posts':
+							{
+								Handler: Sigma.Hypermedia.Stream
+							,	options: streamOptions	
+							}
+						,	'comment':
+							{
+								Handler: Sigma.Hypermedia.Stream
+							,	options: streamOptions	
+							}
+						}
+					}
+				}
+			,	{}
+			)
+			
+			var stream_container = new
+				Sigma.Hypermedia.Stream.Container(
+					$('#stream')
+				,	{
+						id:'Stream'
+					,	target: 'Stream'
+					,	slot: Sigma.Model.HAL.Resource.Stream.fetch('/stream')
+					}
+				)
+		}
+	)
+</script>
+</body>
+</html>
