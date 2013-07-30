@@ -76,6 +76,10 @@ steal(
 							resource.code
 						,	404
 						)
+					||	_.isEqual(
+							resource.code
+						,	"404"
+						)
 			}
 		can.getFormData
 		=	function(form)
@@ -140,5 +144,26 @@ steal(
 			{
 				return	!can.isCollection(resource)
 			}
+		can.extend(
+			can.Observe.List.prototype
+		,	{
+				delete:	function(what)
+				{
+					this
+						.replace(
+							_.filter(
+								this.attr()
+							,	function(el)
+								{
+									return	(what instanceof can.Observe)
+											?	!_.isEqual(el,what.attr())
+											:	!_.isEqual(el,what)
+								}
+							)
+						)
+					return this
+				}
+			}
+		)
 	}
 )
