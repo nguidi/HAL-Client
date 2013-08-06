@@ -119,13 +119,12 @@ steal(
 				}
 			,	'ul.paginable li:not(".disabled") click' : function(element,event)
 				{
-					// Tengo q tratarlo asi porque pierde el Resource Type 
-					// y el Rel entonces no me lo reconoce el HConteiner
-					this._update(
-						this.options.slot.constructor.getRoot(
-							element.data('link').href
-						,	this.options.slot.rel
-						)
+					can.trigger(
+						this.element
+					,	'browse'
+					,	{
+							link:	element.data('link')
+						}
 					)
 				}
 			}

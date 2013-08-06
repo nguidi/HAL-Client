@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="utf-8">
 	<meta name="description" content="">
@@ -27,7 +27,7 @@
 	</div>
 	<div id="paginableContainer" class="span7"></div>
     	<script type='text/javascript' src='../../../steal/steal.js'></script>
-    	<style type="text/css">
+		<style type="text/css">
 			body {
 				padding-top: 90px;
 				padding-bottom: 40px;
@@ -56,7 +56,6 @@
 	)
 	.then(
 		'sigma/controls/pageable'
-	,	'sigma/controls/pageable/fixture.js'
 	,	'sigma/lib/style.js'
 	).then(
 		function()
@@ -94,11 +93,10 @@
 				,	{
 						id: 'Pageable'
 					,	target: 'Pageable'
-					,	slot: Sigma.Model.HAL.Pageable.fetch('/api/personas?page=1&ipp=10&type=pageable','pageable')
+					,	slot: Sigma.Model.HAL.Pageable.Fetch('http://trabajando:3003/api/data/personas?page=1&ipp=10&type=pageable','pageable')
 					}
 				)
 		}
-
 	)
 
 </script>

@@ -67,7 +67,7 @@ steal(
 		,	{
 				resolve: function()
 				{
-					return	this.parent.resource.constructor.fetch(this.url(),this.rel)
+					return	this.parent.fetch(this.url(),this.parent.resource.rel)
 				}
 			}
 		)

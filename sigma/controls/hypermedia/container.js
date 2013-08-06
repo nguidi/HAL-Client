@@ -55,10 +55,10 @@ steal(
 					if(!options.id)
 						throw 'Container must have an "id" property'
 					this.constructor.registerContainer(this)
-					this.update(options)
+					this.update()
 
 				}
-			,	update:	function(options,handler_options)
+			,	update:	function(handler_options)
 				{
 					var	resource=this.options.slot
 					if(resource && resource.isComputed)
@@ -145,13 +145,18 @@ steal(
 					self_rel = this.getSubRelationHandler(self_rel,resource_to_render.rel)
 						?can.extend(self_rel,this.getSubRelationHandler(self_rel,resource_to_render.rel))
 						:self_rel
-					if(this.container_element)
-					{
-						this.container_element.unbind().remove()
-						this.element.html('')
-					}					
-					this.container_element = $('<div>').appendTo(this.element)
-					if(self_rel.options)
+					if	(_.isEqual(this.current_handler,self_rel.Handler))	{
+						can.trigger(
+							this.container_element
+						,	'change_slot'
+						,	resource_to_render
+						)
+					}	else	{
+						if	(this.container_element)
+							this.element.find('.hc_generic').unbind()
+						this.element.empty()
+						this.container_element = $('<div>').appendTo(this.element)
+						this.current_handler = self_rel.Handler
 						new	self_rel.Handler(
 								this.container_element
 							,	can.extend(
@@ -163,6 +168,7 @@ steal(
 									}
 								)
 							)
+					}
 				}
 			,	browse: function(link,options)
 				{
@@ -174,8 +180,8 @@ steal(
 							.pipe(
 								function(raw)
 								{
-									raw.rel=link.rel
-								return	raw
+									raw.rel=raw.rel || link.rel
+									return	raw
 								}
 							)
 						,	options
@@ -198,8 +204,7 @@ steal(
 						return	this.options.resource
 					this.options.slot = value
 					this.update(
-						this.options
-					,	options
+						options
 					)
 				}
 			,	'{slot} change': function(target, ev, newVal)

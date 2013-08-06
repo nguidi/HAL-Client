@@ -176,10 +176,9 @@ steal(
 								)
 						)
 				}
-			,	'{slot} change': function(target, ev, newVal)
+			,	' change_slot': function(target, ev, newVal)
 				{
-					if	(target.isComputed)
-						this._update(newVal)
+					this._update(newVal)
 				}
 			}
 		)

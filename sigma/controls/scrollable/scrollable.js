@@ -1,10 +1,9 @@
 steal(
-	'sigma/stock/controls/lib'
-,	'sigma/hal/collections.js'
+	'sigma/controls/hypermedia/control.js'
 ).then(
 	function() {
 		Sigma.HypermediaControl(
-			'Sigma.Controls.Scrollable'
+			'Sigma.Control.Scrollable'
 		,	{
 				defaults:{
 					view_more: '//stock/views/scrollable/more.mustache'
@@ -78,7 +77,7 @@ steal(
 
 			,	'button.more click' : function(element,event)
 				{
-					this._more_content(element)
+					this._more_content(element,event)
 				}
 			,	'{window} scroll': function(el,ev)
 				{
@@ -92,22 +91,28 @@ steal(
 				{
 					if(element.data('more'))
 					{
-						var	self 
-						= 	this
-						,	def 
-						= 	this.options.slot.constructor.getRoot(
-								element.data('more').href
-							,	this.options.slot.rel
-							)
-						this._update(def)
-						def.then(
-							function(obj)
-							{
-								self.bindScrollEnable = true
-								element.data('more',obj.links.more)
+						// var	self 
+						// = 	this
+						// ,	def 
+						// = 	this.options.slot.constructor.getRoot(
+						// 		element.data('more').href
+						// 	,	this.options.slot.rel
+						// 	)
+						// this._update(def)
+						// def.then(
+						// 	function(obj)
+						// 	{
+						// 		self.bindScrollEnable = true
+						// 		element.data('more',obj.links.more)
+						// 	}
+						// )
+						can.trigger(
+							this.element
+						,	'browse'
+						,	{
+								link:	element.data('more')
 							}
 						)
-						
 					}
 				}
 			}
