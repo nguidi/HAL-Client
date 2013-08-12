@@ -1,140 +1,92 @@
 steal(
-	'sigma/stock/controls/lib'
-,	'sigma/stock/controls/dropdown'
+	'sigma/lib'
+,	'sigma/util'
+,	'sigma/plugins'
 ).then(
-	function() {
-		Sigma.HypermediaControl(
+	'./styles.css'
+).then(
+	function()
+	{
+		can.Control(
 			'Sigma.Controls.Searcher'
 		,	{
-				defaults:{
-					view_filter: false
-				,	data_render: false
-				,	rapid_search: false
+				defaults:
+				{
+					//	KEY = CLAVE PARA  BUSQUEDA RAPIDA (SI LA DEJAS VACIA TE VA A PUTEAR)
+					key:	''
+				,	view:	false
+					//	toFilter = LUGAR DONDE TIRA EL EVENTO PARA BUSCAR, EJEMPLO: DONDE SE ECUENTRA EL LISTADO
+					//	EL NOMBRE DEL EVENTO ES "search"
+				,	toFilter: false
 				}
 			}
 		,	{
-				_render_content: function(data)
+				init: function(element,options)
 				{
-
-				var 	data_render 
-				= 	this.options.data_render
-				,	self 
-				=	this
-					if(can.isArray(data_render))
-					{
-						can.each(
-							data_render
-						,	function(item)
-							{
-							var	emb 
-							= 	data.embedded[item]
-								?data.embedded[item]
-								:data.links[item].fetch()
-							,	resolve
-							=	emb
-
-								if(can.isDeferred(emb))
-								{
-									emb.then(
-										function(link_resolve)
-										{
-											//console.log("Link resolver deferred: ",link_resolve)
-											resolve = link_resolve
-										}
-									)
-								}
-
-								can.each(
-									resolve.embedded.collection
-								,	function(itema)
-									{
-										if(itema.name == 'search')
-										{
-											data.attr('search_button', itema)
-											data.attr('advance_search', itema)
-										}
-									}
-								)
-
-								data.attr(item,resolve.embedded.collection)
-							}
-						)
-					}
-					else
-					{
-					var	emb = data.embedded[data_render]	
-						data.attr(data_render, emb.embedded.collection)
-					}
-
 					can.append(
 						this.element
-					,	can.$('<div class="filter">')
-							.append(can.view(this.options.view_filter,data))
-					)
-
-					new Sigma.Controls.Dropdown(
-						can.$('.filter')
-					)
-					
-				}
-			,	'button#search click' : function(element,event)
-				{
-					//console.log(element.data('search_button'))
-					var data = element.parent('div').find('input#appendedInputButton').val()
-					if(this.options.rapid_search)
-						this._data_trigger_rapid_search(data)
-					else
-					{
-						var params = {n_centro: data}
-						this.element.trigger(
-							'browse_data'
-						,	{
-								rel: can.underscore(this.options.target_content)
-							,	target: this.options.target_content
-							,	storage: this.options.slot.storage
-							,	params: params
-							}
+					,	can.view(
+							this.options.view
+						,	this.options.data
 						)
+					)
+
+					this.element
+							.find('.advance')
+								.css('width',this.element.find('.searcher').width()-1)
+				}
+
+			,	'.advance click':function(el,ev)
+				{
+					ev.stopPropagation()
+					ev.preventDefault()
+				}
+
+			,	'.cancel click': function()
+				{
+					this.hide_advance()
+				}
+
+			,	'input.search keydown': function(el,ev)
+				{
+					if	(_.isEqual(ev.keyCode,13))	{
+						var	query
+						=	{query: [{key: this.options.key, value: can.$(el).val()}]}
+						this.search(query)
 					}
 				}
-			,	'input#appendedInputButton keypress' : function(element,event)
+
+			,	'button.search click': function(el,ev)
 				{
-					if(event.charCode==13)
-					{
-						this._data_trigger_rapid_search(can.$(element).val())	
-					}
+					var	input
+					=	this.element.find('input.search')
+					,	query
+					=	{query: [{key: this.options.key, value: can.$(input).val()}]}
+					this.search(query)
 				}
-			,	_data_trigger_rapid_search : function(data_search)
+
+			,	'button.advance-search click': function(el,ev)
 				{
+					var	parsed_form
+					=	can.getFormData(this.element.find('.advance form'))
+					this.search(parsed_form)
+				}
+
+			,	search: function(query)
+				{
+					this.hide_advance()
 					can.trigger(
-						$('div.hc_generic')
-					,	'rapid_search'
-					,	data_search
+						this.options.toFilter
+					,	'search'
+					,	query
 					)
 				}
 
-			,	'button#advance_search click' : function(element,event)
+			,	hide_advance: function()
 				{
-					// Tengo q tratarlo asi porque pierde el Resource Type 
-					// y el Rel entonces no me lo reconoce el HContainer
-				var	params = {}
-					can.each(
-						can.deparam(element.parents('form').serialize())
-					,	function(item, index)
-						{
-							if(item!="" && item!=undefined)
-								params[index] = item
-						}
-					)
-					this.element.trigger(
-						'browse_data'
-					,	{
-							rel: can.underscore(this.options.target_content)
-						,	target: this.options.target_content
-						,	storage: this.options.slot.storage
-						,	params: params
-						}
-					)
+					this.element
+							.find('.btn.dropdown-toggle')
+								.click()
 				}
 			}
 		)

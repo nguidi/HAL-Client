@@ -1,7 +1,8 @@
 steal(
 	'sigma/controls/hypermedia/control.js'
 ).then(
-	function() {
+	function()
+	{
 		Sigma.HypermediaControl(
 			'Sigma.Control.Scrollable'
 		,	{

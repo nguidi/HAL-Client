@@ -3,6 +3,9 @@ steal(
 ,	'sigma/lib/hypermedia.js'
 ,	'sigma/util'
 ).then(
+	'sigma/controls/form'
+,	'sigma/plugins'
+).then(
 	function() {
 
 		Sigma.HypermediaControl(
@@ -14,10 +17,11 @@ steal(
 				,	view_steps:			false
 				,	view_content:		false
 				,	view_actions:		false
-				,	current:			new can.Observe()
+				,	current_step:		new can.Observe()
 				,	form_data:			new can.Observe()
 				,	content_control:	false
 				,	hc_content:			false
+				,	hc_id:				'Wizard.Inner_Content'
 				}
 			}
 		,	{
@@ -29,16 +33,28 @@ steal(
 							this.options.view_init
 						,	data
 						)
-					)
+					)    
 
-					var self
-					=	this
-					
+					this.$next
+					=	this.element.find('.next').parent('li')
+
+					this.$prev
+					=	this.element.find('.prev').parent('li')
+
 					this._render_wizard_steps()
 					
 					this._render_wizard_content()
 					
-					this._update_current(this.element.find('.step:first'))
+					this.element
+							.find('.acc-wizard')
+								.accwizard(
+									{
+										addButtons:	false
+									}
+								)
+
+					this.update_current(this.element.find('.acc-wizard-todo:first'))
+
 				}
 
 			,	_render_wizard_steps: function()
@@ -46,9 +62,7 @@ steal(
 					var	self
 					=	this
 					,	$wizard_step
-					=	$('<div>')
-							.addClass('wizard-steps')
-							.appendTo(this.element)
+					=	this.element.find('.acc-wizard-sidebar')
 
 					can.each(
 						this.options.data.getSteps()
@@ -61,159 +75,156 @@ steal(
 								,	step
 								)
 							)
+
+							$wizard_step
+								.find('li:last')
+									.attr('data-owner',step.identity())
+									.data(
+										'step'
+									,	_.extend(
+											step
+										,	{
+												rel: ""+step.index
+											}
+										)
+									)
 						}
 					)
 				}
 
 			,	_render_wizard_content: function()
 				{
-					var self
+					var	self
 					=	this
 					,	$wizard_content
-					=	(this.options.view_content)
-						?	can.append(
-								this.element
-							,	can.view(
-									this.options.view_content
-								,	this.options.data
-								)
-							).find('.wizard-content')
-						:	$('div')
-								.addClass('wizard-content')
-								.appendTo(this.element)
+					=	this.element.find('.acc-wizard-content')
 
-					this.options.current.bind(
-						'step'
-					,	function(ev,new_val,old_val)
-						{
-							if	(!_.isUndefined(old_val))
-								self.element.find('div.'+old_val.identity()).hide()
-							
-							self.element.find('div.'+new_val.identity()).show()
-							
-							self._render_wizard_actions()
-						}
-					)
-
-					can.each(
-						this.options.data.getSteps()
-					,	function(step)
-						{
-							var	$step
-							=	$('<div>')
-									.addClass(step.identity())
-									.appendTo($wizard_content)
-
-							if	(self.options.hc_content)
-								new	self.options.hc_content(
-									$step
-								,	{
-										id:		'Wizard.Content.'+step.identity()
-									,	slot:	_.extend(
-													step
-												,	{
-														rel: step.index
-													}
-												)
-									}
-								)
-							else
-								new self.options.content_control(
-									$step
-								,	{
-										slot : step
-									,	container: self.options.container
-									}
-								)
-
-							if	(step.isInitial())
-								self.options.current.attr('step',step)
-							else
-								$step.hide()
-						}
-					)
-				}
-
-			,	_render_wizard_actions: function()
-				{
-					this.element.find('div.wizard-actions').remove()
 					can.append(
-						this.element
+						$wizard_content
 					,	can.view(
-							this.options.view_actions
-						,	this.options.current.step
+							this.options.view_content
+						,	this.options.current_step
 						)
+					)
+
+					new	this.options.hc_content(
+						$wizard_content
+							.find('.acc-wizard-step-content')
+								.find('.accordion-inner')
+					,	{
+							id:		this.options.hc_id
+						}
 					)
 				}
 
-			,	check_step_requirements: function()
+			,	update_previus: function(step)
 				{
-					return	true
-				}
-
-			,	_update_current: function(step)
-				{
-					this.element
-							.find('.current')
-								.removeClass('current')
-
-					this.element
-							.find('span.badge')
-								.removeClass('badge-warning')
-
 					step
-						.addClass('current')
+						.removeClass('acc-wizard-todo')
+						.removeClass('acc-wizard-active')
+						.addClass('acc-wizard-completed')
+						.addClass('text-success')
+				}
 
+			,	update_current: function(step)
+				{
 					step
-						.find('span.badge')
-							.addClass('badge-warning')
+						.removeClass('acc-wizard-completed')
+						.addClass('acc-wizard-todo')
+						.addClass('acc-wizard-active')
+
+					this.options.current_step.attr('title',step.data('step').attr('title'))
+
+					can.trigger(
+						this.element
+					,	'browse'
+					,	{
+							target:	this.options.hc_id
+						,	data:	step.data('step')
+						,	options:
+							{
+								prev_form_data:	this.options.form_data
+							}
+						}
+					)
 				}
 
-			,	' step_complete': function(element,ev)
+			,	update_next: function(step)
+				{					
+					step
+						.removeClass('acc-wizard-active')
+						.addClass('acc-wizard-todo')
+				}
+
+			,	'.acc-wizard-todo li, .acc-wizard-todo a click': function(el,ev)
 				{
-					var	step
-					=	this.options.current.attr('step')
-					,	form_data
-					=	can.deparam(
-							this.element
-									.find('.'+step.identity())
-										.find('form')
-											.serialize()
-						)
+					ev.preventDefault()
+				}				
 
-					this.element
-							.find('.next')
-								.removeClass('disabled')
-				}
-				
-
-			,	'.next:not(".disabled") a:not(".final") click': function(current,ev)
+			,	'li:not(".disabled") a.next click': function(current,ev)
 				{
-					if	(this.check_step_requirements())	{
-						this.options
-								.current
-								.attr(
-									'step'
-								,	current.data('action').getFinalStep()
-								)
-						this._update_current(this.element.find('.step.current').next())	
-					}
+					var	current
+					=	this.element.find('.acc-wizard-active')
+
+					this.update_previus(current)
+
+					this.$prev
+							.removeClass('disabled')
+
+					this.$next
+							.addClass('disabled')
+					
+					this.update_current(current.next())
 				}
 
-			,	'.next:not(".disabled") a.final click':function(current,ev)
+			,	'li:not(".disabled") a.prev click': function(current,ev)
 				{
-					this._show_preview()
+					var	current
+					=	this.element.find('.acc-wizard-active')
+
+					this.update_next(current)
+
+					this.update_current(current.prev())
+
+					this.$next
+							.removeClass('disabled')
 				}
 
-			,	'.previous:not(".disabled") a  click': function(current,ev)
+			,	' step_incomlete': function(el,ev)
+				{
+					this.$next
+							.addClass('disabled')
+				}
+
+			,	' step_complete': function(el,ev,step)
 				{
 					this.options
-							.current
-							.attr(
-								'step'
-							,	current.data('action').getFinalStep()
-							)
-					this._update_current(this.element.find('.step.current').prev())
+							.form_data
+								.attr(
+									step.id
+								,	step.query
+								)
+
+					this.$next
+							.removeClass('disabled')
+				}
+
+			,	' final_step': function(el,ev)
+				{
+					this.$next
+							.text('Finalizar')
+				}
+
+			,	' initial_step': function(el,ev)
+				{
+					this.$prev
+							.addClass('disabled')
+				}
+
+			,	' step_rendered': function(el,ev)
+				{
+					this.$next
+							.addClass('disabled')
 				}
 			}
 		)

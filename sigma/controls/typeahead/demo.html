@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="utf-8">
+	<meta name="description" content="">
+	<meta name="author" content="Sigma-IT">
+	<title>HAL-Client/Typeahead Demo</title>
+</head>
+<body>
+	<div id="topbar" class="navbar navbar-fixed-top">
+		<div class="navbar-inner">
+			<div class="container-fluid">
+				<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</a>
+				<a class="brand" href="#">
+					<h1>Typeahead Demo</h1>
+				</a>
+				<div id='home' class="nav-collapse" >
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="typeahead" class="container">
+		<form>
+			<label>Simple Source</label>
+			<input type="text" id="simple">
+			<span class="help-block">Source: Array de Objetos</span>
+			<label>Ajax Source</label>
+			<input type="text" id="ajax">
+			<span class="help-block">Source: Peticion Ajax</span>
+			<label>Styled Source</label>
+			<input type="text" id="styled">
+			<span class="help-block">Lista con diferente LI</span>
+		</form>
+	</div>
+    	<script type='text/javascript' src='../../../steal/steal.js'></script>
+		<style type="text/css">
+			body {
+				padding-top: 90px;
+				padding-bottom: 40px;
+			}
+			#home .container-fluid {
+				margin-left: auto;
+				margin-right: auto;
+				max-width: 500px;
+			}
+			#root {
+				margin-left: auto;
+				margin-right: auto;
+				max-width: 800px;
+			}
+		</style>
+	</style>
+</body>
+</html>
+
+<script type="text/javascript">
+	steal(
+		'sigma/controls/hypermedia/container.js'
+	,	'sigma/models'
+	,	'sigma/lib'
+	,	'sigma/lib/style.js'
+	,	'can/view/mustache'
+	)
+	.then(
+		'sigma/controls/typeahead'
+	,	'sigma/lib/style.js'
+	).then(
+		function()
+		{
+			var	mySource
+			=	[{ id: 1, name: 'Hola'}, { id: 2, name: 'como'}, { id: 3, name: 'estas'}];
+
+			new	Sigma.Controls.Typeahead(
+				'#simple'
+			,	{
+					source: mySource
+				}
+			)
+
+			new	Sigma.Controls.Typeahead(
+				'#ajax'
+			,	{
+					ajax: 'http://trabajando:3003/api/typeahead/campos_extras'
+				,	display: 'nombre'
+				,	view_item:	'//sigma/views/typeahead/ajax_li.mustache'
+				,	hal: true
+				}
+			)
+
+			new	Sigma.Controls.Typeahead(
+				'#styled'
+			,	{
+					ajax: 'http://trabajando:3003/api/typeahead/campos_extras'
+				,	display: 'nombre'
+				,	view_item:	'//sigma/views/typeahead/templated_li.mustache'
+				,	hal: true
+				}
+			)
+		}
+	)
+</script>

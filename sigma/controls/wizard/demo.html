@@ -39,7 +39,7 @@
 					<span class="icon-bar"></span>
 				</a>
 				<a class="brand" href="#">
-					<h1>HAL-Client/Wizard Demo</h1>
+					<h1>Wizard Demo</h1>
 				</a>
 				<div id='home' class="nav-collapse" >
 				</div>
@@ -53,19 +53,252 @@
 	,	'can/view/mustache'
 	,	'sigma/util'
 	,	'sigma/lib/hypermedia.js'
-	,	'sigma/controls/login'
 	,	'sigma/lib/style.js'
 	).then(
 		'sigma/controls/wizard'
-	,	'sigma/controls/wizard/style.css'
-	,	'sigma/controls/form'
+	,	'sigma/controls/wizard/styles.css'
 	,	'sigma/controls/wizard/content/content.js'
-	,	'sigma/controls/wizard/content/contentwithpreview.js'
 	,	'sigma/controls/wizard/content/contentpreview.js'
+	,	'sigma/controls/wizard/content/contentwithpreview.js'
 	).then(
 		function()
 		{
-			
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Wizards'
+			,	{ }
+			,	{
+					getSteps: function()
+					{
+						return	this.links.get('estados')
+							&&	this.links.get('estados').embedded.attr('collection')
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Estados'
+			,	{ }
+			,	{
+					isInitial: function()
+					{
+						return	_.isBoolean(this.attr('initial'))
+								?	this.attr('initial')
+								:	this.attr('initial') == "true"
+					}
+				,	isFinal: function()
+					{
+						return	_.isBoolean(this.attr('final'))
+								?	this.attr('final')
+								:	this.attr('final') == "true"
+					}
+				,	getPreview: function()
+					{
+						return	this.links.get('preview')
+					}
+				,	getInnerSteps: function()
+					{
+						return	this.links.get('inner_steps')
+					}
+				,	hasInnerSteps: function()
+					{
+						return	!can.isEmptyResource(
+									this.getInnerSteps()
+								)
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Inner_steps'
+			,	{}
+			,	{
+					getForm: function()
+					{
+						return	this.links.get('form_fields')
+					}
+				,	hasRequirements: function()
+					{
+						return	!can.isEmptyResource(
+									this.getRequirements()
+								)
+					}
+				,	getRequirements: function()
+					{
+						return	this.links.get('inner_required_fields')
+					}
+				,	isInitial: function()
+					{
+						return	_.isBoolean(this.attr('initial'))
+								?	this.attr('initial')
+								:	this.attr('initial') == "true"
+					}
+				,	isFinal: function()
+					{
+						return	_.isBoolean(this.attr('final'))
+								?	this.attr('final')
+								:	this.attr('final') == "true"
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Collection(
+				'Sigma.Model.HAL.Inner_steps.Collection'
+			,	{}
+			,	{
+					getSteps: function()
+					{
+						return	this.embedded.attr('collection')
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Inner_required_fields'
+			,	{}
+			,	{
+					getFormField: function()
+					{
+						return	this.links.get('form_field')
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Collection(
+				'Sigma.Model.HAL.Inner_required_fields.Collection'
+			,	{}
+			,	{
+					getFields: function()
+					{
+						return	this.embedded.attr('collection')
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Form_fields'
+			,	{}
+			,	{
+					getFieldType: function()
+					{
+						return	this.embedded.attr('form_field_type')
+							&&	this.embedded.attr('form_field_type').attr('type')
+					}
+				,	options: function()
+					{
+						return	(
+									this.embedded.attr('options')
+								&&	this.embedded.attr('options').embedded.attr('collection')
+								)
+							||	(
+									this.embedded.attr('suboptions')
+								&&	this.embedded.attr('suboptions').embedded.attr('collection')
+								)
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Collection(
+				'Sigma.Model.HAL.Form_fields.Collection'
+			,	{ }
+			,	{
+					getFields: function()
+					{
+						return	this.embedded.attr('collection')
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Suboptions'
+			,	{}
+			,	{
+					name: function()
+					{
+						return	this.attr('label')
+							||	this.attr('clase')
+							||	this.attr('tipo_proceso')
+							||	this.attr('rol')
+							||	this.attr('estado_avance')
+							||	this.attr('cuenta')
+							||	this.attr('nombre')
+							||	this.attr('codigo_concepto')
+							||	this.attr('evento')
+							||	this.attr('grupo')
+					}
+				}
+			)
+
+			Sigma.HypermediaContainer(
+				'HAL.Container.Wizard.Content'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'1':
+							{
+								Handler:	Sigma.Controls.Wizard_Content
+							,	options:	{}
+							}
+						,	'2':
+							{
+								Handler:	Sigma.Controls.Wizard_ContentWithPreview
+							,	options:
+								{
+									view_preview:	'sigma/views/wizard/list/campos_extra.mustache'
+								}
+							}
+
+						,	' 3, 4, 5, 6, 7':
+							{
+								Handler:	Sigma.Controls.Wizard_ContentWithPreview
+							,	options:	{}
+							}
+						,	'8':
+							{
+								Handler:	Sigma.Controls.Wizard_ContentPreviewer
+							,	options:	{}
+							}
+						}
+					}
+				}
+			,	{ }
+			)
+
+			Sigma.HypermediaContainer(
+				'HAL.Container.Wizard'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'wizard':
+							{
+								Handler:	Sigma.Controls.Wizard
+							,	options:
+								{
+									view_init:		'sigma/views/wizard/init.mustache'
+								,	view_steps:		'sigma/views/wizard/step_list.mustache'
+								,	view_content:	'sigma/views/wizard/step_content.mustache'
+								,	hc_content:		HAL.Container.Wizard.Content
+								}
+							}
+						}
+					}
+				}
+			,	{}
+			)
+
+			new	HAL.Container.Wizard(
+				$('#root')
+			,	{
+					id:		'Wizard'
+				,	slot:	Sigma.Model.HAL.Wizards.Fetch(
+								'http://trabajando:3003/api/data/maquina_de_estados/1'
+							,	'wizard'
+							) 
+				}
+			)
 		}
 	)
 </script>

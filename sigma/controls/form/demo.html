@@ -42,7 +42,7 @@ steal(
 	function()
 	{
 		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.Form'
+			'Sigma.Model.HAL.Forms'
 		,	{}
 		,	{
 				getActions:function()
@@ -84,6 +84,18 @@ steal(
 			}
 		)
 
+		Sigma.Model.HAL.Resource(
+			'Sigma.Model.HAL.Suboptions'
+		,	{}
+		,	{
+				name: function()
+				{
+					return	this.attr('clase')
+						||	this.attr('tipo_proceso')
+				}
+			}
+		)
+
 		Sigma.HypermediaContainer(
 			'Sigma.Hypermedia.Form.Container'
 		,	{
@@ -110,7 +122,7 @@ steal(
 			$('#form')
 		,	{
 				id: 'Form'
-			,	slot:	Sigma.Model.HAL.Form.Fetch(
+			,	slot:	Sigma.Model.HAL.Forms.Fetch(
 							'http://trabajando:3003/api/data/forms/1'
 						,	'form'
 						)

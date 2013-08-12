@@ -1,100 +1,157 @@
 steal(
-	'sigma/stock/controls/lib'
-,	'sigma/hal/collections.js'
+	'sigma/controls/hypermedia/control.js'
+,	'sigma/plugins'
 ).then(
-	function() {
+	'./styles.css'
+).then(
+	function()
+	{
 		Sigma.HypermediaControl(
-			'Sigma.Controls.Tabs'
+			'Sigma.Control.Tabs'
 		,	{
-				defaults:{
-					view_form:false
+				defaults:
+				{
+					view:		false
+				,	view_new:	false
+				,	editable:	false
+				,	new:		false
 				}
 			}
 		,	{
 				_render_content: function(data)
-				{	
-					this.loadTemplate(data)
-					this.autoloadFirstTab()
-				}
-
-			,	autoloadFirstTab: function()
 				{
-					this.loadTabByIndex(0)
-				}
-
-			,	loadTemplate:function(data)
-				{
-					can.append(
-							this.element
-						,	can.$('<div class="tabs-wrapper">')
-								.append(
-									can.view(this.options.view_form,data)
-								)
-						)
-				}
-
-			,	toggleActive: function(li)
-				{
-					this.element
-						.find('li.active')
-						.removeClass('active')
-					li.addClass('active')
-
-					this.element
-						.find('li.active')
-
-				}
-
-			,	showActive: function()
-				{
-					var toShowId
-					=	this.element
-							.find('li.active a')
-							.attr('href')
-							.substr(1)
+					this._super(data)
 					
-					this.element
-						.find('.tab-pane').hide()
-					this.element
-						.find('#'+toShowId).show()
-				}
+					var	self
+					=	this
 
-			,	loadTabByIndex: function(index)
-				{
 					this.element
-						.find('li')
-						.eq(index)
-						.children('a.browseable')
-						.trigger('click')
-				}
+							.addClass('tabbable')
 
-			,	'li a.browseable click': function(el, ev)
-				{
-					if (!el.parent('li').hasClass('active'))
-					{
-						this.toggleActive(el.parent('li'))
-						this.showActive()
-						console.log("2Browse",{
-								links: this.options.slot.links
-							,	rel: 'template_sections_general'
-							,	name: el.data('link').name
-							,	target: (this.options.target_content)
-									? this.options.target_content
-									: this.options.target
-							})
-						
-						this.element.trigger(
-							'browse'
-						,	{
-								links: this.options.slot.links
-							,	rel: 'template_sections_general'
-							,	name: el.data('link').name
-							,	target: (this.options.target_content)
-									? this.options.target_content
-									: this.options.target
+					this.element
+							.find('ul')
+								.addClass('nav nav-tabs')
+
+					if	(this.options.editable)
+						_.each(
+							this.element.find('ul.nav-tabs li a')
+						,	function(tab)
+							{
+								self.setEditable(tab)
+								can.$(tab)
+										.editable('disable')
 							}
 						)
-					}
+
+					if	(this.options.new)
+						this.addNewTab()
+
+					this.element
+							.find('ul.nav-tabs li:first a')
+								.click()
+				}
+
+			,	setEditable: function(tab)
+				{
+					can.$(tab)
+							.tooltip('destroy')
+
+					can.$(tab)
+							.tooltip(
+								{
+									title: 'Presione para editar'	
+								}
+							)
+
+					can.$(tab)
+							.editable(
+								{
+									type:			'text'
+								,	title:			'Nombre del Tab'
+								,	highlight:		false
+								,	showbuttons:	false
+								}
+							)
+							.removeClass('editable-click')
+				}
+
+			,	getNewTabName: function()
+				{
+					var	news
+					=	this.element.find('ul.nav-tabs li:contains("Nueva Tab")')
+					
+					return	"Nueva Tab"
+						+	(
+								news.length
+								?	" "+(news.length+1)
+								:	""
+							)
+				}
+
+			,	addNewTab: function()
+				{
+					can.append(
+						this.element.find('ul.nav-tabs')
+					,	can.view(
+							this.options.view_new
+						,	this.options.data
+						)
+					)
+					this.element
+							.find('ul li:last a')
+								.addClass('addNewTab')
+								.tooltip(
+									{
+										title:	'Presione para agregar un nuevo tab'
+									}
+								)
+				}
+
+			,	addNewEmptyTab: function(tab_name)
+				{
+					var	tab
+					=	this.element
+							.find('ul.nav-tabs li:last a')
+					tab	
+						.text(
+								tab_name
+							||	this.getNewTabName()
+							)
+
+					this.setEditable(tab)
+				}
+
+			,	'ul.nav-tabs li.active a click': function(el)
+				{
+					el
+						.tooltip('hide')
+				}
+
+			,	'ul.nav-tabs li:not(".active") a click': function(el)
+				{
+					var	active
+					=	this.element
+							.find('li.active a')
+					active
+						.editable('disable')
+					active
+						.parent('li')
+							.removeClass('active')
+					el
+						.editable('enable')
+					el
+						.parent('li')
+							.addClass('active')
+				}
+
+			,	'ul.nav-tabs li a.addNewTab click': function(el)
+				{
+					el
+						.removeClass('addNewTab text-info')
+
+					this.addNewEmptyTab()
+
+					this.addNewTab()
 				}
 			}
 		)

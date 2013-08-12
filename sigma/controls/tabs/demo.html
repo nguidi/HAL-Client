@@ -1,29 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="utf-8">
 	<meta name="description" content="">
 	<meta name="author" content="Sigma-IT">
-	<title>Sigma/Tab demo</title>
-	<script type='text/javascript' src="../../../../steal/steal.js"></script>
-	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-	<!--[if lt IE 9]>
-		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-	<script id="formTemplate" type="text/mustache">
-	    {{>views/formTemplate.mustache}}
-	</script>
-	<script id="actionsTemplate" type="text/mustache">
-	    {{>views/actionsTemplate.mustache}}
-	</script>
-	<script id="barsTemplate" type="text/mustache">
-	    {{>views/barsTemplate.mustache}}
-	</script>
-	<script id="listInstitucionesTemplate" type="text/mustache">
-	    {{>views/listInstitucionesTemplate.mustache}}
-	</script>
+	<title>HAL-Client/Tabs Demo</title>
 </head>
 <body>
 	<div id="topbar" class="navbar navbar-fixed-top">
@@ -42,89 +25,111 @@
 			</div>
 		</div>
 	</div>
-	<div id="templateContainer" class="well-large"></div>
-	<div id="contentContainer" class="well-large"></div>
-<script type='text/javascript'>
-steal(
-	'sigma/stock/controls/lib'
-,	'can/view/mustache'
-).then(
-	'sigma/stock/controls/tabs'
-,	'sigma/stock/controls/tabs/actividad_adapter.js'
-,	'sigma/stock/controls/lib/media.css'
-,	'sigma/stock/controls/css/common.css'
-,	'sigma/lib/style.js'
-).then(
-	function()
-	{
-		Sigma.HypermediaContainer(
-			'Sigma.Hypermedia.Tabs.Container'
-		,	{
-				defaults:
-				{
-					media_types:
-					{
-						'template':
-						{
-							Handler:Sigma.Controls.Tabs
-						,	options:
-							{
-								target: 'Template'
-							,	target_content: 'Content'
-							,	view_form: '//stock/views/tabs/init.mustache'
-							}
-						}
-					}
-				}
+	<div id="tabs" class="container"></div>
+    	<script type='text/javascript' src='../../../steal/steal.js'></script>
+		<style type="text/css">
+			body {
+				padding-top: 90px;
+				padding-bottom: 40px;
 			}
-		,	{}
-		)
-
-		Sigma.HypermediaContainer(
-			'Sigma.Hypermedia.TabContent.Container'
-		,	{
-				defaults:
-				{
-					media_types:
-					{
-						'template_sections_general':
-						{
-							Handler: Sigma.Controls.Former
-						,	options:
-							{
-								view: '//stock/views/former/init.mustache'
-							}
-						}
-					}
-				}
+			#home .container-fluid {
+				margin-left: auto;
+				margin-right: auto;
+				max-width: 500px;
 			}
-		,	{}
-		)
-
-		new	Sigma.Hypermedia.Tabs.Container(
-			$('#templateContainer')
-		,	{
-				id: 'Template'
-			,	slot: Sigma.Model.HAL.Tabs.getRoot(
-					'http://trabajando:3003/api/data/templates/1'
-				,	'template'
-				)
+			#root {
+				margin-left: auto;
+				margin-right: auto;
+				max-width: 800px;
 			}
-		)
-
-		new	Sigma.Hypermedia.TabContent.Container(
-			$('#contentContainer')
-		,	{
-				id: 'Content'
-			,	slot: Sigma.Model.HAL.Resource.getRoot(
-					'http://trabajando:3003/api/data/actividads/30'
-				,	'template_sections_general'
-				)
+			#tabs {
+				margin-top: 100px;
 			}
-		)
-
-	}
-)
-</script>
+		</style>
+	</style>
 </body>
 </html>
+
+<script type="text/javascript">
+	steal(
+		'sigma/controls/hypermedia/container.js'
+	,	'sigma/models'
+	,	'sigma/lib'
+	,	'sigma/lib/style.js'
+	,	'can/view/mustache'
+	)
+	.then(
+		'sigma/controls/tabs'
+	,	'sigma/lib/style.js'
+	).then(
+		function()
+		{
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Seccions'
+			,	{}
+			,	{
+					name: function()
+					{
+						return	this.attr('seccion')
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Collection(
+				'Sigma.Model.HAL.Seccions.Collection'
+			,	{}
+			,	{
+					tabs: function()
+					{
+						return	this.getCollection()
+					}
+				}
+			)
+
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Groups'
+			,	{}
+			,	{}
+			)
+
+			Sigma.Model.HAL.Resource(
+				'Sigma.Model.HAL.Campos_extras'
+			,	{}
+			,	{}
+			)
+
+			Sigma.HypermediaContainer(
+				'Sigma.Hypermedia.Tabs'
+			,	{
+					defaults:
+					{
+						media_types:
+						{
+							'tab':
+							{
+								Handler: Sigma.Control.Tabs
+							,	options:
+								{
+									view: '//sigma/views/tabs/init.mustache'
+								,	view_new: '//sigma/views/tabs/new.mustache'
+								,	editable: true
+								,	new: true
+								}
+							}
+						}
+					}
+				}
+			,	{}
+			)
+
+			new Sigma.Hypermedia.Tabs(
+					$('#tabs')
+				,	{
+						id: 'Tabs'
+					,	target: 'Tabs'
+					,	slot: Sigma.Model.HAL.Seccions.Fetch('http://trabajando:3003/api/data/seccions','tab')
+					}
+				)
+		}
+	)
+</script>

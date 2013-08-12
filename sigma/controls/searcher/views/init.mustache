@@ -1,46 +1,45 @@
-<div class="input-append">
-	<input class="input-xlarge" id="appendedInputButton" type="text" name="busqueda_rapida">
-	
-	{{#if fields_search}}
-	<button class="btn dropdown-toggle" type="button" title="Busqueda Avanzada">
-		<span class="caret"></span>
-	</button>
-	{{/if}}
-	<button id="search" class="btn btn-primary" type="button" title="Buscar" {{#search_button}} {{data 'search_button'}} {{/search_button}}>&nbsp;&nbsp;<i class="icon-search"></i>&nbsp;&nbsp;</button>
-	{{#if actions_search}}
-		<span class="actions offset1">
-		{{#actions_search}}
-			<button class="btn btn-small" name="{{name}}" type="button" title="{{tooltip}}">
-				<i class="icon-{{icon}}"></i>&nbsp;&nbsp;{{caption}}
-			</button>
-		{{/actions_search}}
-		</span>
-	{{/if}}
+<div class="input-append searcher">
+	<input class="search" type="text">
+	<div class="btn-group">
+		<button class="btn search">
+			Buscar
+		</button>
+		<button class="btn dropdown-toggle" data-toggle="dropdown" tabindex="-1">
+			<span class="caret"></span>
+		</button>
+		<div class="advance dropdown-menu pull-right">
+			<form>
+				<fieldset>
+					<legend>
+						<p class="text-center">
+							Busqueda Avanzada
+						</p>
+					</legend>
+					<div class="form_field">
+						<label for="name">Nombre</label>
+						<input class="input-large" type="text" name="name">
+					</div>
+					<div class="form_field">
+						<label for="lastname">Apellido</label>
+						<input class="input-large" type="text" name="lastname">
+					</div>
+					<div class="form_field">
+						<label for="sex">Sexo</label>
+						<select name="sex">
+							<option>Masculino</option>
+							<option>Femenino</option>
+						</select>
+					</div>
+					<div class="form_field">
+						<label for="dni">DNI</label>
+						<input class="input-large" type="text" name="dni">
+					</div>
+				</fieldset>
+			</form>
+			<div class="form-actions">
+				<button type="button" class="btn pull-left cancel">Cancelar</button>
+				<button type="button" class="btn btn-primary pull-right advance-search">Buscar</button>
+			</div>
+		</div>
+	</div>
 </div>
-
-{{#if fields_search}}
-<ul class="advance dropdown-menu">
-	<form class="well-small">
-		<fieldset>
-    		<legend>Busqueda avanzada de {{title}}</legend>
-    		<lu>
-			{{#fields_search}}
-			<li>
-				<div class="well-small">
-					<span class="span2"><small>{{label}}</small></span>
-					<input type="text" name="{{name}}" id="{{name}}" placeholder="{{placeholder}}">
-				</div>
-			</li>
-			{{/fields_search}}
-		</lu>
-		<div class="form-actions well-small">
-	  		<button class="btn btn-small" type="reset">Limpiar</button>
-	  		<button id="advance_search" class="btn btn-small btn-primary pull-right" type="button" {{#advance_search}} {{data 'advance_search'}} {{/advance_search}}>Buscar</button>
-	  	</div>
-	  	</fieldset>
-	</form>
-</ul>
-{{/if}}
-
-
-

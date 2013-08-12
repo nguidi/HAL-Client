@@ -25,7 +25,7 @@ steal(
 			,	get: function()
 				{
 					return	_.isDefined(this.parent)
-							?	this.parent.get(this.rel,this.attr('this.name'))
+							?	this.parent.get(this.rel,this.attr(this.name))
 							:	_.isDefined(this.rel)
 								?	Sigma.Model.HAL.model_by_rel(this.rel).get(this.attr('href'),this.rel)
 								:	Sigma.Model.HAL.Resource.get(this.attr('href'))

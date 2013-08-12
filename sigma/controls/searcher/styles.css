@@ -1,0 +1,8 @@
+.searcher .advance .form_field {
+	margin: 5px;
+	padding: 5px;
+}
+
+.searcher .advance .form-actions{
+	margin-bottom: -3px !important;
+}

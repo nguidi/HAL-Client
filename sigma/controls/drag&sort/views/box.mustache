@@ -1,0 +1,27 @@
+<div class="row dragger-box">
+	<legend>
+		<h4 class="title">
+			{{title}}
+		</h4>
+	</legend>
+	<ul class="unstyled">
+	{{#items}}
+		<li {{data 'item'}}>
+			<div class="dragger-item alert alert-info">
+				<strong>{{title}}}</strong><br>
+				<small class="muted">
+					{{#tipo_campo}}
+						<strong>Tipo: </strong>{{tipo_campo}}
+					{{/tipo_campo}}
+					{{#default}}
+						<strong>Defecto: </strong>{{default}}
+					{{/default}}
+					{{#es_indicador}}
+						<strong>Indicador: </strong>{{es_indicador}}
+					{{/es_indicador}}
+				</small>
+			</div>
+		</li>
+	{{/items}}
+	</ul>
+</div>

@@ -15,7 +15,7 @@ steal(
 				,	view_file:		'sigma/views/form/file.mustache'
 				,	view_radio:		'sigma/views/form/radio.mustache'
 				,	view_checkbox:	'sigma/views/form/checkbox.mustache'
-				,	view_input:		'sigma/views/form/text.mustache'
+				,	view_text:		'sigma/views/form/text.mustache'
 				,	view_button:	'sigma/views/form/button.mustache'
 				}
 			}
@@ -45,10 +45,16 @@ steal(
 							can.append(
 								self.element.find('form')
 							,	can.view(
-									self.options['view_'+field.getFieldType()]
+									self.options['view_'+(_.isEqual(field.getFieldType(),'input') ? field.attr('type') : field.getFieldType())]
 								,	field
 								)
 							)
+							self.element
+									.find(
+										field.getFieldType()+':last'
+									).addClass(
+										field.identity()
+									)
 							// if	(field.attr('depends'))
 							// {
 							// 	var $element

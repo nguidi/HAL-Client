@@ -1,0 +1,40 @@
+<div class="row-fluid">
+	<div class="span6 sorteable">
+		{{#targets}}
+			<div class="row dragger-box">
+				<legend>
+					<h4 class="title">
+						{{title}}
+					</h4>
+				</legend>
+				<ul class="unstyled">
+				{{#items}}
+					<li {{data 'item'}}>
+						<div class="dragger-item alert alert-info">
+							<strong>{{title}}}</strong><br>
+							<small class="muted">
+								{{#tipo_campo}}
+									<strong>Tipo: </strong>{{tipo_campo}}
+								{{/tipo_campo}}
+								{{#default}}
+									<strong>Defecto: </strong>{{default}}
+								{{/default}}
+								{{#es_indicador}}
+									<strong>Indicador: </strong>{{es_indicador}}
+								{{/es_indicador}}
+							</small>
+						</div>
+					</li>
+				{{/items}}
+				</ul>
+			</div>
+		{{/targets}}
+	</div>
+	<div class="span6 available">
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span6">
+		<button class="btn btn-large btn-block drag-new-box" type="button">Nuevo Grupo</button>
+	</div>
+</div>

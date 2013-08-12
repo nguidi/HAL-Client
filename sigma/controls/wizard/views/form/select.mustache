@@ -1,0 +1,23 @@
+<div class="control-group">
+	<label class="control-label" for="{{name}}">
+		{{label}}
+	</label>
+	<div class="controls">
+		<select id="{{name}}" name="{{name}}" {{#multiple}} multiple {{/multiple}}>
+			<option value="">Seleccione una opción</option>
+			{{#options}}
+			<option value="{{value}}" {{data 'option'}}>
+				{{name}}
+			</option>
+			{{/options}}
+		</select>
+	</div>
+</div>
+{{#note}}
+<span class="help-block">
+	<p class="muted">
+		<strong>NOTA:</strong>
+		{{note}}
+	</p>
+</span>
+{{/note}}
