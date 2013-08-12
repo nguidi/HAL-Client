@@ -1,6 +1,7 @@
 steal(
-	'sigma/stock/controls/lib'
-,	'sigma/hal/collections.js'
+	'sigma/lib'
+,	'sigma/lib/hypermedia.js'
+,	'sigma/util'
 ).then(
 	function() {
 		Sigma.HypermediaControl(
@@ -14,27 +15,6 @@ steal(
 		,	{
 				_render_content: function(data)
 				{
-					data.attr(
-						'headers_list'
-					,	[
-							{
-								title:"Planes"
-							,	span: 3
-							}
-						,	{
-								title:"Programas asociados"
-							,	span: 4
-							}
-						,	{
-								title:"Paises"
-							,	span: 1
-							}
-						,	{
-								title:"Objetivos"
-							,	span: 4
-							}
-						]
-					)
 					can.append(
 						this.element
 					,	can.$('<div class="list-wrapper">')
@@ -45,11 +25,8 @@ steal(
 								)
 							)
 					)
-
-					//console.log(data.planes())
-
 					can.append(
-						can.$('#planes_list_table')
+						can.$('#list_table')
 					,	can.view(
 							this.options.view_template_list
 						,	data

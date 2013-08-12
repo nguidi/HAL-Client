@@ -22,7 +22,6 @@ steal(
 					if	(el.hasClass('signup'))
 						this.signup(el)
 				}
-
 			,	signin: function(el)
 				{
 					var	form 
@@ -48,8 +47,10 @@ steal(
 							el
 						,	can.$('<i class="icon-spinner icon-spin icon-large pull-left">')
 						)
+					console.log(el.data('link'))
 
 					if (this.checkLogin(form))
+					{
 						el.data('link')
 							.resolve(form)
 							.then(
@@ -62,6 +63,7 @@ steal(
 										self.loginSuccess(data)
 								}
 							)
+					}
 					else
 					{
 						el

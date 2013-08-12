@@ -121,7 +121,7 @@ steal(
 									).href
 								).expand(
 									{
-										model:	this.attr('href').split('/')[1]
+										action:	this.attr('href').split('/')[1]
 									,	id:		this.attr('href').split('/')[2]
 									,	assoc:	this.attr('href').split('/')[3]
 									}
@@ -154,6 +154,7 @@ steal(
 				}
 			,	resolve: function()
 				{
+					console.log(this.parent,this.rel)
 					return	this.parent.fetch(this.url(),this.rel)
 				}
 			}
@@ -238,6 +239,7 @@ steal(
 				}
 			,	resolve: function(data,rel)
 				{
+					console.log(this.url())
 					return	this.parent.find(this.url(),data,rel || this.rel)
 				}
 			,	url: function()
@@ -255,7 +257,7 @@ steal(
 								).href
 							).expand(
 								{
-									api_action: this.attr('href').split('/')[1] 
+									action: this.attr('href').split('/')[1] 
 								}
 							)
 				}
@@ -385,6 +387,7 @@ steal(
 				}
 			,	resource_by_rel: function(rel)
 				{
+					console.log(rel)
 					return	(
 							_.isEqual(rel,"self")
 							?	this.resource.constructor

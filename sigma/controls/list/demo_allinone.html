@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="Sigma-IT">
 	<title>Sigma/List demo</title>
-	<script type='text/javascript' src="../../../../../steal/steal.js"></script>
+	<script type='text/javascript' src="../../../steal/steal.js"></script>
 	<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
@@ -76,13 +76,12 @@
 	<div id="vistaLIST"></div>
 <script type='text/javascript'>
 steal(
-	'sigma/stock/controls/lib'
-,	'can/view/mustache'
+	'//../app/models/models.js'
+,	'//../app/styles/styles.js'
 ).then(
-	'sigma/stock/controls/list'
-,	'sigma/stock/controls/charts'
-,	'sigma/stock/controls/lib/media.css'
-,	'sigma/lib/style.js'
+	'sigma/controls/list'
+,	'sigma/controls/charts'
+,	'//../app/controls/planes/global.js'
 ).then(
 	function()
 	{
@@ -95,12 +94,12 @@ steal(
 					{
 						'procesos':
 						{
-							Handler: Sigma.Controls.List
+							Handler: Sigma.Controls.SRU.Global
 						,	options:
 							{
 								target: 'Root'
-							,	view_list: '//stock/views/list/procesos.mustache'
-							,	view_template_list: '//api/views/planes/planes_globales_list.mustache'
+							,	view_list: '//sigma/views/list/procesos.mustache'
+							,	view_template_list: '//../app/views/planes/planes_globales_list.mustache'
 							}
 						}
 					,	'programas':
@@ -109,7 +108,7 @@ steal(
 						,	options:
 							{
 								target: 'Root'
-							,	view_list: '//stock/views/list/programas.mustache'
+							,	view_list: '//sigma/views/list/programas.mustache'
 							}
 						}
 					,	'actividads':
@@ -118,7 +117,7 @@ steal(
 						,	options:
 							{
 								target: 'Root'
-							,	view_list: '//stock/views/list/actividads.mustache'
+							,	view_list: '//sigma/views/list/actividads.mustache'
 							}
 						}
 					,	'plans':
@@ -127,8 +126,8 @@ steal(
 						,	options:
 							{
 								target: 'Root'
-							,	view_list: '//stock/views/list/planes.mustache'
-							,	view_template_list: '//api/views/planes/planes_globales_list.mustache'
+							,	view_list: '//sigma/views/list/planes.mustache'
+							,	view_template_list: '//../app/views/planes/planes_globales_list.mustache'
 							}
 						}
 					,	'pais':
@@ -137,8 +136,8 @@ steal(
 						,	options:
 							{
 								target: 'Root'
-							,	view_list: '//stock/views/list/planes.mustache'
-							,	view_template_list: '//api/views/planes/planes_globales_list.mustache'
+							,	view_list: '//sigma/views/list/planes.mustache'
+							,	view_template_list: '//../app/views/planes/planes_globales_list.mustache'
 							}
 						}
 					,	'plan':
@@ -147,7 +146,7 @@ steal(
 						,	options:
 							{
 								target: 'Root'
-							,	view_list: '//stock/views/list/plan.mustache'
+							,	view_list: '//sigma/views/list/plan.mustache'
 							}
 						}
 					}
@@ -156,75 +155,17 @@ steal(
 		,	{}
 		)
 
-		Sigma.Model.HAL.Collection(
-			'Sigma.Model.HAL.Plans'
-		,	{}
-		,	{
-				planes: function()
-				{
-					return this.getCollection()
-				}
-			}
-		)
-
-		Sigma.Model.HAL.Collection(
-			'Sigma.Model.HAL.Programas'
-		,	{}
-		,	{}
-		)
-
-		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.Programa'
-		,	{}
-		,	{
-				programa: function()
-				{
-					return 	this.links.attr('nombre_programa').get()
-				}
-			,	pais: function()
-				{
-					return 	this.embedded.attr('pais')
-				}
-			}
-		)
-
-		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.NombrePrograma'
-		,	{}
-		,	{}
-		)
-
-		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.Pais'
-		,	{}
-		,	{}
-		)
-
-		Sigma.Model.HAL.Resource(
-			'Sigma.Model.HAL.Plan'
-		,	{}
-		,	{
-				programas: function()
-				{
-					return 	this.embedded.attr('programas')
-					?	this.embedded.attr('programas').getCollection()
-					: 	new can.Observe.List() 
-				}
-			}
-		)
-
-		Sigma.Model.HAL.Plans.fetch(
+		Sigma.Model.HAL.Plans.Fetch(
 			'http://trabajando:3003/api/data/plans'
 		,	'procesos'
 		).then(
 			function(list)
 			{
-				list.attr('title',"Planes globales")
 				can.each(
 					list.getCollection()
 				,	function(data)
 					{
-						data.attr('rowspan',data.embedded.attr('programas')?data.embedded.attr('programas').getCollection().length+1:0)
+						data.attr('rowspan',data.embedded.attr('programas').code!="404"?data.embedded.attr('programas').getCollection().length+1:0)
 					}
 				)
 				

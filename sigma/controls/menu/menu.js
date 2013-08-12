@@ -34,8 +34,6 @@ steal(
 
 			,	'.browseable click': function(el, ev)
 				{
-					console.log(el.data('link'))
-
 					if (this.toggleActive(el.is('li') ? el : el.parent('li')))
 						can.trigger(
 							this.element

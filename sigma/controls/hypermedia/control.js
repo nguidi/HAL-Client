@@ -18,6 +18,7 @@ steal(
 		,	{
 				_render_content: function(data)
 				{
+					//console.log("HYPERMEDIA CONTROL",data)
 					if	(data instanceof can.Observe.List)
 						this._render_list(data)
 					else

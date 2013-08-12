@@ -56,6 +56,7 @@ steal(
 						throw 'Container must have an "id" property'
 					this.constructor.registerContainer(this)
 					this.update()
+					//this.update(options)
 
 				}
 			,	update:	function(handler_options)
@@ -114,7 +115,7 @@ steal(
 						if	(resource)
 							throw	'Wrong resource type!!!'
 				}
-			,	getRelationHandler: function(resource)
+			,	getRelationHandler: function(relation)
 				{
 					return	_.find(
 								this.options.media_types
@@ -122,7 +123,7 @@ steal(
 								{
 									return	_.contains(
 												rel.replace(/ /g,'').split(',')
-											,	resource.rel
+											,	relation
 											)
 								}
 							)
@@ -141,9 +142,11 @@ steal(
 			,	render_resource: function(resource_to_render,handler_options)
 				{
 					var	self = this
-					,	self_rel = this.getRelationHandler(resource_to_render)
-					self_rel = this.getSubRelationHandler(self_rel,resource_to_render.rel)
-						?can.extend(self_rel,this.getSubRelationHandler(self_rel,resource_to_render.rel))
+					,	rel  = (handler_options && handler_options.rel)?handler_options.rel:resource_to_render.rel
+					,	self_rel = this.getRelationHandler(rel)
+					console.log(self_rel,rel,resource_to_render)
+					self_rel = this.getSubRelationHandler(self_rel,rel)
+						?can.extend(self_rel,this.getSubRelationHandler(self_rel,rel))
 						:self_rel
 					if	(_.isEqual(this.current_handler,self_rel.Handler))	{
 						can.trigger(
@@ -170,7 +173,7 @@ steal(
 							)
 					}
 				}
-			,	browse: function(link,options)
+			,	browse: function(link,options,rel)
 				{
 					var	resolved
 					=	link.get() || link.resolve()
@@ -184,7 +187,7 @@ steal(
 									return	raw
 								}
 							)
-						,	options
+						,	rel?can.extend(options,{rel: rel}):options
 						)
 					else
 						this.slot(
@@ -194,7 +197,7 @@ steal(
 										rel:	link.rel || 'root'
 									}
 								)
-							,	options
+							,	rel?can.extend(options,{rel: rel}):options
 							)
 
 				}
@@ -214,7 +217,7 @@ steal(
 				}
 			,	' browse': function(el,ev,args)
 				{
-					//console.log("this constructor: ",args)
+					console.log("this constructor: ",args)
 					//A = this
 					ev.stopPropagation()
 					var	container
@@ -224,18 +227,20 @@ steal(
 											args.target
 										)
 								)
+					console.log("CONTAINER FIND ",container,this.options.media_types)
 
 					if	(args.link instanceof Sigma.Model.HAL.Link)
 						container
 							.browse(
 								args.link
 							,	args.options
+							,	args.rel?can.underscore(args.rel):undefined
 							)
 					else if	(args.data instanceof Sigma.Model.HAL.Resource || can.isDeferred(args.data))
 						container
 							.slot(
 								args.data
-							,	args.options
+							,	args.rel?can.extend(args.options,{rel: can.underscore(args.rel)}):args.options
 							)
 					else
 						container
@@ -246,6 +251,7 @@ steal(
 								,	data.name
 								)
 							,	args.options
+							,	args.rel
 							)
 				}
 			}
