@@ -14,21 +14,9 @@ steal(
 				,	slot: false
 				,	render:
 					{
-						loading:
-							function(message)
-							{
-								this.element.html(can.EJS({text:'cargando...'})(message))
-							}
-					,	empty:
-							function()
-							{
-								this.element.html(can.EJS({text:'vacio...'})())
-							}
-					,	fail:
-							function()
-							{
-								this.element.html(can.EJS({text:'fail...'})())
-							}
+						loading: '//HAL-Client/sigma/views/hypermedia/loading.mustache'
+					,	empty: '//HAL-Client/sigma/views/hypermedia/empty.mustache'
+					,	fail: '//HAL-Client/sigma/views/hypermedia/fail.mustache'
 					}
 				,	media_types:{}
 				,	default_media_type:
@@ -55,8 +43,7 @@ steal(
 					if(!options.id)
 						throw 'Container must have an "id" property'
 					this.constructor.registerContainer(this)
-					this.update()
-					//this.update(options)
+					this.update(options)
 
 				}
 			,	update:	function(handler_options)
@@ -70,16 +57,19 @@ steal(
 				{
 					var self
 					=	this
+					this.element.html(can.view(this.options.render.loading))
 					if(can.isDeferred(resource))
 					{
-						this.proxy(this.options.render.loading,'')
 						resource
 							.then(
 								function(resolved)
 								{
 									self._update(resolved,handler_options)
 								}
-							,	this.proxy(this.options.render.fail,'')
+							,	function()
+								{
+									this.element.html(can.view(self.options.render.fail))
+								}
 							)
 					}
 					else	if(resource)
@@ -96,7 +86,7 @@ steal(
 							this.set_resource(resource)
 							// this.on()
 							//this.proxy(this.options.render.content,'')
-							this.proxy(this.options.render.empty,'')
+							this.element.html(can.view(this.options.render.empty))
 						}
 
 				}
@@ -144,17 +134,18 @@ steal(
 					var	self = this
 					,	rel  = (handler_options && handler_options.rel)?handler_options.rel:resource_to_render.rel
 					,	self_rel = this.getRelationHandler(rel)
-					console.log(self_rel,rel,resource_to_render)
+					//console.log(self_rel,rel,resource_to_render)
 					self_rel = this.getSubRelationHandler(self_rel,rel)
 						?can.extend(self_rel,this.getSubRelationHandler(self_rel,rel))
 						:self_rel
-					if	(_.isEqual(this.current_handler,self_rel.Handler))	{
+					/*if	(_.isEqual(this.current_handler,self_rel.Handler))	{
+						console.log()
 						can.trigger(
 							this.container_element
 						,	'change_slot'
 						,	resource_to_render
 						)
-					}	else	{
+					}	else	{*/
 						if	(this.container_element)
 							this.element.find('.hc_generic').unbind()
 						this.element.empty()
@@ -171,12 +162,14 @@ steal(
 									}
 								)
 							)
-					}
+					//}
 				}
-			,	browse: function(link,options,rel)
+			,	browse: function(link,options,rel,data)
 				{
 					var	resolved
-					=	link.get() || link.resolve()
+					=	data
+					? 	link.resolve(data)
+					: 	link.get(data) || link.resolve(data)
 					if	(can.isDeferred(resolved))		
 						this.slot(
 							resolved
@@ -187,7 +180,14 @@ steal(
 									return	raw
 								}
 							)
-						,	rel?can.extend(options,{rel: rel}):options
+						,	rel
+							?	can.extend(
+									options
+								,	{
+										rel: rel
+									}
+								)
+							: 	options
 						)
 					else
 						this.slot(
@@ -217,8 +217,7 @@ steal(
 				}
 			,	' browse': function(el,ev,args)
 				{
-					console.log("this constructor: ",args)
-					//A = this
+					//console.log("this constructor: ",args)
 					ev.stopPropagation()
 					var	container
 					=	this.constructor
@@ -227,14 +226,19 @@ steal(
 											args.target
 										)
 								)
-					console.log("CONTAINER FIND ",container,this.options.media_types)
+					//console.log("CONTAINER FIND ",container,this.options.media_types)
 
 					if	(args.link instanceof Sigma.Model.HAL.Link)
 						container
 							.browse(
 								args.link
 							,	args.options
-							,	args.rel?can.underscore(args.rel):undefined
+							,	args.rel
+								?	can.underscore(args.rel)
+								: 	undefined
+							,	args.data
+								?	args.data
+								: 	undefined
 							)
 					else if	(args.data instanceof Sigma.Model.HAL.Resource || can.isDeferred(args.data))
 						container

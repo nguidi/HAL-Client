@@ -154,7 +154,7 @@ steal(
 				}
 			,	resolve: function()
 				{
-					console.log(this.parent,this.rel)
+					//console.log(this.parent,this.rel)
 					return	this.parent.fetch(this.url(),this.rel)
 				}
 			}
@@ -387,7 +387,7 @@ steal(
 				}
 			,	resource_by_rel: function(rel)
 				{
-					console.log(rel)
+					//console.log(rel)
 					return	(
 							_.isEqual(rel,"self")
 							?	this.resource.constructor

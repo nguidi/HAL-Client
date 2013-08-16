@@ -42,6 +42,7 @@ steal(	'sigma/lib'
 						,	{
 								link: data.links
 							,	target: data.target
+							,	data: data.data
 							}
 						)
 					}

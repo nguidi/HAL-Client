@@ -14,6 +14,7 @@ steal(
 		,	{
 				_render_content: function(data)
 				{
+					console.log(data)
 					var exists = 	this.element.find('div').hasClass('content') 
 					||		this.element.find('div').hasClass('links')
 

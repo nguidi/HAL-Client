@@ -15,7 +15,23 @@ steal(
 				}
 			}
 		,	{
-				'.browseable click': function(el,ev)
+				_render_content: function(data)
+				{
+					this._super(data)
+					this.element.find('input[name=username]').focus()
+				}
+			,	'.browseable click': function(el,ev)
+				{
+					this.render_action(el,ev)
+				}
+			,	'input.input_login keydown': function(el,ev)
+				{
+					if	(_.isEqual(ev.keyCode,13))	{
+						console.log(ev)
+						this.render_action(el,ev)
+					}
+				}
+			,	render_action: function(el,ev)
 				{
 					if	(el.hasClass('signin'))
 						this.signin(el)

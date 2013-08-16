@@ -1,5 +1,13 @@
 <div class="table-wrapper">
 	<div class="well well-small">
+	{{#getNav}}
+		<a href="#">{{nombre}}</a> / 
+	{{/getNav}}
+	{{#getLastNav}}
+		{{nombre}}
+	{{/getLastNav}}
+	</div>
+	<div class="well well-small">
 		<h4 class="">{{title}}</h4>
 	</div>
 	<table class="table table-hover table-bordered">
