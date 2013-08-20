@@ -15,6 +15,8 @@ steal(
 				,	view_new:	false
 				,	editable:	false
 				,	new:		false
+				,	hc_content:	undefined
+				,	hc_id:		undefined
 				}
 			}
 		,	{
@@ -46,6 +48,27 @@ steal(
 					if	(this.options.new)
 						this.addNewTab()
 
+					if	(this.options.hc_content)
+					{
+						this.options.$content
+						=	can.$('<div>')
+									.addClass('tab-content tab-panel active')
+										.appendTo(this.element)
+
+						this.options.hc_id
+						=	this.options.hc_id
+						||	data.identity()+'_content'
+
+						console.log(this.options.hc_content)
+
+						new	this.options.hc_content(
+								this.options.$content
+							,	{
+									id:	this.options.hc_id
+								}
+							)
+					}
+					
 					this.element
 							.find('ul.nav-tabs li:first a')
 								.click()
@@ -142,6 +165,15 @@ steal(
 					el
 						.parent('li')
 							.addClass('active')
+
+					can.trigger(
+						this.element
+					,	'browse'
+					,	{
+							target:	this.options.hc_id
+						,	data:	el.data('tab')
+						}
+					)
 				}
 
 			,	'ul.nav-tabs li a.addNewTab click': function(el)

@@ -3,6 +3,7 @@ steal(
 ,	'sigma/lib/hypermedia.js'
 ,	'sigma/util'
 ,	'sigma/controls/form/preloader_select.js'
+,	'sigma/controls/typeahead'
 ).then(
 	function(){
 			Sigma.HypermediaControl(
@@ -17,6 +18,8 @@ steal(
 				,	view_checkbox:	'sigma/views/form/checkbox.mustache'
 				,	view_text:		'sigma/views/form/text.mustache'
 				,	view_button:	'sigma/views/form/button.mustache'
+				,	view_typeahead: 'sigma/views/form/autocomplete.mustache'
+				,	view_typeahead_li: 'sigma/views/typeahead/ajax_li.mustache'
 				}
 			}
 		,	{
@@ -35,26 +38,55 @@ steal(
 						)
 					else
 						$('<form>')
-							.addClass(data.identity())
 							.appendTo(this.element)
+							
+					this.options.$form
+					=	this.element.find('form')
 
 					_.each(
 						data.getFields()
 					,	function(field)
 						{
+							var	$field
+							=	can.$('<div>')
+										.addClass('form-field')
+
 							can.append(
-								self.element.find('form')
+								$field
 							,	can.view(
 									self.options['view_'+(_.isEqual(field.getFieldType(),'input') ? field.attr('type') : field.getFieldType())]
 								,	field
 								)
 							)
-							self.element
-									.find(
-										field.getFieldType()+':last'
-									).addClass(
-										field.identity()
+							
+							$field
+								.find(
+									_.isEqual(field.getFieldType(),'typeahead')
+									?	'input'
+									:	field.getFieldType()
+								)
+								.addClass(field.identity())
+
+							if	(_.isEqual(field.getFieldType(),'typeahead'))
+								new	Sigma.Controls.Typeahead(
+										$field.find('input')
+									,	_.extend(
+											{
+												display: field.attr('name')
+											,	view_item:	self.options.view_typeahead_li
+											}
+										,	_.isEmpty(field.attr('model'))
+											?	{}
+											:	{
+													ajax: 'http://trabajando:3003/api/typeahead/'+field.attr('model')
+												,	hal: true
+												}
+										)
 									)
+
+
+							$field
+								.appendTo(self.options.$form)
 							// if	(field.attr('depends'))
 							// {
 							// 	var $element

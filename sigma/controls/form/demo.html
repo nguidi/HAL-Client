@@ -47,7 +47,6 @@ steal(
 		,	{
 				getActions:function()
 				{
-					console.log(this.embedded.attr('actions_forms'))
 					return (this.embedded.attr('actions_forms'))
 							?this.embedded.attr('actions_forms').embedded.attr('collection')
 							:false

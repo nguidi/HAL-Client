@@ -1,8 +1,12 @@
 <div class="control-group radio">
-	<div class="controls">
-		<input type="radio" name="{{name}}" value="{{value}}">
+	{{#options}}
+	<div class="control-group radio">
+		<div class="controls">
+			<input type="radio" name="{{name}}" value="{{value}}">
+		</div>
+		<label class="control-label" for="{{name}}">
+			{{label}}
+		</label>
 	</div>
-	<label class="control-label" for="{{name}}">
-		{{label}}
-	</label>
+	{{/options}}
 </div>

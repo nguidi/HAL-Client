@@ -39,7 +39,7 @@ steal(
 					this.source = this.options.source
 					var self = this
 
-					if (!this.options.source.length)	{
+					if (this.options.ajax)	{
 						var ajax = this.options.ajax
 
 						if (typeof ajax === 'string')	{
@@ -69,8 +69,10 @@ steal(
 					var	self
 					=	this
 					,	query
-					=	self.$element.val()
-
+					=	{
+							key:	self.options.display
+						,	value:	self.$element.val()
+						}
 					if (query === self.query)	{
 				    	return self
 					}
@@ -85,7 +87,7 @@ steal(
 				    	self.ajax.timerId = null
 					}
 
-					if (!query || query.length < self.ajax.triggerLength) {
+					if (!query.value || query.value.length < self.ajax.triggerLength) {
 						// Cancel the ajax callback if in progress
 						if (self.ajax.xhr) {
 							self.ajax.xhr.abort()
@@ -178,6 +180,7 @@ steal(
 				//
 			,	lookup: function (event)
 				{
+
 					var self = this,
 						items
 
@@ -185,9 +188,13 @@ steal(
 						self.ajaxer()
 					}
 					else {
-						self.query = self.$element.val()
+						self.query
+						=	{
+								key:	self.options.display
+							,	value:	self.$element.val()
+							}
 
-						if (!self.query) {
+						if (!self.query.value) {
 							return self.shown ? self.hide() : self
 						}
 
@@ -232,7 +239,7 @@ steal(
 				//
 			,	matcher: function (item)
 				{
-					return ~item.toLowerCase().indexOf(this.query.toLowerCase())
+					return ~item.toLowerCase().indexOf(this.query.value.toLowerCase())
 				}
 
 				//------------------------------------------------------------------
@@ -248,10 +255,10 @@ steal(
 						item
 
 					while (item = items.shift()) {
-						if (!item[self.options.display].toLowerCase().indexOf(this.query.toLowerCase())) {
+						if (!item[self.options.display].toLowerCase().indexOf(this.query.value.toLowerCase())) {
 							beginswith.push(item)
 						}
-						else if (~item[self.options.display].indexOf(this.query)) {
+						else if (~item[self.options.display].indexOf(this.query.value)) {
 							caseSensitive.push(item)
 						}
 						else {
@@ -306,7 +313,7 @@ steal(
 				//
 			,	highlighter: function (item)
 				{
-					var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+					var query = this.query.value.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
 					return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
 						return '<strong>' + match + '</strong>'
 					})
@@ -349,8 +356,6 @@ steal(
 												//
 												click: function (e)
 												{
-													e.stopPropagation()
-													e.preventDefault()
 													self.select()
 												}
 												//------------------------------------------------------------------
@@ -405,7 +410,7 @@ steal(
 			,	select: function ()
 				{
 					var $selectedItem = this.$menu.find('.active')
-					this.$element.val($selectedItem.attr('data-label')).change()
+					this.$element.val($selectedItem.attr('data-label')).keydown()
 					this.options.itemSelected($selectedItem, $selectedItem.attr('data-value'), $selectedItem.attr('data-label'))
 					return this.hide()
 				}
@@ -458,17 +463,10 @@ steal(
 				//
 			,	' keyup': function(element,e)
 				{
-					e.stopPropagation()
-					e.preventDefault()
+					// e.stopPropagation()
+					// e.preventDefault()
 
 					switch (e.keyCode) {
-						case 40:
-							// down arrow
-						case 38:
-							// up arrow
-							break
-						case 9:
-							// tab
 						case 13:
 							// enter
 							if (!this.shown) {
@@ -494,8 +492,8 @@ steal(
 					var	self
 					=	this
 
-					e.stopPropagation()
-					e.preventDefault()
+					// e.stopPropagation()
+					// e.preventDefault()
 
 					setTimeout(
 						function()
@@ -514,32 +512,28 @@ steal(
 				//
 			,	' keydown': function (el,e)
 				{
-						e.stopPropagation()
-
+						// e.stopPropagation(
 						if (!this.shown) {
 							return
 						}
-
 						switch (e.keyCode) {
-							case 9:
-								// tab
-							case 13:
-								// enter
-							case 27:
-								// escape
-								e.preventDefault()
-								break
 							case 38:
 								// up arrow
-								e.preventDefault()
+								// e.preventDefault()
 								this.prev()
 								break
 							case 40:
 								// down arrow
-								e.preventDefault()
+								// e.preventDefault()
 								this.next()
 								break
 						}
+				}
+
+			,	' update_source': function(el,ev,data)
+				{
+					this.source
+					=	data.source
 				}
 			}
 		)

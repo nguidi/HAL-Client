@@ -23,6 +23,8 @@ steal(
 					,	view_text:		'sigma/views/wizard/form/text.mustache'
 					,	view_textarea:	'sigma/views/wizard/form/textarea.mustache'
 					,	view_form:		'sigma/views/wizard/form/forms.mustache'
+					,	view_typeahead: 'sigma/views/wizard/form/autocomplete.mustache'
+					,	view_typeahead_li: 'sigma/views/typeahead/ajax_li.mustache'
 					}
 				,	view_step_title:	'sigma/views/wizard/index.mustache'
 				,	prev_steps_data:	new can.Observe() 
@@ -36,11 +38,19 @@ steal(
 
 					this.options.reqs
 					=	this.get_step_requirements(data)
+
 					
 					if	(data.hasInnerSteps())
 					{
+						self.options.$pending_steps
+						=	$('<div>')
+								.addClass('pending')
+								.appendTo(self.element)
+								.hide()
+						
 						self.options.$steps
-						=	$('<div class="steps">')
+						=	$('<div>')		
+								.addClass('steps')
 								.appendTo(self.element)
 
 						_.each(
@@ -62,7 +72,7 @@ steal(
 								}	else	{
 									can.bind.call(
 										self.element
-									,	'custom_event_'+inner_step.identity()
+									,	'custom_event_show_'+inner_step.identity()
 									,	function(ev,el)
 										{
 											self.show_step(
@@ -75,6 +85,21 @@ steal(
 											inner_step
 										)
 								}
+
+								can.bind.call(
+									self.element
+								,	'custom_event_delete_'+inner_step.identity()
+								,	function(ev,el)
+									{
+										self.delete_step(
+											inner_step
+										)
+									}
+								)
+
+								self.bind_fields(
+										inner_step
+									)
 							}
 						)	
 					}
@@ -99,14 +124,14 @@ steal(
 
 			,	_render_inner_step: function(inner_step)
 				{
-					$('<div class="step">')
-							.addClass(inner_step.identity())
-							.attr('step',inner_step.attr('step'))
-							.appendTo(this.options.$steps)
-					
 					var	$step
-					=	this.element.find('div.'+inner_step.identity())
-
+					=	can.$('<div class="step">')
+					
+					$step
+						.addClass(
+							inner_step.identity()
+						)
+					
 					can.append(
 						$step
 					,	can.view(
@@ -125,6 +150,16 @@ steal(
 						,	this.options.form_views
 						)
 					)
+
+					$step
+						.appendTo(
+							this.options.$pending_steps
+						)
+				}
+
+			,	get_step: function(step)
+				{
+					return	((this.options.$steps.find('div.step:visible').length)+1)+' - '
 				}
 
 			,	get_step_requirements: function(step)
@@ -157,40 +192,86 @@ steal(
 
 
 			,	show_step: function(inner_step)
-				{
-					this.element
-							.find('[step="'+inner_step.attr('step')+'"]')
-							.hide()
+				{					
+					if	(!this.options.$steps.find('.'+inner_step.identity()).length)	{
+						console.log('SHOW - ',inner_step.identity())
+						var	$step
+						=	this.options.$pending_steps
+									.find('.'+inner_step.identity())
 
-					var	$step
-					=	this.element
-							.find('.'+inner_step.identity())
-
-					_.each(
 						$step
-							.find('form')
-					,	function(form)
-						{
-							form
-								.reset()
-						}						
-					)
+							.find('.step strong')
+								.remove()
 
-					$step
-						.show()
+						$step
+							.find('.step')
+								.prepend('<strong>'+this.get_step(inner_step)+'</strong>')
 
-					this.hide_next_steps($step)
+						$step
+							.appendTo(
+								this.options.$steps
+							)
+					}
 				}
 
-			,	hide_next_steps: function(step)
+			,	delete_step: function(inner_step)
 				{
-					step.next().hide()
+					if	(this.options.$steps.find('.'+inner_step.identity()))
+					{
+						console.log("DELETE - ",inner_step.identity())
+						var $step
+						=	this.options.$steps
+									.find('.'+inner_step.identity())
 
+						this.remove_next_steps($step.next())
+					}
+				}
+
+			,	remove_next_steps: function(step)
+				{
 					var $next
 					=	step.next()
-
+					
 					if	($next.hasClass('step'))
-						this.hide_next_steps($next)
+						this.remove_next_steps($next)
+
+					can.cleanForm(
+						step
+							.find('form')
+					)
+
+					step
+						.appendTo(
+							this.options.$pending_steps
+						)
+				}
+
+			,	bind_fields: function(inner_step)
+				{
+					var	self
+					=	this
+
+					_.each(
+						inner_step.getForm().getFields()
+					,	function(form_field)
+						{
+							var	element
+							=	self.get_field_element_data(inner_step,form_field)
+
+							can.bind.call(
+								element.el
+							,	element.ev
+							,	function(ev,el)
+								{
+									if	(element.ev != 'keydown' || (element.ev == 'keydown' && ev.keyCode == 13))
+										can.trigger(
+											self.element
+										,	'custom_event_delete_'+inner_step.identity()
+										)
+								}
+							)
+						}
+					)
 				}
 
 			,	bind_requirements: function(inner_step)
@@ -205,8 +286,7 @@ steal(
 							var	form_field
 							=	req.getFormField()
 							,	element
-							=	self.get_element_data(form_field)
-
+							=	self.get_req_element_data(form_field)
 							if	(_.isEqual(element.type,'radio'))
 								element.el
 								=	element.el.filter('[value="'+req.attr('expected_value')+'"]')
@@ -216,7 +296,11 @@ steal(
 							,	element.ev
 							,	function(ev,el)
 								{
-									if	(element.ev != 'keydown' || (element.ev == 'keydown' && ev.keyCode == 13))
+									if	(
+											element.ev != 'keydown' 
+										||	(element.ev == 'keydown' && ev.keyCode == 13)
+										||	(element.ev == 'keydown' && ev.keyCode == undefined)
+										)
 										self.check_step_requirements(ev.target,inner_step)
 								}
 							)
@@ -229,14 +313,18 @@ steal(
 						,	function(form_field)
 							{
 								var	element
-								=	self.get_element_data(form_field)
+								=	self.get_field_element_data(inner_step,form_field)
 
 								can.bind.call(
 									element.el
 								,	element.ev
 								,	function(ev,el)
 									{
-										if	(element.ev != 'keydown' || (element.ev == 'keydown' && ev.keyCode == 13))
+										if	(
+												element.ev != 'keydown' 
+											||	(element.ev == 'keydown' && ev.keyCode == 13)
+											||	(element.ev == 'keydown' && ev.keyCode == undefined)
+											)
 											self.check_final_step(inner_step)
 									}
 								)
@@ -244,11 +332,28 @@ steal(
 						)
 				}
 
-			,	get_element_data: function(form_field)
+			,	get_req_element_data: function(form_field)
 				{
 					var	$element
 					=	this.element.find('.'+form_field.identity())
-					,	element_type
+
+					return	this.get_element_data($element)
+				}
+
+			,	get_field_element_data: function(inner_step,form_field)
+				{
+					var	$element
+					=	this.element.find('.'+inner_step.identity()+' .'+form_field.identity())
+
+					return	this.get_element_data($element)
+				}
+
+			,	get_element_data: function(element)
+				{
+					var	$element
+					=	element
+
+					var	element_type
 					=	$element.is('input')
 						?	$element.attr('type')
 						:	$element.is('select')
@@ -277,9 +382,13 @@ steal(
 					var	$form_field
 					=	this.element.find('.'+form_field.identity()+':visible')
 
-					return	_.isUndefined(req) || _.isEmpty(req.attr('expected_value'))
+					if	($form_field.is('[type="radio"]'))
+						$form_field
+						=	this.options.$steps.find('.'+form_field.identity()+':visible:checked')
+
+					return	_.isUndefined(req) || (_.isEmpty(req.attr('expected_value')) && !_.isNumber(req.attr('expected_value')))
 							?	!_.isEmpty($form_field.val())
-							:	_.isEqual($form_field.val().toLowerCase(),req.attr('expected_value').toLowerCase())
+							:	$form_field.val() && _.isEqual($form_field.val().toLowerCase(),(req.attr('expected_value')+"").toLowerCase())
 				}
 
 			,	check_step_requirements: function(target,inner_step)
@@ -304,9 +413,9 @@ steal(
 
 					if	(_.isEqual(_.first(_.uniq(bool)),true) && _.isEqual(_.uniq(bool).length,1))
 						can.trigger(
-							can.$(target)
-						,	'custom_event_'+inner_step.identity()
-						)
+							this.element
+						,	'custom_event_show_'+inner_step.identity()
+						)						
 				}
 
 			,	check_final_step: function(inner_step)
@@ -334,7 +443,7 @@ steal(
 								{
 									id:	self.options.data.attr('id')
 								}
-							,	can.getFormData(self.element.find('form:visible'))
+							,	can.getFormData(self.options.$steps.find('form:visible'))
 							)
 						)
 				}
