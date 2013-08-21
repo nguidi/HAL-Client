@@ -64,8 +64,19 @@ steal(
 							=	Sigma.Model.HAL.model_by_rel(relation)
 							||	Sigma.Model.HAL.Resource
 
-							embedded_data.rel
-							=	relation
+							
+							if	(_.isEqual(relation,'collection'))	{
+								_.each(
+									embedded_data
+								,	function(d)
+									{
+										d.rel
+										=	self.parentModel().toLowerCase().replace(/(\s+)?.$/, '')
+									}
+								)
+							}	else
+								embedded_data.rel
+								=	relation
 
 							instance.embedded.attr(
 								relation

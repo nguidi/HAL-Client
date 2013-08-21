@@ -37,10 +37,10 @@ steal(
 					if (this.toggleActive(el.is('li') ? el : el.parent('li')))
 						can.trigger(
 							this.element
-						,	'navegable'
+						,	'browse'
 						,	{
 								target: this.options.target
-							,	links: el.data('link')
+							,	data: el.data('link')
 							}
 						)
 				}

@@ -68,7 +68,7 @@ steal(
 								}
 							,	function()
 								{
-									this.element.html(can.view(self.options.render.fail))
+									self.element.html(can.view(self.options.render.fail))
 								}
 							)
 					}
@@ -132,8 +132,8 @@ steal(
 			,	render_resource: function(resource_to_render,handler_options)
 				{
 					var	self = this
-					,	rel  = (handler_options && handler_options.rel)?handler_options.rel:resource_to_render.rel
-					,	self_rel = this.getRelationHandler(rel)
+					,	rel = resource_to_render.rel
+					,	self_rel = this.getRelationHandler(resource_to_render.rel)
 					//console.log(self_rel,rel,resource_to_render)
 					self_rel = this.getSubRelationHandler(self_rel,rel)
 						?can.extend(self_rel,this.getSubRelationHandler(self_rel,rel))
@@ -164,41 +164,13 @@ steal(
 							)
 					//}
 				}
-			,	browse: function(link,options,rel,data)
+			,	browse: function(link,options)
 				{
-					var	resolved
-					=	data
-					? 	link.resolve(data)
-					: 	link.get(data) || link.resolve(data)
-					if	(can.isDeferred(resolved))		
-						this.slot(
-							resolved
-							.pipe(
-								function(raw)
-								{
-									raw.rel=raw.rel || link.rel
-									return	raw
-								}
-							)
-						,	rel
-							?	can.extend(
-									options
-								,	{
-										rel: rel
-									}
-								)
-							: 	options
-						)
-					else
-						this.slot(
-								_.extend(
-									resolved
-								,	{
-										rel:	link.rel || 'root'
-									}
-								)
-							,	rel?can.extend(options,{rel: rel}):options
-							)
+					this.slot(
+						link.resolve()
+					||	link.get()
+					,	options
+					)
 
 				}
 			,	slot: function(value,options)
@@ -217,7 +189,6 @@ steal(
 				}
 			,	' browse': function(el,ev,args)
 				{
-					//console.log("this constructor: ",args)
 					ev.stopPropagation()
 					var	container
 					=	this.constructor
@@ -226,37 +197,26 @@ steal(
 											args.target
 										)
 								)
-					//console.log("CONTAINER FIND ",container,this.options.media_types)
-
-					if	(args.link instanceof Sigma.Model.HAL.Link)
+					if	(args.data instanceof Sigma.Model.HAL.Link)
 						container
 							.browse(
-								args.link
-							,	args.options
-							,	args.rel
-								?	can.underscore(args.rel)
-								: 	undefined
-							,	args.data
-								?	args.data
-								: 	undefined
-							)
-					else if	(args.data instanceof Sigma.Model.HAL.Resource || can.isDeferred(args.data))
-						container
-							.slot(
 								args.data
-							,	args.rel?can.extend(args.options,{rel: can.underscore(args.rel)}):args.options
+							,	args.options
+							||	{}
 							)
 					else
-						container
-							.browse(
-								Sigma.Model.HAL.lookup(
-									data.links
-								,	data.rel
-								,	data.name
+					if	(
+							args.data instanceof Sigma.Model.HAL.Resource
+						||	args.data instanceof Sigma.Model.HAL.Collection
+						||	can.isDeferred(args.data)
+						)
+							container
+								.slot(
+									args.data
+								,	args.options
+								||	{}
+								// ,	args.rel?can.extend(args.options,{rel: can.underscore(args.rel)}):args.options
 								)
-							,	args.options
-							,	args.rel
-							)
 				}
 			}
 		)

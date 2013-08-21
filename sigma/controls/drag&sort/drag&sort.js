@@ -31,7 +31,7 @@ steal(
 				{
 					// TODO: SALVAR - VER METODO this.DRAGEND
 					this._super(data)
-					
+
 					var	self
 					=	this
 
