@@ -11,53 +11,60 @@ steal(	'sigma/lib'
 				{
 					containers:{}
 				,	inicializable: true
-				,	view: undefined
+				,	view: false
+				,	slot: false
 				}
 			}
 		,	{
-				init:	function(el,data)
+				init:	function(el,options)
 				{
-					//new array hypemerdia containers
-					this.hypermedia_containers = {}
+					// new array hypemerdia containers
+					this.hypermedia_containers = _.keys(this.options.containers)
 					// this._set_hypermedia_containers(data)
-					this._init_containers()
-					this.set_containers_slots(data)
-				}
+					
 
-			,	_init_containers: function()
-				{
 					var	self
 					=	this
+					
+					if(self.options.view)
+					{
+						this.options.view=steal.idToUri(this.options.view).path
+						can.append(
+							self.element
+						,	can.view(self.options.view)
+						)
+					}
 
-					can.each(
-						this.options.containers
-					,	function(item, index)
+					can.when(
+						can.map(
+							this.hypermedia_containers
+						,	function(index)
+							{
+								var item
+								=	self.options.containers[index]
+
+								if(can.$('div#'+index).length==0)
+								{
+									$element = can.$('<div id="'+index+'">')
+									if(item.class)
+										$element.addClass(item.class)
+									can.append(
+										self.element
+									,	$element
+									)
+								}
+								else
+									$element = can.$('div#'+index+'')
+								
+								// self.hypermedia_containers[index]
+								// =	self.install_hc(index,$element,item)
+								return	self.install_hc(index,$element,item)
+							}
+						)
+					).done(
+						function(hcs)
 						{
-							var	hypermedia_container_new
-							=	{}
-
-							if(self.options.view)
-							{
-								can.append(
-									self.element
-								,	can.view(self.options.view)
-								)
-							}
-							if(can.$('div#'+index+'').length==0)
-							{
-								$element = can.$('<div id="'+index+'">')
-								if(item.class)
-									$element.addClass(item.class)
-								can.append(
-									self.element
-								,	$element
-								)
-							}
-							else
-								$element = can.$('div#'+index+'')
-							
-							self.hypermedia_containers[index]
-							=	self.install_hc(index,$element,item)
+							self.set_containers_slots()
 						}
 					)
 				}
@@ -70,13 +77,14 @@ steal(	'sigma/lib'
 					media_aux[index] = media
 					var	options
 					=	{
-							media_types: can.extend(
+							media_types:
+								can.extend(
 									media[index]
 									?	media
 									: 	media_aux
 								,	media.media_types
 								)
-						,	id: can.capitalize(index)
+						,	id: 	can.capitalize(index)
 						}
 
 					can.each(
@@ -87,34 +95,48 @@ steal(	'sigma/lib'
 						}
 					)
 
-					Sigma.HypermediaContainer(
-						'Sigma.' + can.capitalize(index)
-					)
-					
-					return	new Sigma[can.capitalize(index)](
+					var	HyperMediaContainer
+					=	Sigma.HypermediaContainer(
+							'Sigma.' + can.capitalize(index)
+						)
+
+					return	new	HyperMediaContainer(
 								$element
 							,	options
 							)
 				}
+
+			,	get_container_slot: function(index)
+				{
+					var	item
+					=	this.options.containers[index]
+					,	data
+					=	this.options.slot
+
+					return	this.options.slot
+						&&	can.isDeferred(data)
+							?	data
+							:	(!_.isEmpty(item.resource) && !_.isEmpty(item.url))
+								?	item.resource.Fetch(item.url,index)
+								:	_.isFunction(data['get'+can.capitalize(index)])
+									?	data['get'+can.capitalize(index)]()
+									:	false
+				}
 				
-			,	set_containers_slots: function(data)
+			,	set_containers_slots: function()
 				{
 					var self
 					=	this
 					,	resource
 					=	undefined
-					
+
 					can.each(
 						this.options.containers
 					,	function(item, index)
 						{
 							resource
-							=	(!_.isEmpty(item.resource) && !_.isEmpty(item.url))
-								?	item.resource.Fetch(item.url,index)
-								:	_.isFunction(data['get'+can.capitalize(index)])
-									?	data['get'+can.capitalize(index)]()
-									:	undefined
-							
+							=	self.get_container_slot(index)
+
 							if	(
 									resource instanceof	Sigma.Model.HAL.Resource
 								||	resource instanceof Sigma.Model.HAL.Collection
@@ -122,7 +144,7 @@ steal(	'sigma/lib'
 								||	can.isDeferred(resource)
 								)
 									can.trigger(
-										self.element
+										self.element.find('#'+index)
 									,	'browse'
 									,	{
 											data:	resource

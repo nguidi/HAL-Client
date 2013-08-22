@@ -14,9 +14,9 @@ steal(
 				,	slot: false
 				,	render:
 					{
-						loading: '//HAL-Client/sigma/views/hypermedia/loading.mustache'
-					,	empty: '//HAL-Client/sigma/views/hypermedia/empty.mustache'
-					,	fail: '//HAL-Client/sigma/views/hypermedia/fail.mustache'
+						loading: 'sigma/views/hypermedia/loading.mustache'
+					,	empty: 'sigma/views/hypermedia/empty.mustache'
+					,	fail: 'sigma/views/hypermedia/fail.mustache'
 					}
 				,	media_types:{}
 				,	default_media_type:
@@ -27,7 +27,7 @@ steal(
 			,	containers:{}
 			,	findContainer:function(container_id)
 				{
-				return	this.containers[container_id]
+				return	this.containers[can.capitalize(container_id)]
 				}
 			,	registerContainer:function(container)
 				{
@@ -40,6 +40,16 @@ steal(
 				init:	function(el,options)
 				{
 					//console.log("arguments", arguments)
+					can.each(
+						this.options.render
+					,	this.proxy(
+							function(val,what)
+							{
+								if (val)
+									this.options.render[what]=steal.idToUri(val).path
+							}
+						)
+					)
 					if(!options.id)
 						throw 'Container must have an "id" property'
 					this.constructor.registerContainer(this)
@@ -190,6 +200,7 @@ steal(
 			,	' browse': function(el,ev,args)
 				{
 					ev.stopPropagation()
+					console.log('browse',args)
 					var	container
 					=	this.constructor
 								.findContainer(

@@ -12,60 +12,20 @@ steal(
 			,	defaults:
 				{
 					view:		'sigma/views/hypermedia/generic.mustache'
-				,	view_list:	'sigma/views/hypermedia/generic_list.mustache'
 				}
 			}
 		,	{
-				_render_content: function(data)
-				{
-					//console.log("HYPERMEDIA CONTROL",data)
-					if	(data instanceof can.Observe.List)
-						this._render_list(data)
-					else
-						this._super(data)
-				}
-
-			,	_render_list: function(observe_list)
-				{
-					var	self
-					=	this
-					this.element
-							.list(
-								{
-									loading: function()
-									{
-										return 'Cargando...'
-									}
-								,	empty: function()
-									{
-										return 'Vacio...'
-									}
-								,	view:function(obs)
-									{
-										return	can.view(
-														self.options.list_view
-													,	obs
-													)
-									}
-								,	list: observe_list
-								}
-							)
-				}
-
-			,	'[data-relation] click': function(el, ev)
+				'.browseable click': function(el, ev)
 				{
 					ev.preventDefault()
-					this.element
-							.trigger(
-								'browse'
-							,	{
-									links:this.options.data.links
-								,	rel:el.data('relation')
-								,	name:el.data('name')
-								,	target:this.options.target
-								}
-							)
-					return false
+					can.trigger(
+						this.element
+					,	'browse'
+					,	{
+							data:	el.data('resource')
+						,	target:	this.options.target
+						}
+					)
 				}
 		}
 		)
