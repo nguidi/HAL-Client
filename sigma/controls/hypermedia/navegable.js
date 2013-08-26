@@ -64,7 +64,7 @@ steal(	'sigma/lib'
 					).done(
 						function(hcs)
 						{
-							self.set_containers_slots()
+							self._update(self.options.slot)
 						}
 					)
 				}
@@ -106,53 +106,62 @@ steal(	'sigma/lib'
 							)
 				}
 
-			,	get_container_slot: function(index)
+			,	_update: function(resource)
 				{
-					var	item
-					=	this.options.containers[index]
-					,	data
-					=	this.options.slot
-
-					return	this.options.slot
-						&&	can.isDeferred(data)
-							?	data
-							:	(!_.isEmpty(item.resource) && !_.isEmpty(item.url))
-								?	item.resource.Fetch(item.url,index)
-								:	_.isFunction(data['get'+can.capitalize(index)])
-									?	data['get'+can.capitalize(index)]()
-									:	false
+					var self
+					=	this
+					
+					if(can.isDeferred(resource))
+					{
+						resource
+							.then(
+								function(resolved)
+								{
+									self._update(resolved)
+								}
+							)
+					}
+					else
+						if(resource)
+							this.set_containers_slots(resource)
 				}
 				
-			,	set_containers_slots: function()
+			,	set_containers_slots: function(data)
 				{
 					var self
 					=	this
 					,	resource
 					=	undefined
 
-					can.each(
-						this.options.containers
-					,	function(item, index)
-						{
-							resource
-							=	self.get_container_slot(index)
-
-							if	(
-									resource instanceof	Sigma.Model.HAL.Resource
-								||	resource instanceof Sigma.Model.HAL.Collection
-								||	resource instanceof Sigma.Model.HAL.Link
-								||	can.isDeferred(resource)
-								)
-									can.trigger(
-										self.element.find('#'+index)
-									,	'browse'
-									,	{
-											data:	resource
-										,	target:	can.capitalize(index)
-										}
+					if	(data)
+						can.each(
+							this.options.containers
+						,	function(item, index)
+							{
+								resource
+								=	can.isDeferred(data)
+										?	data
+										:	(!_.isEmpty(item.resource) && !_.isEmpty(item.url))
+											?	item.resource.Fetch(item.url,index)
+											:	_.isFunction(data['get'+can.capitalize(index)])
+												?	data['get'+can.capitalize(index)]()
+												:	false
+								if	(
+										resource instanceof	Sigma.Model.HAL.Resource
+									||	resource instanceof Sigma.Model.HAL.Collection
+									||	resource instanceof Sigma.Model.HAL.Link
+									||	can.isDeferred(resource)
 									)
-						}
-					)
+										can.trigger(
+											self.element.find('#'+index)
+										,	'browse'
+										,	{
+												data:	resource
+											,	target:	can.capitalize(index)
+											}
+										)
+							}
+						)
 				}
 
 			// ,	_set_hypermedia_containers: function(data)

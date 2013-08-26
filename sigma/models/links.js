@@ -24,11 +24,9 @@ steal(
 				}
 			,	get: function()
 				{
-					return	_.isDefined(this.parent)
-							?	this.parent.get(this.rel,this.attr(this.name))
-							:	_.isDefined(this.rel)
-								?	Sigma.Model.HAL.model_by_rel(this.rel).get(this.attr('href'),this.rel)
-								:	Sigma.Model.HAL.Resource.get(this.attr('href'))
+					return	_.isDefined(this.rel)
+							?	Sigma.Model.HAL.model_by_rel(this.rel).get(this.attr('href'),this.rel)
+							:	Sigma.Model.HAL.Resource.get(this.attr('href'))
 				}
 			,	title: function()
 				{
@@ -360,30 +358,39 @@ steal(
 						}
 					)
 				}
-			,	get_link_by_rel: function(relation)
+			,	get_link_by_rel: function(relation,name)
 				{
-					var	res
-					=	undefined
-
-					can.each(
-						this
-					,	function(it, ind){
-							if(it && it.rel == relation)
-								res = it
-						}
-					)
-					return	res
+					return	_.find(
+								this
+							,	function(link)
+								{
+									if	(link instanceof Sigma.Model.HAL.Link)
+										return	(
+													_.isEqual(
+														link.rel
+													,	relation
+													)
+												||	_.isEqual(
+														link.rel
+													,	relation.replace(/(\s+)?.$/, '')
+													)
+												)
+											&&	_.contains(
+													_.isDefined(name)
+													?	new Array(name)
+													:	['show', 'list']
+												,	link.curie
+												)
+								}
+							)
 				}
 			,	get:function(relation,name)
 				{
-					var	stored
-					=	this.resource.constructor.store[this.resource.id]
-
 					if	(_.isEqual(relation,"self"))
-						return	stored
-					
-					//return	Sigma.Model.HAL.lookup((stored && stored.embedded) || this.resource.embedded,relation,name)
+						return	this.resource
+
 					return	Sigma.Model.HAL.lookup(this.resource.embedded,relation,name)
+						||	this.get_link_by_rel(relation,name).resolve()
 				}
 			,	resource_by_rel: function(rel)
 				{

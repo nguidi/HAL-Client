@@ -67,6 +67,7 @@ steal(
 				{
 					var self
 					=	this
+					console.log("container",resource)
 					this.element.html(can.view(this.options.render.loading))
 					if(can.isDeferred(resource))
 					{
@@ -200,7 +201,7 @@ steal(
 			,	' browse': function(el,ev,args)
 				{
 					ev.stopPropagation()
-					console.log('browse',args)
+					console.log('browse',args.target,args.data)
 					var	container
 					=	this.constructor
 								.findContainer(

@@ -60,32 +60,36 @@ steal(
 						embedded
 					,	function(embedded_data,relation)
 						{
-							embedded_model
-							=	Sigma.Model.HAL.model_by_rel(relation)
-							||	Sigma.Model.HAL.Resource
+							if	(!can.isEmptyResource(embedded_data))
+							{
+								embedded_model
+								=	Sigma.Model.HAL.model_by_rel(relation)
+								||	Sigma.Model.HAL.Resource
 
-							
-							if	(_.isEqual(relation,'collection'))	{
-								_.each(
-									embedded_data
-								,	function(d)
-									{
-										d.rel
-										=	self.parentModel().toLowerCase().replace(/(\s+)?.$/, '')
-									}
+								
+								if	(_.isEqual(relation,'collection'))	{
+									_.each(
+										embedded_data
+									,	function(d)
+										{
+											d.rel
+											=	self.parentModel().toLowerCase().replace(/(\s+)?.$/, '')
+										}
+									)
+								}	else
+									embedded_data.rel
+									=	relation
+
+								instance.embedded.attr(
+									relation
+								,	_.isEqual(relation,'collection')
+									?	Sigma.Model.HAL.model_by_rel(self.parentModel()).models(embedded_data)
+									:	can.isResource(embedded)
+										?	embedded_model.model(embedded_data)
+										:	embedded_model.Collection.model(embedded_data)
 								)
-							}	else
-								embedded_data.rel
-								=	relation
 
-							instance.embedded.attr(
-								relation
-							,	_.isEqual(relation,'collection')
-								?	Sigma.Model.HAL.model_by_rel(self.parentModel()).models(embedded_data)
-								:	can.isResource(embedded)
-									?	embedded_model.model(embedded_data)
-									:	embedded_model.Collection.model(embedded_data)
-							)
+							}
 						}
 					)
 
@@ -232,19 +236,22 @@ steal(
 						embedded
 					,	function(embedded_data,relation)
 						{
-							embedded_model
-							=	Sigma.Model.HAL.model_by_rel(relation)
-							||	Sigma.Model.HAL.Resource
+							if	(!can.isEmptyResource(embedded_data))
+							{
+								embedded_model
+								=	Sigma.Model.HAL.model_by_rel(relation)
+								||	Sigma.Model.HAL.Resource
 
-							embedded_data.rel
-							=	relation
-							
-							instance.embedded.attr(
-								relation
-							,	can.isResource(embedded_data)
-								?	embedded_model.model(embedded_data)
-								:	embedded_model.Collection.model(embedded_data)
-							)
+								embedded_data.rel
+								=	relation
+								
+								instance.embedded.attr(
+									relation
+								,	can.isResource(embedded_data)
+									?	embedded_model.model(embedded_data)
+									:	embedded_model.Collection.model(embedded_data)
+								)
+							}
 						}
 					)
 
