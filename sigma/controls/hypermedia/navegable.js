@@ -10,7 +10,6 @@ steal(	'sigma/lib'
 				defaults:
 				{
 					containers:{}
-				,	inicializable: true
 				,	view: false
 				,	slot: false
 				}
@@ -19,10 +18,11 @@ steal(	'sigma/lib'
 				init:	function(el,options)
 				{
 					// new array hypemerdia containers
-					this.hypermedia_containers = _.keys(this.options.containers)
+					this.hypermedia_containers_keys = _.keys(this.options.containers)
+					this.sub_hypermedia_containers = {}
+					this.containers = this.options.containers
 					// this._set_hypermedia_containers(data)
 					
-
 					var	self
 					=	this
 					
@@ -35,13 +35,37 @@ steal(	'sigma/lib'
 						)
 					}
 
+					/*can.each(
+						this.options.containers
+					,	function(item,key)
+						{
+							if(!_.isEmpty(item.containers))
+							{
+								can.extend(self.containers, item.containers)
+								can.extend(self.sub_hypermedia_containers, _.keys(item.containers))
+							}
+						}
+					)*/
+
+					this.install_all_containers(this.hypermedia_containers_keys)
+
+				}
+			,	install_all_containers: function(containers)
+				{
+					var	self
+					=	this
+
 					can.when(
 						can.map(
-							this.hypermedia_containers
+							containers
 						,	function(index)
 							{
 								var item
-								=	self.options.containers[index]
+								=	self.containers[index]
+								,	hc
+								= 	undefined
+
+								//console.log(can.$('div#'+index),self.element.find('div#'+index),index)
 
 								if(can.$('div#'+index).length==0)
 								{
@@ -56,19 +80,28 @@ steal(	'sigma/lib'
 								else
 									$element = can.$('div#'+index+'')
 								
-								// self.hypermedia_containers[index]
-								// =	self.install_hc(index,$element,item)
-								return	self.install_hc(index,$element,item)
+								hc 	=	self.install_hc(index,$element,item)
+
+								//can.extend(self.hypermedia_containers, item.containers)
+
+								return {hc: hc, containers: item.containers}
 							}
 						)
 					).done(
 						function(hcs)
 						{
-							self._update(self.options.slot)
+							//console.log(hcs)
+							//can.when(
+								self.set_containers_slots(self.options.slot)
+							/*).done(
+								function()
+								{
+									self.install_all_containers(self.sub_hypermedia_containers)
+								}
+							)*/
 						}
 					)
 				}
-
 			,	install_hc: function(index,$element,media)
 				{
 					var	media_aux
@@ -83,17 +116,21 @@ steal(	'sigma/lib'
 									?	media
 									: 	media_aux
 								,	media.media_types
+								,	media.containers
 								)
 						,	id: 	can.capitalize(index)
 						}
 
-					can.each(
-						media.media_types
-					,	function(item,index)
-						{
-							can.extend(options.media_types,item.children_media_types)
-						}
-					)
+					if(_.isEmpty(media.media_types))
+						can.extend(options.media_types,media.children_media_types)
+					else
+						can.each(
+							media.media_types
+						,	function(item,index)
+							{
+								can.extend(options.media_types,item.children_media_types)
+							}
+						)
 
 					var	HyperMediaContainer
 					=	Sigma.HypermediaContainer(
@@ -105,27 +142,6 @@ steal(	'sigma/lib'
 							,	options
 							)
 				}
-
-			,	_update: function(resource)
-				{
-					var self
-					=	this
-					
-					if(can.isDeferred(resource))
-					{
-						resource
-							.then(
-								function(resolved)
-								{
-									self._update(resolved)
-								}
-							)
-					}
-					else
-						if(resource)
-							this.set_containers_slots(resource)
-				}
-				
 			,	set_containers_slots: function(data)
 				{
 					var self
@@ -133,10 +149,11 @@ steal(	'sigma/lib'
 					,	resource
 					=	undefined
 
-					if	(data)
-						can.each(
-							this.options.containers
-						,	function(item, index)
+					can.each(
+						this.options.containers
+					,	function(item, index)
+						{
+							if(_.isUndefined(item.inicializable))
 							{
 								resource
 								=	can.isDeferred(data)
@@ -145,7 +162,10 @@ steal(	'sigma/lib'
 											?	item.resource.Fetch(item.url,index)
 											:	_.isFunction(data['get'+can.capitalize(index)])
 												?	data['get'+can.capitalize(index)]()
-												:	false
+												:	data.links.get(index)
+													?	data.links.get(index)
+													: 	false
+
 								if	(
 										resource instanceof	Sigma.Model.HAL.Resource
 									||	resource instanceof Sigma.Model.HAL.Collection
@@ -161,7 +181,8 @@ steal(	'sigma/lib'
 											}
 										)
 							}
-						)
+						}
+					)
 				}
 
 			// ,	_set_hypermedia_containers: function(data)

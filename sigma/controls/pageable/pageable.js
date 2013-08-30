@@ -9,12 +9,12 @@ steal(
 				defaults:{
 					view_links: false
 				,	view_content: false
+				,	view_empty_data: 'sigma/controls/pageable/views/empty.mustache'
 				}
 			}
 		,	{
 				_render_content: function(data)
 				{
-					console.log(data)
 					var exists = 	this.element.find('div').hasClass('content') 
 					||		this.element.find('div').hasClass('links')
 
@@ -24,23 +24,51 @@ steal(
 					if(data.links.prev)
 						data.attr('prev',data.links.prev)
 					
-					if (!exists) {
+					if (!exists && data.code != "404") {
 						this._render_pageable_content(data)
 						this._render_pageable_links(data)
+						this._update_content(data)
 					}
-					this._update_content(data)			
+					else
+					{
+						this.element.html(
+							can.view(
+								this.options.view_empty_data
+							,	data
+							)
+						)
+
+					}
 				}
 
 			,	_render_pageable_content: function(data)
 				{
-					can.append(
-						this.element
-					,	can.$('<div class="content">')
-					)
+					if(this.options.view_content)
+					{
+						can.append(
+							this.element
+						,	can.$('<div class="header">')
+						)
+						can.append(
+							this.element
+								.find('div.header')
+						,	can.view(
+								this.options.view_content
+							,	data
+							)
+						)
+					}
+					if(!this.element.find('#list_table'))
+						can.append(
+							this.element
+						,	can.$('<div class="content">')
+						)
 
 					can.append(
 						this.element
-							.find('div.content')
+							 	.find('#list_table')
+						||	this.element
+								.find('div.content')
 					,	can.view(
 							this.options.view
 						,	data

@@ -134,9 +134,15 @@ steal(
 				}
 			,	_render_content: function(data_to_render)
 				{
-					can.append(
+					/*can.append(
 							this.element
 						,	can.view(
+								this.options.view
+							,	data_to_render
+							)
+						)*/
+					this.element.html(
+							can.view(
 								this.options.view
 							,	data_to_render
 							)

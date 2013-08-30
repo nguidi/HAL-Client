@@ -96,11 +96,10 @@ steal(
 					{
 						can.trigger(
 							this.element
-						,	'navegable'
+						,	'browse'
 						,	{
 								target: this.options.target
-							,	links: el.data('link')
-							,	data: query
+							,	data: el.data('link').resolve(query.query)
 							}
 						)
 					}

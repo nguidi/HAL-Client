@@ -394,7 +394,6 @@ steal(
 				}
 			,	resource_by_rel: function(rel)
 				{
-					//console.log(rel)
 					return	(
 							_.isEqual(rel,"self")
 							?	this.resource.constructor

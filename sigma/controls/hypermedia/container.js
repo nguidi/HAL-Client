@@ -39,7 +39,6 @@ steal(
 		,	{
 				init:	function(el,options)
 				{
-					//console.log("arguments", arguments)
 					can.each(
 						this.options.render
 					,	this.proxy(
@@ -67,14 +66,17 @@ steal(
 				{
 					var self
 					=	this
+
 					console.log("container",resource)
 					this.element.html(can.view(this.options.render.loading))
+
 					if(can.isDeferred(resource))
 					{
 						resource
 							.then(
 								function(resolved)
 								{
+									console.log(resolved)
 									self._update(resolved,handler_options)
 								}
 							,	function()
@@ -83,20 +85,15 @@ steal(
 								}
 							)
 					}
-					else	if(resource)
+					else	
+						if(resource)
 						{
-							this.current_control=false
 							this.set_resource(resource)
-							// this.on()
-							//this.proxy(this.options.render.content,'')
 							this.render_resource(this.options.resource,handler_options)
 						}
 						else
 						{
-							this.current_control=false
 							this.set_resource(resource)
-							// this.on()
-							//this.proxy(this.options.render.content,'')
 							this.element.html(can.view(this.options.render.empty))
 						}
 
@@ -118,6 +115,7 @@ steal(
 				}
 			,	getRelationHandler: function(relation)
 				{
+					console.log(this.options.media_types,relation)
 					return	_.find(
 								this.options.media_types
 							,	function(data,rel)
@@ -142,37 +140,43 @@ steal(
 				}
 			,	render_resource: function(resource_to_render,handler_options)
 				{
+					//console.log(resource_to_render)
+
 					var	self = this
-					,	rel = resource_to_render.rel
+					,	rel = resource_to_render._rel || resource_to_render.rel
 					,	self_rel = this.getRelationHandler(resource_to_render.rel)
-					//console.log(self_rel,rel,resource_to_render)
+
+					console.log(rel)
+
+					console.log(self_rel)
+
 					self_rel = this.getSubRelationHandler(self_rel,rel)
 						?can.extend(self_rel,this.getSubRelationHandler(self_rel,rel))
 						:self_rel
 					/*if	(_.isEqual(this.current_handler,self_rel.Handler))	{
-						console.log()
 						can.trigger(
 							this.container_element
 						,	'change_slot'
 						,	resource_to_render
 						)
 					}	else	{*/
-						if	(this.container_element)
-							this.element.find('.hc_generic').unbind()
-						this.element.empty()
-						this.container_element = $('<div>').appendTo(this.element)
-						this.current_handler = self_rel.Handler
-						new	self_rel.Handler(
-								this.container_element
-							,	can.extend(
-									_.extend(self_rel.options||{},handler_options||{})
-								,	{
-										container: self
-									,	target: self_rel.options.target
-									,	slot: resource_to_render
-									}
-								)
+					if	(this.container_element)
+						this.element.find('.hc_generic').unbind()
+					console.log(self_rel)
+					this.element.empty()
+					this.container_element = $('<div>').appendTo(this.element)
+					this.current_handler = self_rel.Handler
+					new	self_rel.Handler(
+							this.container_element
+						,	can.extend(
+								_.extend(self_rel.options||{},handler_options||{})
+							,	{
+									container: self
+								,	target: self_rel.options.target
+								,	slot: resource_to_render
+								}
 							)
+						)
 					//}
 				}
 			,	browse: function(link,options)
@@ -201,7 +205,8 @@ steal(
 			,	' browse': function(el,ev,args)
 				{
 					ev.stopPropagation()
-					console.log('browse',args.target,args.data)
+					console.log('browse',args)
+					console.log(this.options.media_types)
 					var	container
 					=	this.constructor
 								.findContainer(
@@ -209,6 +214,7 @@ steal(
 											args.target
 										)
 								)
+					console.log(container)
 					if	(args.data instanceof Sigma.Model.HAL.Link)
 						container
 							.browse(
@@ -227,7 +233,6 @@ steal(
 									args.data
 								,	args.options
 								||	{}
-								// ,	args.rel?can.extend(args.options,{rel: can.underscore(args.rel)}):args.options
 								)
 				}
 			}
