@@ -63,22 +63,8 @@ steal(
 							if	(!can.isEmptyResource(embedded_data))
 							{
 								embedded_model
-								=	Sigma.Model.HAL.model_by_rel(relation)
+								=	Sigma.Model.HAL.model_by_rel(instance._rel)
 								||	Sigma.Model.HAL.Resource
-
-								
-								if	(_.isEqual(relation,'collection'))	{
-									_.each(
-										embedded_data
-									,	function(d)
-										{
-											d.rel
-											=	self.parentModel().toLowerCase().replace(/(\s+)?.$/, '')
-										}
-									)
-								}	else
-									embedded_data.rel
-									=	relation
 
 								instance.embedded.attr(
 									relation
@@ -104,7 +90,7 @@ steal(
 					// Ejemplo: Si es Sigma.Model.HAL.Resource.Collection -> Resource
 					return	_.last(_.initial(this.fullName.split('.'),1))
 				}
-			,	request: function(url, type, data, rel)
+			,	request: function(url, type, data, rel, profile)
 				{
 					var	self
 					=	this
@@ -119,38 +105,36 @@ steal(
 							.then(
 								function(resolved)
 								{
-									resolved.rel
-									=	( rel == undefined)
-										?	'root'
-										:	rel
+									resolved._profile
+									=	profile
 
 									return self.model(resolved)
 								}
 							)
 				}
-			,	Fetch: function(url,rel)
+			,	Fetch: function(url,rel,profile)
 				{
-					return	this.request( url, 'GET', {}, rel)
+					return	this.request( url, 'GET', {}, rel, profile)
 				}
-			,	Update: function(url,data,rel)
+			,	Update: function(url,data,rel,profile)
 				{
-					return	this.request( url, 'PUT', {}, rel)
+					return	this.request( url, 'PUT', {}, rel, profile)
 				}
-			,	Find: function(url,data,rel)
+			,	Find: function(url,data,rel,profile)
 				{
-					return	this.request( url, 'POST', { action: 'findOneBy', query: data }, rel)
+					return	this.request( url, 'POST', { action: 'findOneBy', query: data }, rel, profile)
 				}
-			,	Filter: function(url,data,rel)
+			,	Filter: function(url,data,rel,profile)
 				{
-					return	this.request( url, 'POST', { action: 'findAllBy', query: data }, rel)
+					return	this.request( url, 'POST', { action: 'findAllBy', query: data }, rel, profile)
 				}
-			,	Create: function(url,data,rel)
+			,	Create: function(url,data,rel,profile)
 				{
-					return	this.request( url, 'POST', { action: 'create', query: data }, rel)
+					return	this.request( url, 'POST', { action: 'create', query: data }, rel, profile)
 				}
-			,	Delete: function(url,rel)
+			,	Delete: function(url,rel,profile)
 				{
-					return	this.request( url, 'DELETE', {}, rel)
+					return	this.request( url, 'DELETE', {}, rel, profile)
 				}
 			}
 		,	{
@@ -239,11 +223,8 @@ steal(
 							if	(!can.isEmptyResource(embedded_data))
 							{
 								embedded_model
-								=	Sigma.Model.HAL.model_by_rel(relation)
+								=	Sigma.Model.HAL.model_by_rel(embedded_data._rel)
 								||	Sigma.Model.HAL.Resource
-
-								embedded_data.rel
-								=	relation
 								
 								instance.embedded.attr(
 									relation
@@ -257,7 +238,7 @@ steal(
 
 					return instance
 				}
-			,	request: function(url, type, data, rel)
+			,	request: function(url, type, data, rel, profile)
 				{
 					var	self
 					=	this
@@ -271,13 +252,18 @@ steal(
 							).then(
 								function(resolved)
 								{
-									resolved.rel
-									=	rel
-									||	'root'
+									resolved._profile
+									=	profile
+
+									var	Model
+									=	_.isUndefined(resolved._rel)
+										?	self
+										:	Sigma.Model.HAL.model_by_rel(resolved._rel)
+										||	self
 
 									return	can.isResource(resolved)
-											?	self.model(resolved)
-											:	self.Collection.model(resolved)
+											?	Model.model(resolved)
+											:	Model.Collection.model(resolved)
 								}
 							)
 				}
@@ -294,29 +280,29 @@ steal(
 					return	cached
 						||	this.fetch(url,rel)
 				}
-			,	Fetch: function(url,rel)
+			,	Fetch: function(url,rel,profile)
 				{
-					return	this.request( url, 'GET', {}, rel)
+					return	this.request( url, 'GET', {}, rel, profile)
 				}
 			,	Update: function(url,data,rel)
 				{
-					return	this.request( url, 'PUT', data, rel)
+					return	this.request( url, 'PUT', data, rel, profile)
 				}
 			,	Find: function(url,data,rel)
 				{
-					return	this.request( url, 'POST', { action: 'findOneBy', query: data }, rel)
+					return	this.request( url, 'POST', { action: 'findOneBy', query: data }, rel, profile)
 				}
 			,	Filter: function(url,data,rel)
 				{
-					return	this.request( url, 'POST', { action: 'findAllBy', query: data }, rel)
+					return	this.request( url, 'POST', { action: 'findAllBy', query: data }, rel, profile)
 				}
 			,	Create: function(url,data,rel)
 				{
-					return	this.request( url, 'POST', { action: 'create', query: data }, rel)
+					return	this.request( url, 'POST', { action: 'create', query: data }, rel, profile)
 				}
 			,	Delete: function(url,rel)
 				{
-					return	this.request( url, 'DELETE', {}, rel)
+					return	this.request( url, 'DELETE', {}, rel, profile)
 				}
 			}
 		,	{

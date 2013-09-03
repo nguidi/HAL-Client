@@ -21,7 +21,8 @@ steal(
 				,	media_types:{}
 				,	default_media_type:
 					{
-						Handler:Sigma.HypermediaControl
+						Handler:	Sigma.HypermediaControl
+					,	options:	{}
 					}
 				}
 			,	containers:{}
@@ -34,6 +35,10 @@ steal(
 					if(this.containers[container.options.id])
 						throw can.sub('Container "{id}" already registered',container.options)
 					this.containers[container.options.id]=container
+				}
+			,	unRegisterContainer: function(container_id)
+				{
+					delete this.containers[container_id]
 				}
 			}
 		,	{
@@ -55,6 +60,11 @@ steal(
 					this.update(options)
 
 				}
+			,	destroy: function()
+				{
+					this.constructor.unRegisterContainer(this.options.id)
+					can.Control.prototype.destroy.call( this );
+				}
 			,	update:	function(handler_options)
 				{
 					var	resource=this.options.slot
@@ -67,8 +77,7 @@ steal(
 					var self
 					=	this
 
-					console.log("container",resource)
-					this.element.html(can.view(this.options.render.loading))
+					this.render_loading()
 
 					if(can.isDeferred(resource))
 					{
@@ -76,12 +85,11 @@ steal(
 							.then(
 								function(resolved)
 								{
-									console.log(resolved)
 									self._update(resolved,handler_options)
 								}
 							,	function()
 								{
-									self.element.html(can.view(self.options.render.fail))
+									self.render_fail()
 								}
 							)
 					}
@@ -94,7 +102,7 @@ steal(
 						else
 						{
 							this.set_resource(resource)
-							this.element.html(can.view(this.options.render.empty))
+							this.render_empty()
 						}
 
 				}
@@ -113,46 +121,78 @@ steal(
 						if	(resource)
 							throw	'Wrong resource type!!!'
 				}
-			,	getRelationHandler: function(relation)
+			,	getRelationHandler: function(relation,profile)
 				{
-					console.log(this.options.media_types,relation)
 					return	_.find(
 								this.options.media_types
 							,	function(data,rel)
 								{
-									return	_.contains(
-												rel.replace(/ /g,'').split(',')
-											,	relation
-											)
+									return	profile
+											?	_.find(
+													rel.replace(/ /g,'').split(',')
+												,	function(prel)
+													{
+														return	_.isEqual(_.first(prel.split(':')),profile)
+															&&	_.isEqual(_.last(prel.split(':')),relation)
+													}
+												)
+											:	_.contains(
+													rel.replace(/ /g,'').split(',')
+												,	relation
+												)
 								}
 							)
 						||	this.options.default_media_type
 				}
+			// ,	getSubRelationHandler: function(relation_found,resource_rel)
+			// 	{
+			// 		return	relation_found[this.options.id.toLowerCase().split('_'+resource_rel,1)[0]]
+			// 			||	undefined
+			// 	}
 			,	getRelationTarget: function(target_name)
 				{
 					return	target_name
 						||	this.options.target
 				}
-			,	getSubRelationHandler: function(relation_found,resource_rel)
+			,	render_loading: function()
 				{
-					return	relation_found[this.options.id.toLowerCase().split('_'+resource_rel,1)[0]]
-						||	undefined
+					this.container_element	=	this.reset_container()
+					can.append(
+						this.container_element
+					,	can.view(
+							this.options.render.loading
+						)
+					)
+				}
+			,	render_fail: function()
+				{
+					this.container_element	=	this.reset_container()
+					can.append(
+						this.container_element
+					,	can.view(
+							this.options.render.fail
+						)
+					)
+				}
+			,	render_empty: function()
+				{
+					this.container_element	=	this.reset_container()
+					can.append(
+						this.container_element
+					,	can.view(
+							this.options.render.empty
+						)
+					)
 				}
 			,	render_resource: function(resource_to_render,handler_options)
 				{
-					//console.log(resource_to_render)
-
 					var	self = this
-					,	rel = resource_to_render._rel || resource_to_render.rel
-					,	self_rel = this.getRelationHandler(resource_to_render.rel)
+					,	rel = resource_to_render._rel
+					,	self_rel = this.getRelationHandler(resource_to_render._rel,resource_to_render._profile)
 
-					console.log(rel)
-
-					console.log(self_rel)
-
-					self_rel = this.getSubRelationHandler(self_rel,rel)
-						?can.extend(self_rel,this.getSubRelationHandler(self_rel,rel))
-						:self_rel
+					// self_rel = this.getSubRelationHandler(self_rel,rel)
+					// 	?can.extend(self_rel,this.getSubRelationHandler(self_rel,rel))
+					// 	:self_rel
 					/*if	(_.isEqual(this.current_handler,self_rel.Handler))	{
 						can.trigger(
 							this.container_element
@@ -160,11 +200,11 @@ steal(
 						,	resource_to_render
 						)
 					}	else	{*/
-					if	(this.container_element)
-						this.element.find('.hc_generic').unbind()
-					console.log(self_rel)
-					this.element.empty()
-					this.container_element = $('<div>').appendTo(this.element)
+					// if	(this.container_element)
+					// 	this.element.find('.hc_generic').unbind()
+					// this.element.empty()
+					// this.container_element = $('<div>').appendTo(this.element)
+					this.container_element	=	this.reset_container()
 					this.current_handler = self_rel.Handler
 					new	self_rel.Handler(
 							this.container_element
@@ -178,6 +218,19 @@ steal(
 							)
 						)
 					//}
+				}
+			,	reset_container: function()
+				{
+					if	(this.container_element)
+						this.remove_children(this.container_element)
+					return	$('<div>').appendTo(this.element)
+				}
+			,	remove_children: function(elements)
+				{
+					if	(elements.children().length)
+							this.remove_children(elements.children())
+					elements.unbind()
+					elements.remove()
 				}
 			,	browse: function(link,options)
 				{
@@ -205,8 +258,6 @@ steal(
 			,	' browse': function(el,ev,args)
 				{
 					ev.stopPropagation()
-					console.log('browse',args)
-					console.log(this.options.media_types)
 					var	container
 					=	this.constructor
 								.findContainer(
@@ -214,7 +265,6 @@ steal(
 											args.target
 										)
 								)
-					console.log(container)
 					if	(args.data instanceof Sigma.Model.HAL.Link)
 						container
 							.browse(

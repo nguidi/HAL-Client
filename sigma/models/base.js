@@ -11,7 +11,7 @@ steal(
 						model_by_rel: function(rel)
 						{
 							return	this[can.capitalize(can.camelCase(rel))]
-								||	this[can.capitalize(can.camelCase(rel+'s'))]
+								// ||	this[can.capitalize(can.camelCase(rel+'s'))]
 						}
 					,	collection_by_rel: function(rel)
 						{

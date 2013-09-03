@@ -58,7 +58,7 @@ steal(	'sigma/lib'
 					can.when(
 						can.map(
 							containers
-						,	function(index)
+						,	function(index,i)
 							{
 								var item
 								=	self.containers[index]
@@ -92,7 +92,7 @@ steal(	'sigma/lib'
 						{
 							//console.log(hcs)
 							//can.when(
-								self.set_containers_slots(self.options.slot)
+								self._update(self.options.slot)
 							/*).done(
 								function()
 								{
@@ -142,6 +142,26 @@ steal(	'sigma/lib'
 							,	options
 							)
 				}
+
+			,	_update: function(resource)
+				{
+					var	self
+					=	this
+
+					if	(can.isDeferred(resource))	{
+						resource
+							.then(
+								function(resolved)
+								{
+									self._update(resolved)
+								}
+							)
+					}
+					else
+						if(resource)
+							this.set_containers_slots(resource)
+				}
+
 			,	set_containers_slots: function(data)
 				{
 					var self

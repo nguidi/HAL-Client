@@ -10,9 +10,6 @@
 [submodule "jquery"]
 	path = jquery
 	url = https://github.com/bitovi/jquerypp.git
-[submodule "bootstrap"]
-	path = bootstrap
-	url = git://github.com/twitter/bootstrap.git
 [submodule "canui"]
 	path = canui
 	url = https://github.com/bitovi/canui.git

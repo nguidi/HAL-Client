@@ -138,7 +138,7 @@ steal(
 				}
 			,	resolve: function()
 				{
-					return	this.parent.fetch(this.url(),this.rel)
+					return	this.parent.fetch(this.url(),this.rel,this.profile)
 				}
 			}
 		)
@@ -152,8 +152,7 @@ steal(
 				}
 			,	resolve: function()
 				{
-					//console.log(this.parent,this.rel)
-					return	this.parent.fetch(this.url(),this.rel)
+					return	this.parent.fetch(this.url(),this.rel,this.profile)
 				}
 			}
 		)
@@ -167,7 +166,7 @@ steal(
 				}
 			,	resolve: function(data)
 				{
-					return	this.parent.find(this.url(),data,this.rel)
+					return	this.parent.find(this.url(),data,this.rel,this.profile)
 				}
 			}
 		)
@@ -181,7 +180,7 @@ steal(
 				}
 			,	resolve: function(data)
 				{
-					return	this.parent.filter(this.url(),data,this.rel)
+					return	this.parent.filter(this.url(),data,this.rel,this.profile)
 				}
 			}
 		)
@@ -195,7 +194,7 @@ steal(
 				}
 			,	resolve: function(data)
 				{
-					return	this.parent.create(this.url(),data,this.rel)
+					return	this.parent.create(this.url(),data,this.rel,this.profile)
 				}
 			}
 		)
@@ -209,7 +208,7 @@ steal(
 				}
 			,	resolve: function(data)
 				{
-					return	this.parent.update(this.url(),data,this.rel)
+					return	this.parent.update(this.url(),data,this.rel,this.profile)
 				}
 			}
 		)
@@ -223,7 +222,7 @@ steal(
 				}
 			,	resolve: function()
 				{
-					return	this.parent.delete(this.url(),this.rel)
+					return	this.parent.delete(this.url(),this.rel,this.profile)
 				}
 			}
 		)
@@ -237,8 +236,7 @@ steal(
 				}
 			,	resolve: function(data,rel)
 				{
-					console.log(this.url())
-					return	this.parent.find(this.url(),data,rel || this.rel)
+					return	this.parent.find(this.url(),data,rel || this.rel,this.profile)
 				}
 			,	url: function()
 				{
@@ -305,7 +303,7 @@ steal(
 				}
 			,	get: function(name)
 				{
-					return	this.parent.fetch(this.find(name).href,name)
+					return	this.parent.fetch(this.find(name).href,name,this.profile)
 				}
 			}
 		)
@@ -329,6 +327,7 @@ steal(
 						{
 							link.rel
 							=	relation
+
 							self.attr(
 									relation
 								,	can.isArray(link)
@@ -343,6 +342,7 @@ steal(
 																	).Link(item)
 																		.attr('rel',_.last(relation.split(':')))
 																		.attr('curie',_.first(relation.split(':')))
+																		.attr('profile',_.last(_.first(relation.split(':'),2)))
 													}
 												)
 											)
@@ -352,6 +352,7 @@ steal(
 											).Link(link)
 												.attr('rel',_.last(relation.split(':')))
 												.attr('curie',_.first(relation.split(':')))
+												.attr('profile',_.last(_.first(relation.split(':'),2)))
 								)
 							self[relation].parent
 							=	self
@@ -390,7 +391,10 @@ steal(
 						return	this.resource
 
 					return	Sigma.Model.HAL.lookup(this.resource.embedded,relation,name)
-						||	this.get_link_by_rel(relation,name).resolve()
+						||	(
+								this.get_link_by_rel(relation,name)
+							&&	this.get_link_by_rel(relation,name).resolve()
+							)
 				}
 			,	resource_by_rel: function(rel)
 				{
@@ -403,29 +407,29 @@ steal(
 								)
 						)
 				}
-			,	fetch: function(url,rel)
+			,	fetch: function(url,rel,profile)
 				{
-					return 	this.resource_by_rel(rel).Fetch(url,rel)
+					return 	this.resource_by_rel(rel).Fetch(url,rel,profile)
 				}
-			,	find: function(url,data,rel)
+			,	find: function(url,data,rel,profile)
 				{
-					return	this.resource_by_rel(rel).Find(url,data,rel)
+					return	this.resource_by_rel(rel).Find(url,data,rel,profile)
 				}
-			,	filter: function(url,data,rel)
+			,	filter: function(url,data,rel,profile)
 				{
-					return	this.resource_by_rel(rel).Filter(url,data,rel)
+					return	this.resource_by_rel(rel).Filter(url,data,rel,profile)
 				}
-			,	update: function(data)
+			,	update: function(url,data,rel,profile)
 				{
-					return	this.resource_by_rel(rel).Update(url,data,rel)
+					return	this.resource_by_rel(rel).Update(url,data,rel,profile)
 				}
-			,	delete: function(url,rel)
+			,	delete: function(url,rel,profile)
 				{
-					return	this.resource_by_rel(rel).Delete(url,rel)
+					return	this.resource_by_rel(rel).Delete(url,rel,profile)
 				}
-			,	create: function(url,data,rel)
+			,	create: function(url,data,rel,profile)
 				{
-					return	this.resource_by_rel(rel).Create(url,data,rel)
+					return	this.resource_by_rel(rel).Create(url,data,rel,profile)
 				}
 			}
 		)
