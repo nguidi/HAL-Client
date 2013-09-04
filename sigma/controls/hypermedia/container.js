@@ -28,7 +28,7 @@ steal(
 			,	containers:{}
 			,	findContainer:function(container_id)
 				{
-					console.log(this.containers)
+					//console.log(this.containers)
 				return	this.containers[can.capitalize(container_id)]
 				}
 			,	registerContainer:function(container)
@@ -201,7 +201,7 @@ steal(
 					// 	this.element.find('.hc_generic').unbind()
 					// this.element.empty()
 					// this.container_element = $('<div>').appendTo(this.element)
-					console.log(self_rel,resource_to_render)
+					//console.log(self_rel,resource_to_render)
 					this.container_element	=	this.reset_container()
 					this.current_handler = self_rel.Handler
 					new	self_rel.Handler(
@@ -255,7 +255,7 @@ steal(
 				}
 			,	' browse': function(el,ev,args)
 				{
-					console.log(args,this.options.media_types)
+					//console.log(args,this.options.media_types)
 					ev.stopPropagation()
 					var	container
 					=	this.constructor

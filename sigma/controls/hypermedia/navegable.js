@@ -99,7 +99,6 @@ steal(	'sigma/lib'
 								)
 						,	id: 	can.capitalize(index)
 						}
-					console.log(options)
 
 					if(_.isEmpty(media.media_types))
 						can.extend(options.media_types,media.children_media_types)
