@@ -28,6 +28,7 @@ steal(
 			,	containers:{}
 			,	findContainer:function(container_id)
 				{
+					console.log(this.containers)
 				return	this.containers[can.capitalize(container_id)]
 				}
 			,	registerContainer:function(container)
@@ -144,11 +145,6 @@ steal(
 							)
 						||	this.options.default_media_type
 				}
-			// ,	getSubRelationHandler: function(relation_found,resource_rel)
-			// 	{
-			// 		return	relation_found[this.options.id.toLowerCase().split('_'+resource_rel,1)[0]]
-			// 			||	undefined
-			// 	}
 			,	getRelationTarget: function(target_name)
 				{
 					return	target_name
@@ -193,6 +189,7 @@ steal(
 					// self_rel = this.getSubRelationHandler(self_rel,rel)
 					// 	?can.extend(self_rel,this.getSubRelationHandler(self_rel,rel))
 					// 	:self_rel
+
 					/*if	(_.isEqual(this.current_handler,self_rel.Handler))	{
 						can.trigger(
 							this.container_element
@@ -204,6 +201,7 @@ steal(
 					// 	this.element.find('.hc_generic').unbind()
 					// this.element.empty()
 					// this.container_element = $('<div>').appendTo(this.element)
+					console.log(self_rel,resource_to_render)
 					this.container_element	=	this.reset_container()
 					this.current_handler = self_rel.Handler
 					new	self_rel.Handler(
@@ -257,6 +255,7 @@ steal(
 				}
 			,	' browse': function(el,ev,args)
 				{
+					console.log(args,this.options.media_types)
 					ev.stopPropagation()
 					var	container
 					=	this.constructor

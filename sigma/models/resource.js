@@ -9,6 +9,7 @@ steal(
 ,	'sigma/lib/parseuri.js'
 ,	'sigma/models/base.js'
 ,	'sigma/models/links.js'
+,	'sigma/lib/uritemplates.js'
 ).then(
 	function()
 	{
@@ -278,29 +279,29 @@ steal(
 							}
 						)
 					return	cached
-						||	this.fetch(url,rel)
+						||	this.Fetch(url,rel)
 				}
 			,	Fetch: function(url,rel,profile)
 				{
 					return	this.request( url, 'GET', {}, rel, profile)
 				}
-			,	Update: function(url,data,rel)
+			,	Update: function(url,data,rel,profile)
 				{
 					return	this.request( url, 'PUT', data, rel, profile)
 				}
-			,	Find: function(url,data,rel)
+			,	Find: function(url,data,rel,profile)
 				{
 					return	this.request( url, 'POST', { action: 'findOneBy', query: data }, rel, profile)
 				}
-			,	Filter: function(url,data,rel)
+			,	Filter: function(url,data,rel,profile)
 				{
 					return	this.request( url, 'POST', { action: 'findAllBy', query: data }, rel, profile)
 				}
-			,	Create: function(url,data,rel)
+			,	Create: function(url,data,rel,profile)
 				{
 					return	this.request( url, 'POST', { action: 'create', query: data }, rel, profile)
 				}
-			,	Delete: function(url,rel)
+			,	Delete: function(url,rel,profile)
 				{
 					return	this.request( url, 'DELETE', {}, rel, profile)
 				}

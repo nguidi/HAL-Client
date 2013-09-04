@@ -34,7 +34,7 @@ steal(
 					,	this.proxy(
 							function(val,prop)
 							{
-								if(/^view/.test(prop))
+								if(/^view/.test(prop) && val)
 									this.options[prop]=steal.idToUri(val).path
 							}
 						)

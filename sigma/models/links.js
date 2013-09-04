@@ -14,9 +14,26 @@ steal(
 		,	{
 				url: function()
 				{
-					return	_.isEqual(this.attr('templated'),true)
-							?	uritemplate(this.attr('href')).expand(this.parent.resource.attr())
-							:	this.attr('href')
+					var	relation
+					=	this.curie
+
+					return 	Sigma.Model.HAL.simplify_url(
+								uritemplate(
+									_.find(
+										this.parent.curies.attr()
+									,	function(curie)
+										{
+											return	curie.name	==	_.first(relation.split(':'))
+										}
+									).href
+								).expand(
+									{
+										action:	this.attr('href').split('/')[1]
+									,	id:		this.attr('href').split('/')[2]
+									,	assoc:	this.attr('href').split('/')[3]
+									}
+								)
+							)
 				}
 			,	resolve: function()
 				{
@@ -25,7 +42,7 @@ steal(
 			,	get: function()
 				{
 					return	_.isDefined(this.rel)
-							?	Sigma.Model.HAL.model_by_rel(this.rel).get(this.attr('href'),this.rel)
+							?	Sigma.Model.HAL.model_by_rel(this.rel).get(this.url(),this.rel)
 							:	Sigma.Model.HAL.Resource.get(this.attr('href'))
 				}
 			,	title: function()
@@ -103,7 +120,7 @@ steal(
 		Sigma.Model.HAL.Link(
 			'Sigma.Model.HAL.Relation.Link'
 		,	{
-				url: function()
+				/*url: function()
 				{
 					var	relation
 					=	this.curie
@@ -125,7 +142,7 @@ steal(
 									}
 								)
 							)
-				}
+				}*/
 			}
 		)
 
@@ -342,7 +359,12 @@ steal(
 																	).Link(item)
 																		.attr('rel',_.last(relation.split(':')))
 																		.attr('curie',_.first(relation.split(':')))
-																		.attr('profile',_.last(_.first(relation.split(':'),2)))
+																		.attr(
+																			'profile'
+																		,	_.isEqual(relation.split(':').length,3)
+																			? 	_.last(_.first(relation.split(':'),2))
+																			: 	false
+																		)
 													}
 												)
 											)
@@ -352,7 +374,12 @@ steal(
 											).Link(link)
 												.attr('rel',_.last(relation.split(':')))
 												.attr('curie',_.first(relation.split(':')))
-												.attr('profile',_.last(_.first(relation.split(':'),2)))
+												.attr(
+													'profile'
+												,	_.isEqual(relation.split(':').length,3)
+													? 	_.last(_.first(relation.split(':'),2))
+													: 	false
+												)
 								)
 							self[relation].parent
 							=	self

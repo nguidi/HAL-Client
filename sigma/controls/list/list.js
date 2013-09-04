@@ -15,26 +15,31 @@ steal(
 		,	{
 				_render_content: function(data)
 				{
-					can.append(
-						this.element
-					,	can.$('<div class="list-wrapper">')
-							.append(
-								can.view(
-									this.options.view_list
-								,	data
+					//console.log(data)
+					
+					if(_.last(this.options.view_list.split('/')) != "false")
+						can.append(
+							this.element
+						,	can.$('<div class="list-wrapper">')
+								.append(
+									can.view(
+										this.options.view_list
+									,	data
+									)
 								)
-							)
-					)
-					can.append(
-						can.$('#list_table')
-					,	can.view(
-							this.options.view_template_list
-						,	data
 						)
-					)
+
+					if(_.last(this.options.view_template_list.split('/')) != "false")
+						can.append(
+							can.$('#list_table')
+						,	can.view(
+								this.options.view_template_list
+							,	data
+							)
+						)
 				}
 
-			,	'.browseable click': function(el,ev)
+			/*,	'.browseable click': function(el,ev)
 				{
 					console.log(el.data('link').links, ev)
 					this.element.trigger(
@@ -46,7 +51,7 @@ steal(
 						,	target: this.options.target
 						}
 					)
-				}
+				}*/
 
 			,	' rapid_search': function(el,ev,data)
 				{

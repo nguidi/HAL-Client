@@ -35,18 +35,6 @@ steal(	'sigma/lib'
 						)
 					}
 
-					/*can.each(
-						this.options.containers
-					,	function(item,key)
-						{
-							if(!_.isEmpty(item.containers))
-							{
-								can.extend(self.containers, item.containers)
-								can.extend(self.sub_hypermedia_containers, _.keys(item.containers))
-							}
-						}
-					)*/
-
 					this.install_all_containers(this.hypermedia_containers_keys)
 
 				}
@@ -64,8 +52,6 @@ steal(	'sigma/lib'
 								=	self.containers[index]
 								,	hc
 								= 	undefined
-
-								//console.log(can.$('div#'+index),self.element.find('div#'+index),index)
 
 								if(can.$('div#'+index).length==0)
 								{
@@ -90,15 +76,7 @@ steal(	'sigma/lib'
 					).done(
 						function(hcs)
 						{
-							//console.log(hcs)
-							//can.when(
-								self._update(self.options.slot)
-							/*).done(
-								function()
-								{
-									self.install_all_containers(self.sub_hypermedia_containers)
-								}
-							)*/
+							self._update(self.options.slot)
 						}
 					)
 				}
@@ -112,14 +90,16 @@ steal(	'sigma/lib'
 					=	{
 							media_types:
 								can.extend(
-									media[index]
+									/*media[index]
 									?	media
-									: 	media_aux
+									: 	media_aux*/
+									this.options.containers
 								,	media.media_types
 								,	media.containers
 								)
 						,	id: 	can.capitalize(index)
 						}
+					console.log(options)
 
 					if(_.isEmpty(media.media_types))
 						can.extend(options.media_types,media.children_media_types)
@@ -158,7 +138,7 @@ steal(	'sigma/lib'
 							)
 					}
 					else
-						if(resource)
+						//if(resource)
 							this.set_containers_slots(resource)
 				}
 
@@ -176,15 +156,17 @@ steal(	'sigma/lib'
 							if(_.isUndefined(item.inicializable))
 							{
 								resource
-								=	can.isDeferred(data)
-										?	data
-										:	(!_.isEmpty(item.resource) && !_.isEmpty(item.url))
-											?	item.resource.Fetch(item.url,index)
-											:	_.isFunction(data['get'+can.capitalize(index)])
+								=	(!_.isEmpty(item.resource) && !_.isEmpty(item.url))
+										?	item.resource.Fetch(item.url,index)
+										:	data
+											?	(
+												_.isFunction(data['get'+can.capitalize(index)])
 												?	data['get'+can.capitalize(index)]()
 												:	data.links.get(index)
 													?	data.links.get(index)
-													: 	false
+													: false
+												)
+											: 	false
 
 								if	(
 										resource instanceof	Sigma.Model.HAL.Resource
