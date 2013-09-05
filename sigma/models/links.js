@@ -416,7 +416,6 @@ steal(
 				{
 					if	(_.isEqual(relation,"self"))
 						return	this.resource
-
 					return	Sigma.Model.HAL.lookup(this.resource.embedded,relation,name)
 						||	(
 								this.get_link_by_rel(relation,name)

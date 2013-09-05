@@ -131,7 +131,7 @@ steal(
 				}
 			,	Create: function(url,data,rel,profile)
 				{
-					return	this.request( url, 'POST', { action: 'create', query: data }, rel, profile)
+					return	this.request( url, 'PUT', data, rel, profile)
 				}
 			,	Delete: function(url,rel,profile)
 				{
@@ -299,7 +299,7 @@ steal(
 				}
 			,	Create: function(url,data,rel,profile)
 				{
-					return	this.request( url, 'POST', { action: 'create', query: data }, rel, profile)
+					return	this.request( url, 'PUT', data, rel, profile)
 				}
 			,	Delete: function(url,rel,profile)
 				{
